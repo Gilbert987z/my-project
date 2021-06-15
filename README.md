@@ -1,5 +1,9 @@
 # my-project
 
+##vue2项目
+```
+目前在学习axios,router,element-ui
+```
 ## Project setup
 ```
 npm install
