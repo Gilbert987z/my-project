@@ -9,12 +9,14 @@
     <!--    </div>-->
     <!--        <div>{{info}}</div>-->
     <br>
-    <div v-if="info">{{ info.message }}</div>
-    <div>{{ info.list }}</div>
-    <div v-for="list in info.data.list" :key="list.id">
-      {{ list.name }}
-    </div>
 
+    <div v-if="info">
+      <div v-if="info">{{ info.message }}</div>
+      <div>{{ info.list }}</div>
+      <div v-for="list in info.data.list" :key="list.id">
+        {{ list.name }}
+      </div>
+    </div>
   </div>
 </template>
 
@@ -26,7 +28,7 @@ import axios from 'axios'
 
 export default {
   name: "Home.vue",
-  el: '#app',
+  // el: '#app',
   data() {
     return {
       info: null

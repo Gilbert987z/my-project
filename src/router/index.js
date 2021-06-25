@@ -6,6 +6,7 @@ import Home from "../components/Home.vue";
 import Info from "../components/Info.vue";
 import About from "../components/About.vue";
 import Login from "../components/Login.vue";
+import movie from "../components/movie.vue";
 
 Vue.use(Router);
 
@@ -35,6 +36,11 @@ export default new Router({
       path: "/login",
       name:"login",
       component: Login
+    },
+        {
+      path: "/movie",
+      name:"movie",
+      component: movie
     }
   ]
 })
