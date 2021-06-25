@@ -22,6 +22,11 @@ import axios from 'axios'
 export default {
   name: "About.vue",
   el: '#app',
+  data() {
+    return {
+      day_good: null
+    }
+  },
   created() {
     axios.all([axios.get('/activity/index/activity/get-day-good'),
       axios.get('/ongoods/index/index-nav/list')
