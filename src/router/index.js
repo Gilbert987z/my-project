@@ -10,39 +10,46 @@ import movie from "../components/movie.vue";
 
 Vue.use(Router);
 
+//路由导航冗余报错（路由重复）
+const originalPush = Router.prototype.push
+Router.prototype.push = function push(location) {
+    return originalPush.call(this, location).catch(err => err)
+}
+
 export default new Router({
-  routes: [
-    // {
-    //   path: "/todoItem",
-    //   name:"todoItem",
-    //   component: todoItem
-    // },
-    {
-      path: "/",
-      name:"home",
-      component: Home
-    },
-    {
-      path: "/about",
-      name:"about",
-      component: About
-    },
-    {
-      path: "/info",
-      name:"info",
-      component: Info
-    },
-    {
-      path: "/login",
-      name:"login",
-      component: Login
-    },
+    mode: 'history',
+    routes: [
+        // {
+        //   path: "/todoItem",
+        //   name:"todoItem",
+        //   component: todoItem
+        // },
         {
-      path: "/movie",
-      name:"movie",
-      component: movie
-    }
-  ]
+            path: "/",
+            name: "home",
+            component: Home
+        },
+        {
+            path: "/about",
+            name: "about",
+            component: About
+        },
+        {
+            path: "/info",
+            name: "info",
+            component: Info
+        },
+        {
+            path: "/login",
+            name: "login",
+            component: Login
+        },
+        {
+            path: "/movie",
+            name: "movie",
+            component: movie
+        }
+    ]
 })
 
 
