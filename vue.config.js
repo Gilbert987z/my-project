@@ -2,7 +2,7 @@ module.exports = {
     // pabulicPath:process.env.NODE_ENV === 'production' ? '' : '',
     devServer:{
         host:'0.0.0.0',
-        port:'8080',
+        port:'8082',
         // https:false,
         open:true,
         //以上的ip和端口是我们本机的;下面为需要跨域的

@@ -7,6 +7,7 @@ import Info from "../components/Info.vue";
 import About from "../components/About.vue";
 import Login from "../components/Login.vue";
 import movie from "../components/movie.vue";
+import book from "../components/book.vue";
 
 Vue.use(Router);
 
@@ -48,6 +49,11 @@ export default new Router({
             path: "/movie",
             name: "movie",
             component: movie
+        },
+        {
+            path: "/book",
+            name: "book",
+            component: book
         }
     ]
 })
