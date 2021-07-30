@@ -8,6 +8,7 @@ import About from "../components/About.vue";
 import Login from "../components/Login.vue";
 import movie from "../components/movie.vue";
 import book from "../components/book.vue";
+import naviMenu from "../components/common/naviMenu.vue";
 
 Vue.use(Router);
 
