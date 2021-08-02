@@ -44,7 +44,10 @@
           label="书名"
           width="180">
         <template slot-scope="scope">
-          {{scope.row.bookName}}/￥{{scope.row.price}}/{{scope.row.inventory}}
+          {{scope.row.bookName}}/￥{{scope.row.price}}/{{scope.row.inventory}}/{{scope.row.images}}
+
+<!--          <img alt src="../assert/book_images/weicheng.jpg" width="40" height="40" class="head_pic"/>-->
+          <img alt :src="scope.row.images" width="40" height="40" class="head_pic"/>
         </template>
 
       </el-table-column>
@@ -59,6 +62,9 @@
       <el-table-column
           prop="publisher"
           label="出版社">
+      </el-table-column>
+      <el-table-column
+          label="操作">
       </el-table-column>
     </el-table>
 
