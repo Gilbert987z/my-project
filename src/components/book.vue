@@ -4,13 +4,13 @@
     <div class="demo-input-suffix">
       属性方式：
       <el-input
-          placeholder="请输入内容"
+          placeholder="请输入图书名称"
           clearable
           prefix-icon="el-icon-search"
+          @input="bookHandleSearchEvent"
           v-model="inputBookName">
       </el-input>
     </div>
-
 
     <el-select v-model="bookTypeValue" @change="bookTypeChange" clearable placeholder="请选择图书类型">
       <el-option
@@ -30,6 +30,10 @@
       </el-option>
     </el-select>
 
+    <el-row>
+      <el-button type="primary" icon="el-icon-circle-plus" @click="bookSave">新增</el-button>
+    </el-row>
+
     <el-table
         :data="info"
         border
@@ -44,10 +48,9 @@
           label="书名"
           width="180">
         <template slot-scope="scope">
-          {{scope.row.bookName}}/￥{{scope.row.price}}/{{scope.row.inventory}}/{{scope.row.images}}
-
-<!--          <img alt src="../assert/book_images/weicheng.jpg" width="40" height="40" class="head_pic"/>-->
           <img alt :src="scope.row.images" width="40" height="40" class="head_pic"/>
+          {{ scope.row.bookName }}/￥{{ scope.row.price }}
+
         </template>
 
       </el-table-column>
@@ -64,12 +67,32 @@
           label="出版社">
       </el-table-column>
       <el-table-column
+          prop="publisher"
+          label="库存/总数">
+        <template slot-scope="scope">
+          {{ scope.row.inventory }} / {{ scope.row.total }}
+        </template>
+      </el-table-column>
+      <el-table-column
+          prop="desc"
+          label="备注">
+
+      </el-table-column>
+
+      <el-table-column
           label="操作">
+        <template slot-scope="scope">
+          <el-button @click="handleClick(scope.row)" type="text" size="small">查看</el-button>
+          <el-button type="text" size="small">编辑</el-button>
+          <el-button type="text" size="small">删除</el-button>
+        </template>
+
       </el-table-column>
     </el-table>
 
     <!--<span class="demonstration">完整功能</span>-->
     <el-pagination
+        background
         @size-change="handleSizeChange"
         @current-change="handleCurrentChange"
         :current-page="page.currentPage"
@@ -99,13 +122,13 @@ export default {
     }
   }, methods: {
     //获取列表
-    getListTable() {
+    getListTable() {  //图书列表
       var params = {
         page: this.page.currentPage,
         size: this.page.pageSize,
         bookTypeId: this.bookTypeId,
         publisherId: this.publisherId,
-
+        bookName: this.inputBookName
       }
       console.log(params);
       // return false;
@@ -146,7 +169,7 @@ export default {
       this.page.currentPage = val;
       this.getListTable();//重新获取列表数据
     },
-    getBookTypeList() {
+    getBookTypeList() { //图书类型列表
       axios
           .get('http://127.0.0.1:8088/booktype',
               {
@@ -193,13 +216,21 @@ export default {
       this.publisherId = val;
       console.log('publisherChange' + val);
       this.getListTable();
+    },
+    bookHandleSearchEvent(val) {
+      this.inputBookName = val;
+      console.log('inputBookName' + val);
+      this.getListTable();
+    },
+    bookSave(){
+      //通过push进行跳转
+      this.$router.push('/book/bookSave')
     }
-
   },
   created() {
     this.getListTable();
-    this.getBookTypeList();
-    this.getPublisherList();
+    this.getBookTypeList(); //下拉框列表
+    this.getPublisherList(); //下拉框列表
   },
   mounted() {
 

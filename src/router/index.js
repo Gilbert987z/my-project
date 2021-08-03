@@ -8,6 +8,7 @@ import About from "../components/About.vue";
 import Login from "../components/Login.vue";
 import movie from "../components/movie.vue";
 import book from "../components/book.vue";
+import bookSave from "../components/book/bookSave";
 import test from "../components/test.vue";
 // import naviMenu from "../components/common/naviMenu.vue";
 
@@ -56,6 +57,10 @@ export default new Router({
             path: "/book",
             name: "book",
             component: book
+        },{
+            path: "/book/bookSave",
+            name: "bookSave",
+            component: bookSave
         },
         {
             path: "/test",
