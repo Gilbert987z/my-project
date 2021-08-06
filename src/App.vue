@@ -14,6 +14,8 @@
  <router-link to="/login">Login </router-link>
  <router-link to="/movie">movie </router-link>
  <router-link to="/book">book </router-link>
+ <router-link to="/naviMenu">naviMenu </router-link>
+ <router-link to="/test">test </router-link>
 
   <!-- 对应的组件内容渲染到router-view中 -->
  <router-view></router-view>

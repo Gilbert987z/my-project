@@ -84,7 +84,7 @@
         <template slot-scope="scope">
           <el-button @click="handleClick(scope.row)" type="text" size="small">查看</el-button>
           <el-button type="text" size="small">编辑</el-button>
-          <el-button type="text" size="small">删除</el-button>
+          <el-button type="text" size="small" @click="deleteBook(scope.row.id)">删除</el-button>
         </template>
 
       </el-table-column>
@@ -225,6 +225,53 @@ export default {
     bookSave(){
       //通过push进行跳转
       this.$router.push('/book/bookSave')
+    },
+    deleteBook(id){
+           // let app = this;
+     // var deleteData = {
+     //     id: id
+     // }
+     this.$confirm('确定删除该公告吗', '删除公告', {
+         confirmButtonText: '确定',
+         cancelButtonText: '取消',
+         type: 'error'
+     }).then(() => {
+       axios({
+         method:"post",
+         url:'http://127.0.0.1:8088/book/delete',
+         headers:{
+           "token": "zz"
+         },
+         params:{
+          "id":id
+         }
+
+       }).then(()=>{
+
+       })
+         // app.$Api.deleteNotice(deleteData, function (result) {
+         //     if (result.result == "true") {
+         //         app.$notify({
+         //             title: '温馨提示：',
+         //             message: '公告' + result.message,
+         //             type: 'success'
+         //         });
+         //         app.queryNoticeList();
+         //     } else {
+         //         app.$notify.error({
+         //             title: '温馨提示：',
+         //             message: '公告' + result.message
+         //         });
+         //     }
+         // });
+     }).catch(() => {
+         //取消操作
+         this.$message({
+             type: 'info',
+             message: '已取消删除'
+         });
+     });
+
     }
   },
   created() {

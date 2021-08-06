@@ -10,7 +10,8 @@ import movie from "../components/movie.vue";
 import book from "../components/book.vue";
 import bookSave from "../components/book/bookSave";
 import test from "../components/test.vue";
-// import naviMenu from "../components/common/naviMenu.vue";
+import naviMenu from "../components/layout/naviMenu.vue";
+// import navbar from "../components/layout/Navbar";
 
 Vue.use(Router);
 
@@ -66,6 +67,11 @@ export default new Router({
             path: "/test",
             name: "test",
             component: test
+        },
+        {
+            path: "/naviMenu",
+            name: "naviMenu",
+            component: naviMenu
         }
     ]
 })
