@@ -16,10 +16,10 @@ import naviMenu from "../components/layout/naviMenu.vue";
 Vue.use(Router);
 
 //路由导航冗余报错（路由重复）
-const originalPush = Router.prototype.push
+const originalPush = Router.prototype.push;
 Router.prototype.push = function push(location) {
     return originalPush.call(this, location).catch(err => err)
-}
+};
 
 export default new Router({
     mode: 'history',
@@ -29,6 +29,16 @@ export default new Router({
         //   name:"todoItem",
         //   component: todoItem
         // },
+        {
+            path: '/404',
+            component: () => import('@/components/error-page/404'),
+            hidden: true
+        },
+        {
+            path: '/401',
+            component: () => import('@/components/error-page/401'),
+            hidden: true
+        },
         {
             path: "/",
             name: "home",

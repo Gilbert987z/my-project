@@ -1,3 +1,9 @@
+const path = require('path');
+
+function resolve(dir) {
+  return path.join(__dirname, dir)
+}
+
 module.exports = {
     // pabulicPath:process.env.NODE_ENV === 'production' ? '' : '',
     devServer:{
@@ -16,5 +22,32 @@ module.exports = {
                 }
             }
         }
-    }
-}
+    },
+    // //set第一个参数：设置的别名，第二个参数：设置的路径
+    // chainWebpack: config=>{
+    //     //修改文件引入自定义路径
+    //     config.resolve.alias
+    //         .set('@', resolve('src'))
+    //         .set('assets', resolve('src/assets'))
+    // }
+
+
+
+    // chainWebpack: (config) => {
+    //     // set第一个参数：设置的别名，第二个参数：设置的路径
+    //     config.resolve.alias.set('@', resolve('src'));
+    // }
+
+  // configureWebpack: {
+  //   resolve: {
+  //     alias: {
+  //       assets: "@/assets",
+  //       common: "@/common",
+  //       components: "@/components",
+  //       network: "@/network",
+  //       views: "@/views"
+  //     }
+  //   }
+  // }
+
+};

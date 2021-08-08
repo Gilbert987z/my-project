@@ -64,15 +64,15 @@ export default {
               },
           )
           .then(response => {
-            console.log(response)
+            console.log(response);
             // this.bookTypeList = response.data.data.list
-            var message = response.data.message
-            var token = response.data.data.accessToken
-            console.log(message)
+            var message = response.data.message;
+            var token = response.data.data.accessToken;
+            console.log(message);
             // this.page = response.data.data
             // console.log(this.bookTypeList);
-            alert(message)
-            alert(token)
+            alert(message);
+            alert(token);
 
             localStorage.setItem("token", token); //将token存入本地
 
