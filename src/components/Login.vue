@@ -65,16 +65,31 @@ export default {
           )
           .then(response => {
             console.log(response)
-            // this.bookTypeList = response.data.data.list
             var message = response.data.message
+            var success = response.data.success
             var token = response.data.data.accessToken
             console.log(message)
-            // this.page = response.data.data
-            // console.log(this.bookTypeList);
-            alert(message)
-            alert(token)
 
-            localStorage.setItem("token", token); //将token存入本地
+
+            var messageType =null
+            console.log("success的值：",success)
+            console.log(typeof success)
+            if(success=== true){
+              messageType = 'success'
+            }else{
+              messageType = 'error'
+            }
+            console.log(messageType)
+            this.$message({ //登录提示信息
+                message: message,
+                type: messageType //提示类型 success(成功)/warning(警告)/info(消息)/error(错误)
+            });
+
+
+            if(token){ //token有值
+              localStorage.setItem("token", token); //将token存入本地
+              this.$router.push('/book');//跳转到book列表页面
+            }
 
           }).catch(function (error) { // 请求失败处理
         console.log(error);

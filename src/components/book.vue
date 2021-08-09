@@ -119,6 +119,7 @@ export default {
       inputBookName: '',
       bookTypeId: null,
       publisherId: null,
+      token: localStorage.getItem("token"),
     }
   }, methods: {
     //获取列表
@@ -137,7 +138,7 @@ export default {
               {
                 params: params,
                 headers: {
-                  "token": "zz"
+                  "token": this.token
                 }
               }
           )
@@ -175,7 +176,7 @@ export default {
               {
                 // params: params,
                 headers: {
-                  "token": "zz"
+                  "token": this.token
                 }
               }
           )
@@ -194,7 +195,7 @@ export default {
               {
                 // params: params,
                 headers: {
-                  "token": "zz"
+                  "token": this.token
                 }
               }
           )
@@ -240,7 +241,7 @@ export default {
          method:"post",
          url:'http://127.0.0.1:8088/book/delete',
          headers:{
-           "token": "zz"
+           "token": this.token
          },
          params:{
           "id":id
