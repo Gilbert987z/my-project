@@ -119,7 +119,7 @@ export default {
       inputBookName: '',
       bookTypeId: null,
       publisherId: null,
-      token:localStorage.getItem("token")
+      token: localStorage.getItem("token"),
     }
   }, methods: {
     //获取列表
@@ -130,10 +130,9 @@ export default {
         bookTypeId: this.bookTypeId,
         publisherId: this.publisherId,
         bookName: this.inputBookName
-      };
+      }
       console.log(params);
       // return false;
-      console.log(this.token);
       axios
           .get('http://127.0.0.1:8088/book/list',
               {
@@ -144,9 +143,9 @@ export default {
               }
           )
           .then(response => {
-            console.log(response);
-            this.info = response.data.data.list;
-            this.page = response.data.data;
+            console.log(response)
+            this.info = response.data.data.list
+            this.page = response.data.data
             console.log(this.info);
 
 
@@ -177,21 +176,20 @@ export default {
               {
                 // params: params,
                 headers: {
-                  // "token": "zz"
                   "token": this.token
                 }
               }
           )
           .then(response => {
-            console.log(response);
-            this.bookTypeList = response.data.data.list;
+            console.log(response)
+            this.bookTypeList = response.data.data.list
             // this.page = response.data.data
             console.log(this.bookTypeList);
           }).catch(function (error) { // 请求失败处理
         console.log(error);
       });
     },
-    getPublisherList() { //获取下拉框列表
+    getPublisherList() {
       axios
           .get('http://127.0.0.1:8088/publisher',
               {
@@ -202,8 +200,8 @@ export default {
               }
           )
           .then(response => {
-            console.log(response);
-            this.publisherList = response.data.data.list;
+            console.log(response)
+            this.publisherList = response.data.data.list
             // this.page = response.data.data
             console.log(this.publisherList);
           }).catch(function (error) { // 请求失败处理
