@@ -8,6 +8,10 @@ import About from "../components/About.vue";
 import Login from "../components/Login.vue";
 import movie from "../components/movie.vue";
 import book from "../components/book.vue";
+import publisher from "../components/publisher.vue";
+import bookType from "../components/bookType.vue";
+import bookBorrow from "../components/bookBorrow.vue";
+import userlist from "../components/userlist.vue";
 import bookSave from "../components/book/bookSave";
 import test from "../components/test.vue";
 import naviMenu from "../components/layout/naviMenu.vue";
@@ -70,7 +74,25 @@ const router = new Router({
             path: "/book",
             name: "book",
             component: book
-        }, {
+        },
+           {
+            path: "/publisher",
+            name: "publisher",
+            component: publisher
+        },        {
+            path: "/bookBorrow",
+            name: "bookBorrow",
+            component: bookBorrow
+        },        {
+            path: "/bookType",
+            name: "bookType",
+            component: bookType
+        },        {
+            path: "/userlist",
+            name: "userlist",
+            component: userlist
+        },
+        {
             path: "/book/bookSave",
             name: "bookSave",
             component: bookSave
