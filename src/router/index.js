@@ -118,7 +118,7 @@ export default router
 
 // 路由拦截，判断是否需要登录
 router.beforeEach((to, from, next) => {
-    if (to.path === '/login') {
+    if (to.path === '/login' || to.path==='/404') { //login和404网页不用校验
         next();
     } else {
         let token = localStorage.getItem('token');

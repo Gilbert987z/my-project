@@ -121,7 +121,8 @@ export default {
       publisherId: null,
       token: localStorage.getItem("token"),
     }
-  }, methods: {
+  }, 
+  methods: {
     //获取列表
     getListTable() {  //图书列表
       var params = {
@@ -134,7 +135,7 @@ export default {
       console.log(params);
       // return false;
       axios
-          .get('http://127.0.0.1:8088/book/list',
+          .get('http://127.0.0.1:8088/admin/book/list',
               {
                 params: params,
                 headers: {
@@ -172,7 +173,7 @@ export default {
     },
     getBookTypeList() { //图书类型列表
       axios
-          .get('http://127.0.0.1:8088/booktype',
+          .get('http://127.0.0.1:8088/admin/booktype',
               {
                 // params: params,
                 headers: {
@@ -191,7 +192,7 @@ export default {
     },
     getPublisherList() {
       axios
-          .get('http://127.0.0.1:8088/publisher',
+          .get('http://127.0.0.1:8088/admin/publisher',
               {
                 // params: params,
                 headers: {
@@ -227,53 +228,35 @@ export default {
       //通过push进行跳转
       this.$router.push('/book/bookSave')
     },
-    deleteBook(id){
-           // let app = this;
-     // var deleteData = {
-     //     id: id
-     // }
-     this.$confirm('确定删除该公告吗', '删除公告', {
-         confirmButtonText: '确定',
-         cancelButtonText: '取消',
-         type: 'error'
-     }).then(() => {
-       axios({
-         method:"post",
-         url:'http://127.0.0.1:8088/book/delete',
-         headers:{
-           "token": this.token
-         },
-         params:{
-          "id":id
-         }
+    deleteBook(id){//单个删除
+      this.$confirm('确定删除该公告吗', '删除公告', {
+          confirmButtonText: '确定',
+          cancelButtonText: '取消',
+          type: 'error'
+      }).then(() => {
+        axios({
+          method:"post",
+          url:'http://127.0.0.1:8088/admin/book/delete',
+          headers:{
+            "token": this.token
+          },
+          data:{
+            "id":id
+          }
 
-       }).then(()=>{
-
-       })
-         // app.$Api.deleteNotice(deleteData, function (result) {
-         //     if (result.result == "true") {
-         //         app.$notify({
-         //             title: '温馨提示：',
-         //             message: '公告' + result.message,
-         //             type: 'success'
-         //         });
-         //         app.queryNoticeList();
-         //     } else {
-         //         app.$notify.error({
-         //             title: '温馨提示：',
-         //             message: '公告' + result.message
-         //         });
-         //     }
-         // });
-     }).catch(() => {
-         //取消操作
-         this.$message({
-             type: 'info',
-             message: '已取消删除'
-         });
-     });
-
-    }
+        }).then(()=>{
+          this.getListTable();  //请求刷新
+            this.$message.success('已成功删除!')
+        }).catch(() => {
+            //取消操作
+            this.$message({
+                type: 'info',
+                message: '已取消删除'
+            });
+        });
+      });
+    },
+     
   },
   created() {
     this.getListTable();
