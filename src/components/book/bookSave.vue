@@ -1,4 +1,5 @@
 <template>
+  <h1>{{title}}</h1>
   <el-form ref="book" :model="book" label-width="80px">
     <el-form-item label="图片">
       <el-input v-model="book.images"></el-input>
@@ -28,10 +29,10 @@
     </el-form-item>
 
     <el-form-item label="库存">
-      <el-input-number v-model="book.inventory" :min="1" :max="99999999" @change="handleChange" />
+      <el-input-number v-model="book.inventory" :min="1" :max="99999999"  />
     </el-form-item>
     <el-form-item label="总数">
-      <el-input-number v-model="book.total" :min="1" :max="99999999" @change="handleChange" />
+      <el-input-number v-model="book.total" :min="1" :max="99999999" />
     </el-form-item>
 
 
@@ -39,7 +40,7 @@
       <el-input type="textarea" v-model="book.desc"></el-input>
     </el-form-item>
     <el-form-item>
-      <el-button type="primary" @click="onSubmit">立即创建</el-button>
+      <el-button type="primary" @click="onSubmit">{{btnSubmit}}</el-button>
       <el-button>取消</el-button>
     </el-form-item>
   </el-form>
@@ -50,7 +51,7 @@
   export default {
     data() {
       return {
-        book: {
+        book: { //book的实例，默认数据
           bookName:null,
           images:null,
           author:null,
@@ -64,6 +65,8 @@
         },
         bookTypeList: [],
         publisherList: [],
+        btnSubmit:null,//提交按钮的名称
+        title:null,//标题
         token: localStorage.getItem("token"),
       }
     },
@@ -98,7 +101,7 @@
       }else{
         axios({
             method:"post",
-            url:"http://127.0.0.1:8088/admin/book/update", //创建数据的接口
+            url:"http://127.0.0.1:8088/admin/book/update", //修改数据的接口
             headers:{
               "token": this.token
             },
@@ -123,11 +126,16 @@
         });
       }
     },
-    getDetail(){
+    createOrUpdate(){  //判断是否是新增或者修改
       console.log(1)
       console.log(this.$route.params)
       console.log(2)
-      if(this.book.id!=null){
+      console.log(this.book.id)
+
+      if(this.book.id!=null){  //判断是否是修改
+        this.title = '修改';
+        this.btnSubmit = '修改';
+        console.log(this.book.id)
         axios.get('http://127.0.0.1:8088/admin/book/detail',
         {
           headers:{
@@ -136,9 +144,9 @@
           params:this.$route.query
         }).then(response => {
               console.log(response)
-              console.log(response);
-              book = response.data
-              this.book.bookName=book.bookName,
+              console.log(response.data.data.detail);
+              let book = response.data.data.detail
+              this.book.bookName=book.bookName,   //会修改默认的参数，渲染出详情数据
               this.book.images=book.images,
               this.book.author=book.author,
               this.book.publisherId=book.publisherId,
@@ -146,10 +154,14 @@
               this.book.inventory=book.inventory,
               this.book.total=book.total,
               this.book.price=book.price,
-              this.book.desc=book.desc,
+              this.book.desc=book.desc
+
             }).catch(function (error) { // 请求失败处理
           console.log(error);
         });
+      }else{
+        this.title = '创建';
+      this.btnSubmit = '创建';
       }
     },
     getBookTypeList() { //图书类型列表
@@ -194,7 +206,7 @@
     created(){
       this.getBookTypeList(); //下拉框列表
       this.getPublisherList(); //下拉框列表
-      this.getDetail();
+      this.createOrUpdate();  //判断是否是新增或者修改
     }
   }
 </script>
