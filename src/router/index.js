@@ -71,7 +71,7 @@ const router = new Router({
             component: movie
         },
         {
-            path: "/book",
+            path: "/book", //列表页
             name: "book",
             component: book
         },
@@ -93,7 +93,12 @@ const router = new Router({
             component: userlist
         },
         {
-            path: "/book/bookSave",
+            path: "/book/add", //增加书籍
+            name: "bookSave",
+            component: bookSave
+        },
+        {
+            path: "/book/edit", //修改书籍
             name: "bookSave",
             component: bookSave
         },
@@ -107,10 +112,10 @@ const router = new Router({
             name: "naviMenu",
             component: naviMenu
         },
-        {
-            path: "*", // 此处需特别注意置于最底部
-            redirect: "/404" //跳转到404页面
-        }
+        // {
+        //     path: "*", // 此处需特别注意置于最底部
+        //     redirect: "/404" //跳转到404页面
+        // }
     ]
 })
 

@@ -216,55 +216,55 @@ export default {
       console.log('inputBookName' + val);
       this.getListTable();
     },
-    bookSave(){
+    bookSave() {
       //通过push进行跳转
       this.$router.push('/book/bookSave')
     },
-    deleteBook(id){
-           // let app = this;
-     // var deleteData = {
-     //     id: id
-     // }
-     this.$confirm('确定删除该公告吗', '删除公告', {
-         confirmButtonText: '确定',
-         cancelButtonText: '取消',
-         type: 'error'
-     }).then(() => {
-       axios({
-         method:"post",
-         url:'http://127.0.0.1:8088/book/delete',
-         headers:{
-           "token": this.token
-         },
-         params:{
-          "id":id
-         }
+    deleteBook(id) {
+      // let app = this;
+      // var deleteData = {
+      //     id: id
+      // }
+      this.$confirm('确定删除该公告吗', '删除公告', {
+        confirmButtonText: '确定',
+        cancelButtonText: '取消',
+        type: 'error'
+      }).then(() => {
+        axios({
+          method: "post",
+          url: 'http://127.0.0.1:8088/book/delete',
+          headers: {
+            "token": this.token
+          },
+          params: {
+            "id": id
+          }
 
-       }).then(()=>{
+        }).then(() => {
 
-       })
-         // app.$Api.deleteNotice(deleteData, function (result) {
-         //     if (result.result == "true") {
-         //         app.$notify({
-         //             title: '温馨提示：',
-         //             message: '公告' + result.message,
-         //             type: 'success'
-         //         });
-         //         app.queryNoticeList();
-         //     } else {
-         //         app.$notify.error({
-         //             title: '温馨提示：',
-         //             message: '公告' + result.message
-         //         });
-         //     }
-         // });
-     }).catch(() => {
-         //取消操作
-         this.$message({
-             type: 'info',
-             message: '已取消删除'
-         });
-     });
+        })
+        // app.$Api.deleteNotice(deleteData, function (result) {
+        //     if (result.result == "true") {
+        //         app.$notify({
+        //             title: '温馨提示：',
+        //             message: '公告' + result.message,
+        //             type: 'success'
+        //         });
+        //         app.queryNoticeList();
+        //     } else {
+        //         app.$notify.error({
+        //             title: '温馨提示：',
+        //             message: '公告' + result.message
+        //         });
+        //     }
+        // });
+      }).catch(() => {
+        //取消操作
+        this.$message({
+          type: 'info',
+          message: '已取消删除'
+        });
+      });
 
     }
   },
