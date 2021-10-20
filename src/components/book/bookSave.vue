@@ -1,49 +1,51 @@
 <template>
-  <h1>{{title}}</h1>
-  <el-form ref="book" :model="book" label-width="80px">
-    <el-form-item label="图片">
-      <el-input v-model="book.images"></el-input>
-    </el-form-item>
-    <el-form-item label="书名">
-      <el-input v-model="book.bookName"></el-input>
-    </el-form-item>
-    <el-form-item label="作者">
-      <el-input v-model="book.author"></el-input>
-    </el-form-item>
-    <el-form-item label="价格">
-      <el-input-number v-model="book.price" :precision="2" :step="0.1" :max="9999" />
-    </el-form-item>
-    <el-form-item label="图书类型">
-      <el-select v-model="book.bookTypeId"  clearable placeholder="请选择图书类型">
-        <el-option v-for="item in bookTypeList" :key="item.id" :label="item.bookType" :value="item.id">
-        </el-option>
+  <div>
+    <h1>{{title}}</h1>
+    <el-form ref="book" :model="book" label-width="80px">
+      <el-form-item label="图片">
+        <el-input v-model="book.images"></el-input>
+      </el-form-item>
+      <el-form-item label="书名">
+        <el-input v-model="book.bookName"></el-input>
+      </el-form-item>
+      <el-form-item label="作者">
+        <el-input v-model="book.author"></el-input>
+      </el-form-item>
+      <el-form-item label="价格">
+        <el-input-number v-model="book.price" :precision="2" :step="0.1" :max="9999" />
+      </el-form-item>
+      <el-form-item label="图书类型">
+        <el-select v-model="book.bookTypeId"  clearable placeholder="请选择图书类型">
+          <el-option v-for="item in bookTypeList" :key="item.id" :label="item.bookType" :value="item.id">
+          </el-option>
 
-      </el-select>
+        </el-select>
 
-    </el-form-item>
-    <el-form-item label="出版社">
-      <el-select v-model="book.publisherId" clearable placeholder="请选择出版社">
-        <el-option v-for="item in publisherList" :key="item.id" :label="item.publisher" :value="item.id">
-        </el-option>
-      </el-select>
-    </el-form-item>
+      </el-form-item>
+      <el-form-item label="出版社">
+        <el-select v-model="book.publisherId" clearable placeholder="请选择出版社">
+          <el-option v-for="item in publisherList" :key="item.id" :label="item.publisher" :value="item.id">
+          </el-option>
+        </el-select>
+      </el-form-item>
 
-    <el-form-item label="库存">
-      <el-input-number v-model="book.inventory" :min="1" :max="99999999"  />
-    </el-form-item>
-    <el-form-item label="总数">
-      <el-input-number v-model="book.total" :min="1" :max="99999999" />
-    </el-form-item>
+      <el-form-item label="库存">
+        <el-input-number v-model="book.inventory" :min="1" :max="99999999"  />
+      </el-form-item>
+      <el-form-item label="总数">
+        <el-input-number v-model="book.total" :min="1" :max="99999999" />
+      </el-form-item>
 
 
-    <el-form-item label="备注">
-      <el-input type="textarea" v-model="book.desc"></el-input>
-    </el-form-item>
-    <el-form-item>
-      <el-button type="primary" @click="onSubmit">{{btnSubmit}}</el-button>
-      <el-button>取消</el-button>
-    </el-form-item>
-  </el-form>
+      <el-form-item label="备注">
+        <el-input type="textarea" v-model="book.desc"></el-input>
+      </el-form-item>
+      <el-form-item>
+        <el-button type="primary" @click="onSubmit">{{btnSubmit}}</el-button>
+        <el-button @click="goOff()">取消</el-button>
+      </el-form-item>
+    </el-form>
+  </div>
 </template>
 
 <script>
@@ -201,7 +203,14 @@
           }).catch(function (error) { // 请求失败处理
         console.log(error);
       });
-    }
+    },goOff(){
+        if (window.history.length <= 1) {
+          this.$router.push({path:'/'}) //如果没有上一页返回首页
+          return false
+        } else {
+          this.$router.go(-1) //返回上一页
+        }
+      }
     },
     created(){
       this.getBookTypeList(); //下拉框列表
