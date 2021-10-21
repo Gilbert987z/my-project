@@ -1,4 +1,6 @@
-
+/*
+main.js 是最先执行的主 js 文件
+*/
 import App from './App.vue'
 import router from './router'
 import Vue from 'vue'

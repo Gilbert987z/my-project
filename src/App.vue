@@ -16,6 +16,10 @@
  <router-link to="/book">book </router-link>
  <router-link to="/naviMenu">naviMenu </router-link>
  <router-link to="/test">test </router-link>
+ <router-link to="/userlist">userlist </router-link>
+ <router-link to="/publisher">publisher </router-link>
+ <router-link to="/bookType">bookType </router-link>
+ <router-link to="/bookBorrow">bookBorrow </router-link>
 
   <!-- 对应的组件内容渲染到router-view中 -->
  <router-view></router-view>
