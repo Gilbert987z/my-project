@@ -99,7 +99,7 @@
         :page-sizes="[2, 5, 10, 20]"
         :page-size="page.pageSize"
         layout="total, sizes, prev, pager, next, jumper"
-        :total="page.totalPages">
+        :total="page.total">
     </el-pagination>
   </div>
 </template>
@@ -111,7 +111,12 @@ export default {
   data() {
     return {
       info: [],
-      page: {pageSize: 10, currentPage: 1,},
+      page: {
+        pageSize: 10, 
+        currentPage: 1,
+        // pages:null,
+        total:null
+        },
       bookTypeList: [],
       publisherList: [],
       bookTypeValue: '',
@@ -203,6 +208,8 @@ export default {
           .then(response => {
             console.log(response)
             this.publisherList = response.data.data.list
+            this.page.total = response.data.data.total //列表的个数
+            // this.page.pages = response.data.data.pages //列表页面总数
             // this.page = response.data.data
             console.log(this.publisherList);
           }).catch(function (error) { // 请求失败处理
