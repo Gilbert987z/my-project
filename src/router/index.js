@@ -5,14 +5,16 @@ import Router from 'vue-router'
 import Home from "../components/Home.vue";
 import Info from "../components/Info.vue";
 import About from "../components/About.vue";
-import Login from "../components/Login.vue";
+import login from "../components/login.vue";
 import movie from "../components/movie.vue";
-import book from "../components/book.vue";
+import bookList from "../components/bookList.vue";
+import bookSave from "../components/book/bookSave";
+import bookDetail from "../components/book/bookDetail";
 import publisher from "../components/publisher.vue";
 import bookType from "../components/bookType.vue";
 import bookBorrow from "../components/bookBorrow.vue";
 import userlist from "../components/userlist.vue";
-import bookSave from "../components/book/bookSave";
+
 import test from "../components/test.vue";
 import naviMenu from "../components/layout/naviMenu.vue";
 import notFound from "../components/error-page/404.vue";
@@ -63,7 +65,7 @@ const router = new Router({
         {
             path: "/login",
             name: "login",
-            component: Login
+            component: login
         },
         {
             path: "/movie",
@@ -71,9 +73,23 @@ const router = new Router({
             component: movie
         },
         {
-            path: "/book", //列表页
-            name: "book",
-            component: book
+            path: "/bookList", //列表页
+            name: "bookList",
+            component: bookList
+        }, {
+            path: "/book/detail", //图书详情页
+            name: "bookDetail",
+            component: bookDetail
+        },
+        {
+            path: "/book/add", //增加书籍
+            name: "bookSave",
+            component: bookSave
+        },
+        {
+            path: "/book/edit", //修改书籍
+            name: "bookSave",
+            component: bookSave
         },
            {
             path: "/publisher",
@@ -92,16 +108,7 @@ const router = new Router({
             name: "userlist",
             component: userlist
         },
-        {
-            path: "/book/add", //增加书籍
-            name: "bookSave",
-            component: bookSave
-        },
-        {
-            path: "/book/edit", //修改书籍
-            name: "bookSave",
-            component: bookSave
-        },
+       
         {
             path: "/test",
             name: "test",

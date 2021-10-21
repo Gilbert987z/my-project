@@ -13,7 +13,7 @@
  <router-link to="/info">Info </router-link>
  <router-link to="/login">Login </router-link>
  <router-link to="/movie">movie </router-link>
- <router-link to="/book">book </router-link>
+ <router-link to="/bookList">bookList </router-link>
  <router-link to="/naviMenu">naviMenu </router-link>
  <router-link to="/test">test </router-link>
  <router-link to="/userlist">userlist </router-link>

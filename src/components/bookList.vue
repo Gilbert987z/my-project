@@ -31,7 +31,7 @@
     </el-select>
 
     <el-row>
-      <el-button type="primary" icon="el-icon-circle-plus" @click="bookSave">新增</el-button>
+      <el-button type="primary" icon="el-icon-circle-plus" @click="saveBook">新增</el-button>
     </el-row>
 
     <el-table
@@ -82,8 +82,8 @@
       <el-table-column
           label="操作">
         <template slot-scope="scope">
-          <el-button @click="handleClick(scope.row)" type="text" size="small">查看</el-button>
-          <el-button type="text" size="small"  @click="editBook(scope.row.id)">编辑</el-button>
+          <el-button type="text" size="small" @click="checkBook(scope.row.id)">查看</el-button>
+          <el-button type="text" size="small" @click="editBook(scope.row.id)">编辑</el-button>
           <el-button type="text" size="small" @click="deleteBook(scope.row.id)">删除</el-button>
         </template>
 
@@ -231,13 +231,17 @@ export default {
       console.log('inputBookName' + val);
       this.getListTable();
     },
-    bookSave(){
+    saveBook(){ //新增按钮操作
       //通过push进行跳转
       this.$router.push('/book/add')
     },
     editBook(id){ //编辑
       //通过push进行跳转
       this.$router.push({path:'/book/edit',query:{"id":id}})
+    },
+    checkBook(id){ //查看
+      //通过push进行跳转
+      this.$router.push({path:'/book/detail',query:{"id":id}})
     },
     deleteBook(id){//单个删除
       this.$confirm('确定删除该公告吗', '删除公告', {
