@@ -3,7 +3,7 @@
     <h1>{{title}}</h1>
     <el-form ref="book" :model="book" label-width="80px">
       <el-form-item label="图片">
-        <el-input v-model="book.images"></el-input>
+        <el-input v-model="book.image"></el-input>
       </el-form-item>
       <el-form-item label="书名">
         <el-input v-model="book.bookName"></el-input>
@@ -50,7 +50,7 @@
       return {
         book: { //book的实例，默认数据
           bookName:null,
-          images:null,
+          image:null,
           author:null,
           publisherId:null,
           bookTypeId:null,
@@ -77,9 +77,9 @@
         }).then(response => {
               // console.log(response)
               // console.log(response.data.data);
-              let book = response.data.data
+              let book = response.data.data.detail
               this.book.bookName=book.bookName,   //会修改默认的参数，渲染出详情数据
-              this.book.images=book.images,
+              this.book.image=book.image,
               this.book.author=book.author,
               this.book.publisherId=book.publisherId,
               this.book.bookTypeId=book.bookTypeId,

@@ -2,36 +2,36 @@
   <div>
     <h1>{{title}}</h1>
     <el-form ref="book" :model="book" label-width="80px">
-      <el-form-item label="图片">
-        <el-input v-model="book.images"></el-input>
+      <el-form-item label="图片" required="true">
+        <el-input v-model="book.image"></el-input>
       </el-form-item>
-      <el-form-item label="书名">
+      <el-form-item label="书名" required="true">
         <el-input v-model="book.bookName"></el-input>
       </el-form-item>
-      <el-form-item label="作者">
+      <el-form-item label="作者" required="true">
         <el-input v-model="book.author"></el-input>
       </el-form-item>
-      <el-form-item label="价格">
-        <el-input-number v-model="book.price" :precision="2" :step="0.1" :max="9999" />
+      <el-form-item label="价格" required="true">
+        <el-input-number v-model="book.price" :precision="2" :step="0.1" :min="0" :max="9999" />
       </el-form-item>
 
-      <el-form-item label="图书类型">
+      <el-form-item label="图书类型" required="true">
         <el-select v-model="book.bookTypeId"  clearable placeholder="请选择图书类型">
           <el-option v-for="item in bookTypeList" :key="item.id" :label="item.bookType" :value="item.id">
           </el-option>
         </el-select>
       </el-form-item>
-      <el-form-item label="出版社">
+      <el-form-item label="出版社" required="true">
         <el-select v-model="book.publisherId" clearable placeholder="请选择出版社">
           <el-option v-for="item in publisherList" :key="item.id" :label="item.publisher" :value="item.id">
           </el-option>
         </el-select>
       </el-form-item>
 
-      <el-form-item label="库存">
+      <el-form-item label="库存" required="true">
         <el-input-number v-model="book.inventory" :min="1" :max="99999999"  />
       </el-form-item>
-      <el-form-item label="总数">
+      <el-form-item label="总数" required="true">
         <el-input-number v-model="book.total" :min="1" :max="99999999" />
       </el-form-item>
 
@@ -54,7 +54,7 @@
       return {
         book: { //book的实例，默认数据
           bookName:null,
-          images:null,
+          image:null,
           author:null,
           publisherId:null,
           bookTypeId:null,
@@ -83,7 +83,7 @@
             },
             data:{
                     "bookName":this.book.bookName,
-                    "images":this.book.images,
+                    "image":this.book.image,
                     "author":this.book.author,
                     "publisherId":this.book.publisherId,
                     "bookTypeId":this.book.bookTypeId,
@@ -139,7 +139,7 @@
             },
             data:{
                     "bookName":this.book.bookName,
-                    "images":this.book.images,
+                    "image":this.book.image,
                     "author":this.book.author,
                     "publisherId":this.book.publisherId,
                     "bookTypeId":this.book.bookTypeId,
@@ -175,9 +175,9 @@
         }).then(response => {
               // console.log(response)
               // console.log(response.data.data);
-              let book = response.data.data
+              let book = response.data.data.detail
               this.book.bookName=book.bookName,   //会修改默认的参数，渲染出详情数据
-              this.book.images=book.images,
+              this.book.image=book.image,
               this.book.author=book.author,
               this.book.publisherId=book.publisherId,
               this.book.bookTypeId=book.bookTypeId,

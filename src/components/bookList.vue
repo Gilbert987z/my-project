@@ -48,7 +48,7 @@
           label="书名"
           width="180">
         <template slot-scope="scope">
-          <img alt :src="scope.row.images" width="40" height="40" class="head_pic"/>
+          <img alt :src="scope.row.image" width="40" height="40" class="head_pic"/>
           {{ scope.row.bookName }}/￥{{ scope.row.price }}
 
         </template>
