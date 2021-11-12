@@ -5,7 +5,7 @@
     <el-tab-pane label="登录" name="first">
       <el-form label-position="left" label-width="80px" :model="loginInfo">
         <el-form-item label="用户名">
-          <el-input v-model="loginInfo.name"></el-input>
+          <el-input v-model="loginInfo.username"></el-input>
         </el-form-item>
         <el-form-item label="密码">
           <el-input v-model="loginInfo.password" type="password"></el-input>
@@ -20,7 +20,7 @@
     <el-tab-pane label="注册" name="second">
       <el-form label-position="left" label-width="80px" :model="registerInfo">
         <el-form-item label="用户名">
-          <el-input v-model="registerInfo.name"></el-input>
+          <el-input v-model="registerInfo.username"></el-input>
         </el-form-item>
         <el-form-item label="手机号">
           <el-input v-model="registerInfo.mobile" name="phone"
@@ -55,11 +55,11 @@ export default {
       activeName: 'first',
 
       loginInfo: {
-        name: '',
+        username: '',
         password: ''
       },
       registerInfo: {
-        name: '',
+        username: '',
         mobile: '',
         password: '',
         rePassword: ''
@@ -75,16 +75,21 @@ export default {
       axios
           .post(
               'http://127.0.0.1:8088/login',
+              this.$qs.stringify(this.loginInfo),
+              // {
+              //   username: this.loginInfo.username,
+              //   password: this.loginInfo.password
+              // }
               {
-                username: this.loginInfo.name,
-                password: this.loginInfo.password
-              },
-          )
-          .then(response => {
+            headers:{
+              'Content-Type':'application/x-www-form-urlencoded'
+            }
+            }
+        ).then(response => {
             console.log(response)
             var message = response.data.message
             var success = response.data.success
-            var token = response.data.data.accessToken
+            // var token = response.data.data.accessToken
             console.log(message)
 
 
@@ -103,10 +108,10 @@ export default {
             });
 
 
-            if (token) { //token有值
-              localStorage.setItem("token", token); //将token存入本地
-              this.$router.push('/bookList');//跳转到book列表页面
-            }
+            // if (token) { //token有值
+            //   localStorage.setItem("token", token); //将token存入本地
+            //   this.$router.push('/bookList');//跳转到book列表页面
+            // }
 
           }).catch(function (error) { // 请求失败处理
         console.log(error);
@@ -118,7 +123,7 @@ export default {
           .post(
               'http://127.0.0.1:8088/register',
               {
-                username: this.registerInfo.name,
+                username: this.registerInfo.username,
                 mobile: parseInt(this.registerInfo.mobile),
                 password: this.registerInfo.password
               },
