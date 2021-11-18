@@ -81,15 +81,13 @@ export default {
               //   password: this.loginInfo.password
               // }
               {
-            headers:{
-              'Content-Type':'application/x-www-form-urlencoded'
-            }
-            }
+                headers:{'Content-Type':'application/x-www-form-urlencoded'}
+              }
         ).then(response => {
             console.log(response)
             var message = response.data.message
             var success = response.data.success
-            // var token = response.data.data.accessToken
+            var token = response.data.data.token
             console.log(message)
 
 
@@ -108,10 +106,10 @@ export default {
             });
 
 
-            // if (token) { //token有值
-            //   localStorage.setItem("token", token); //将token存入本地
-            //   this.$router.push('/bookList');//跳转到book列表页面
-            // }
+            if (token) { //token有值
+              localStorage.setItem("token", token); //将token存入本地
+              this.$router.push('/bookList');//跳转到book列表页面
+            }
 
           }).catch(function (error) { // 请求失败处理
         console.log(error);
