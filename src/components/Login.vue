@@ -3,13 +3,17 @@
   <el-tabs v-model="activeName" type="card" @tab-click="handleClick">
 
     <el-tab-pane label="登录" name="first">
-      <el-form label-position="left" label-width="80px" :model="loginInfo">
+      <el-form label-position="left" label-width="80px" :model="loginForm">
         <el-form-item label="用户名">
-          <el-input v-model="loginInfo.username"></el-input>
+          <el-input v-model="loginForm.username"></el-input>
         </el-form-item>
         <el-form-item label="密码">
-          <el-input v-model="loginInfo.password" type="password"></el-input>
+          <el-input v-model="loginForm.password" type="password"></el-input>
         </el-form-item>
+        <el-form-item label="验证码" prop="code">
+					<el-input v-model="loginForm.code"></el-input>
+					<el-image :src="captchaImg" class="captchaImg" @click="getCaptcha"></el-image>
+				</el-form-item>
         <el-form-item>
           <el-button type="primary" @click="loginSubmit">登录</el-button>
           <!--          <el-button>取消</el-button>-->
@@ -18,12 +22,12 @@
     </el-tab-pane>
 
     <el-tab-pane label="注册" name="second">
-      <el-form label-position="left" label-width="80px" :model="registerInfo">
+      <el-form label-position="left" label-width="80px" :model="registerForm">
         <el-form-item label="用户名">
-          <el-input v-model="registerInfo.username"></el-input>
+          <el-input v-model="registerForm.username"></el-input>
         </el-form-item>
         <el-form-item label="手机号">
-          <el-input v-model="registerInfo.mobile" name="phone"
+          <el-input v-model="registerForm.mobile" name="phone"
                     pattern="[0-9]*"
                     v-number-only
                     class="y_input"
@@ -31,10 +35,10 @@
                     maxlength="11"></el-input>
         </el-form-item>
         <el-form-item label="密码">
-          <el-input v-model="registerInfo.password" type="password"></el-input>
+          <el-input v-model="registerForm.password" type="password"></el-input>
         </el-form-item>
         <el-form-item label="重复密码">
-          <el-input v-model="registerInfo.rePassword" type="password"></el-input>
+          <el-input v-model="registerForm.rePassword" type="password"></el-input>
         </el-form-item>
         <el-form-item>
           <el-button type="primary" @click="registerSubmit">注册</el-button>
@@ -53,12 +57,16 @@ export default {
   data() {
     return {
       activeName: 'first',
+      
+      captchaImg: null,
 
-      loginInfo: {
+      loginForm: {
         username: '',
-        password: ''
+        password: '',
+        code:'',
+        token:''
       },
-      registerInfo: {
+      registerForm: {
         username: '',
         mobile: '',
         password: '',
@@ -74,11 +82,11 @@ export default {
     loginSubmit() {
       axios
           .post(
-              'http://127.0.0.1:8088/login',
-              this.$qs.stringify(this.loginInfo),
+              '/login',
+              this.$qs.stringify(this.loginForm),
               // {
-              //   username: this.loginInfo.username,
-              //   password: this.loginInfo.password
+              //   username: this.loginForm.username,
+              //   password: this.loginForm.password
               // }
               {
                 headers:{'Content-Type':'application/x-www-form-urlencoded'}
@@ -119,11 +127,11 @@ export default {
     registerSubmit() {
       axios
           .post(
-              'http://127.0.0.1:8088/register',
+              '/register',
               {
-                username: this.registerInfo.username,
-                mobile: parseInt(this.registerInfo.mobile),
-                password: this.registerInfo.password
+                username: this.registerForm.username,
+                mobile: parseInt(this.registerForm.mobile),
+                password: this.registerForm.password
               },
           )
           .then(response => {
@@ -152,8 +160,22 @@ export default {
         console.log(error);
       });
       console.log('submit!');
-    }
-  }
+    },
+    getCaptcha() {
+        console.log('getCaptcha')
+
+				this.$axios.get('/captcha').then(res => {
+					console.log(res)
+          let data = res.data.data;
+					this.loginForm.token = data.token
+					this.captchaImg = data.captchaImg
+					// this.loginForm.code = ''
+				})
+			}
+  },
+  created() {
+			this.getCaptcha()
+		}
 }
 </script>
 
