@@ -1,6 +1,17 @@
 <template>
 
   <div>
+    <div>
+       <el-popconfirm title="是否登出?"
+       @confirm="confirmEvent"
+       >
+        <template #reference>
+          <el-button>登出</el-button>
+        </template>
+      </el-popconfirm>
+    </div>
+
+
     <div class="demo-input-suffix">
       属性方式：
       <el-input
@@ -271,7 +282,24 @@ export default {
         });
       });
     },
-     
+     confirmEvent(){
+        axios({
+          method:"get",
+          url:'/logout',
+          headers:{
+            "token": this.token
+          }
+        }).then(()=>{
+          window.localStorage.clear()  //清空token
+          this.$router.push('/login');//跳转到登录页面
+          this.$message.success('登出成功!')
+        }).catch(() => {
+            this.$message({
+                type: 'info',
+                message: '登出失败'
+            });
+        });
+     }
   },
   created() {
     this.getListTable();
