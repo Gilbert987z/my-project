@@ -227,6 +227,20 @@ export default {
         console.log(error);
       });
     },
+    userinfo(){
+      axios.get('/info',
+      {
+        headers:{
+          "token":this.token
+        }
+      }).then(response=>{
+        console.log(response)
+        this.userInfo = response.data.data.detail;
+        console.log(this.info)
+      }).catch(function(error){
+        console.log(error)
+      })
+    },
     bookTypeChange(val) {
       this.bookTypeId = val;
       console.log('bookTypeChange' + val);
@@ -302,9 +316,11 @@ export default {
      }
   },
   created() {
+    this.userinfo();
     this.getListTable();
     this.getBookTypeList(); //下拉框列表
     this.getPublisherList(); //下拉框列表
+    
   },
   mounted() {
 
