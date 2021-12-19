@@ -2,11 +2,7 @@ import Vue from 'vue'
 import Router from 'vue-router'
 // import todoItem from '@/components/todoItem'
 // 引入组件
-import Home from "../components/Home.vue";
-import Info from "../components/Info.vue";
-import About from "../components/About.vue";
 import login from "../components/login.vue";
-import movie from "../components/movie.vue";
 import bookList from "../components/bookList.vue";
 import bookSave from "../components/book/bookSave";
 import bookDetail from "../components/book/bookDetail";
@@ -14,8 +10,6 @@ import publisher from "../components/publisher.vue";
 import bookType from "../components/bookType.vue";
 import bookBorrow from "../components/bookBorrow.vue";
 import userlist from "../components/userlist.vue";
-
-import test from "../components/test.vue";
 import naviMenu from "../components/layout/naviMenu.vue";
 import notFound from "../components/error-page/404.vue";
 import authorization from "../components/error-page/401.vue";
@@ -48,29 +42,12 @@ const router = new Router({
             hidden: true
         },
         {
-            path: "/",
-            name: "home",
-            component: Home
-        },
-        {
-            path: "/about",
-            name: "about",
-            component: About
-        },
-        {
-            path: "/info",
-            name: "info",
-            component: Info
-        },
-        {
             path: "/login",
             name: "login",
+            meta:{
+                title:"登录页"
+            },
             component: login
-        },
-        {
-            path: "/movie",
-            name: "movie",
-            component: movie
         },
         {
             path: "/bookList", //列表页
@@ -109,11 +86,7 @@ const router = new Router({
             component: userlist
         },
        
-        {
-            path: "/test",
-            name: "test",
-            component: test
-        },
+ 
         {
             path: "/naviMenu",
             name: "naviMenu",
@@ -133,10 +106,9 @@ router.beforeEach((to, from, next) => {
     if (to.path === '/login' || to.path==='/404') { //login和404网页不用校验
         next();
     } else {
-        let token = localStorage.getItem('token');
-
-        if (token === null || token === '') {
-            alert("请登录！")
+        let token = localStorage.getItem('token'); 
+        if (!token) {  //如果没有token，直接跳转到登录页
+            // alert("请登录！")
             next('/login');
         } else {
             next();
