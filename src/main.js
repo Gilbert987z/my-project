@@ -18,7 +18,6 @@ Vue.use(VueAxios, axios)
 Vue.prototype.$axios = axios;   //全局注册，使用方法为:this.$axios
 
 
-// axios.defaults.baseURL = 'https://api-test.shall-buy.top'  //全局使用的请求域名
 axios.defaults.baseURL = 'http://127.0.0.1:8088'  //全局使用的请求域名
 
 Vue.config.productionTip = false

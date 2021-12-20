@@ -1,13 +1,13 @@
 import axios from "axios";
 // import router from "./router";
-import Element from "element-ui"
+// import Element from "element-ui"
 
 // axios.defaults.baseURL = 'https://api-test.shall-buy.top'  //全局使用的请求域名
 axios.defaults.baseURL = 'http://127.0.0.1:8088'  //全局使用的请求域名
 
 // 以后再做前端的token刷新吧，太难了
 // 被挂起的请求数组
-let refreshSubscribers = [];
+// let refreshSubscribers = [];
 // 是否有请求正在刷新token
 window.isRefreshing = false;
 

@@ -2,7 +2,7 @@ import Vue from 'vue'
 import Router from 'vue-router'
 // import todoItem from '@/components/todoItem'
 // 引入组件
-import login from "../components/login.vue";
+// import login from "../components/login.vue";
 import bookList from "../components/bookList.vue";
 import bookSave from "../components/book/bookSave";
 import bookDetail from "../components/book/bookDetail";
@@ -47,7 +47,8 @@ const router = new Router({
             meta:{
                 title:"登录页"
             },
-            component: login
+            // component: login
+            component: () => import('../views/Login.vue'),
         },
         {
             path: "/bookList", //列表页
