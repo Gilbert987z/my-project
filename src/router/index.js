@@ -61,12 +61,12 @@ const router = new Router({
         },
         {
             path: "/book/add", //增加书籍
-            name: "bookSave",
+            name: "bookAdd",
             component: bookSave
         },
         {
             path: "/book/edit", //修改书籍
-            name: "bookSave",
+            name: "bookEdit",
             component: bookSave
         },
            {
@@ -93,10 +93,10 @@ const router = new Router({
             name: "naviMenu",
             component: naviMenu
         },
-        // {
-        //     path: "*", // 此处需特别注意置于最底部
-        //     redirect: "/404" //跳转到404页面
-        // }
+        {
+            path: "*", // 此处需特别注意置于最底部
+            redirect: "/404" //跳转到404页面
+        }
     ]
 })
 
@@ -106,13 +106,17 @@ export default router
 router.beforeEach((to, from, next) => {
     if (to.path === '/login' || to.path==='/404') { //login和404网页不用校验
         next();
+        console.log(11)
     } else {
         let token = localStorage.getItem('token'); 
+        console.log(22)
         if (!token) {  //如果没有token，直接跳转到登录页
             // alert("请登录！")
+            console.log(33)
             next('/login');
         } else {
-            next();
+            console.log(44)
+            next('/bookList');
         }
     }
 });
