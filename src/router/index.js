@@ -24,7 +24,7 @@ Router.prototype.push = function push(location) {
 }
 
 const router = new Router({
-    mode: 'history',
+    mode: 'history', //history模式不带#
     routes: [
         // {
         //   path: "/todoItem",
