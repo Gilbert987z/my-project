@@ -1,9 +1,6 @@
 import Vue from 'vue'
 import Router from 'vue-router'
-// import todoItem from '@/components/todoItem'
 // 引入组件
-// import login from "../components/login.vue";
-import bookList from "../components/bookList.vue";
 import bookSave from "../components/book/bookSave";
 import bookDetail from "../components/book/bookDetail";
 import publisher from "../components/publisher.vue";
@@ -13,7 +10,6 @@ import userlist from "../components/userlist.vue";
 import naviMenu from "../components/layout/naviMenu.vue";
 import notFound from "../components/error-page/404.vue";
 import authorization from "../components/error-page/401.vue";
-// import navbar from "../components/layout/Navbar";
 
 Vue.use(Router);
 
@@ -26,11 +22,6 @@ Router.prototype.push = function push(location) {
 const router = new Router({
     mode: 'history', //history模式不带#
     routes: [
-        // {
-        //   path: "/todoItem",
-        //   name:"todoItem",
-        //   component: todoItem
-        // },
         {
             path: '/404',
             component: notFound,
@@ -43,7 +34,7 @@ const router = new Router({
         },
         {
             path: "/login",
-            name: "login",
+            name: "Login",
             meta:{
                 title:"登录页"
             },
@@ -51,10 +42,27 @@ const router = new Router({
             component: () => import('../views/Login.vue'),
         },
         {
-            path: "/bookList", //列表页
-            name: "bookList",
-            component: bookList
-        }, {
+            path:'/',
+            name:'Home',
+            component:()=>import('../views/Home.vue'), //header的页面
+            children:[
+                {
+                    path: '/index',
+                    name: 'Index',
+                    meta: {
+                        title: "首页"
+                    },
+                    component: ()=>import('../views/Index.vue') //main的页面
+                },
+                {
+                    path: "/bookList", //列表页
+                    name: "BookList",
+                    component: () => import('../views/admin/BookList.vue')
+                },
+            ]
+        },
+        
+         {
             path: "/book/detail", //图书详情页
             name: "bookDetail",
             component: bookDetail
@@ -106,17 +114,17 @@ export default router
 router.beforeEach((to, from, next) => {
     if (to.path === '/login' || to.path==='/404') { //login和404网页不用校验
         next();
-        console.log(11)
+        // console.log(11)
     } else {
         let token = localStorage.getItem('token'); 
-        console.log(22)
+        // console.log(22)
         if (!token) {  //如果没有token，直接跳转到登录页
             // alert("请登录！")
-            console.log(33)
+            // console.log(33)
             next('/login');
         } else {
-            console.log(44)
-            next('/bookList');
+            // console.log(44)
+            next();
         }
     }
 });

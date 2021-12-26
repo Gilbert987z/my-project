@@ -54,7 +54,7 @@
             <el-input v-model="loginForm.username"></el-input>
           </el-form-item>
           <el-form-item label="密码" prop="password">
-            <el-input v-model="loginForm.password" type="password"></el-input>
+            <el-input v-model="loginForm.password" type="password"  prefix-icon="el-icon-lock" show-password></el-input>
           </el-form-item>
           <el-form-item label="验证码" prop="code">
             <el-input v-model="loginForm.code"></el-input>
@@ -191,7 +191,7 @@ export default {
               if (token) {
                 //token有值
                 localStorage.setItem("token", token); //将token存入本地
-                this.$router.push("/bookList"); //跳转到book列表页面
+                this.$router.push("/index"); //跳转到首页
               }
             })
             .catch(function(error) {

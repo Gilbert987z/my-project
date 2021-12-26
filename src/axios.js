@@ -12,17 +12,17 @@ axios.defaults.baseURL = 'http://127.0.0.1:8088'  //全局使用的请求域名
 window.isRefreshing = false;
 
 
-// const request = axios.create({
-// 	timeout: 5000,
-// 	headers: {
-// 		'Content-Type': "application/json; charset=utf-8"
-// 	}
-// })
+const request = axios.create({
+	timeout: 5000,
+	headers: {
+		'Content-Type': "application/json; charset=utf-8"
+	}
+})
 
-// request.interceptors.request.use(config => {
-// 	config.headers['Authorization'] = localStorage.getItem("token")
-// 	return config
-// })
+request.interceptors.request.use(config => {
+	config.headers['Authorization'] = localStorage.getItem("token")
+	return config
+})
 
 // request.interceptors.response.use(
 // 	response => {

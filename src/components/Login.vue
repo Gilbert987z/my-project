@@ -6,7 +6,7 @@
           <el-input v-model="loginForm.username"></el-input>
         </el-form-item>
         <el-form-item label="密码">
-          <el-input v-model="loginForm.password" type="password"></el-input>
+          <el-input v-model="loginForm.password" type="password" prefix-icon="el-icon-lock" show-password></el-input>
         </el-form-item>
         <el-form-item label="验证码" prop="code">
           <el-input v-model="loginForm.code"></el-input>
@@ -39,9 +39,9 @@
           ></el-input>
         </el-form-item>
         <el-form-item label="密码">
-          <el-input v-model="registerForm.password" type="password"></el-input>
+          <el-input v-model="registerForm.password" type="password" show-password></el-input>
         </el-form-item>
-        <el-form-item label="重复密码">
+        <el-form-item label="重复密码" show-password>
           <el-input
             v-model="registerForm.rePassword"
             type="password"
