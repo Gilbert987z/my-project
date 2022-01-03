@@ -152,16 +152,12 @@ export default {
       console.log(tab, event);
     },
     loginSubmit(formName) {
-      this.$refs[formName].validate((valid) => {
+      this.$refs[formName].validate((valid) => { //表单校验
         if (valid) {
           axios
             .post(
               "/login",
               this.$qs.stringify(this.loginForm),
-              // {
-              //   username: this.loginForm.username,
-              //   password: this.loginForm.password
-              // }
               {
                 headers: { "Content-Type": "application/x-www-form-urlencoded" },
               }

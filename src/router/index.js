@@ -41,6 +41,7 @@ const router = new Router({
             // component: login
             component: () => import('../views/Login.vue'),
         },
+       
         {
             path:'/',
             name:'Home',
@@ -55,9 +56,24 @@ const router = new Router({
                     component: ()=>import('../views/Index.vue') //main的页面
                 },
                 {
-                    path: "/bookList", //列表页
-                    name: "BookList",
-                    component: () => import('../views/admin/BookList.vue')
+                    path:'/sys',
+                    name:'Home',
+                    component:()=>import('../views/admin/sys/Role.vue'),  
+                    children:[
+                        {
+                            path: "/role",  
+                            name: "Role",
+                            meta: {
+                                title: "角色"
+                            },
+                            component: () => import('../views/admin/sys/Role.vue')
+                        },
+                    ]
+                },
+                {
+                    path: "/book", //列表页
+                    name: "Book",
+                    component: () => import('../views/admin/book/Book.vue')
                 },
             ]
         },

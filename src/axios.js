@@ -1,3 +1,6 @@
+
+//axios的文件封装
+
 import axios from "axios";
 // import router from "./router";
 // import Element from "element-ui"
@@ -9,9 +12,10 @@ axios.defaults.baseURL = 'http://127.0.0.1:8088'  //全局使用的请求域名
 // 被挂起的请求数组
 // let refreshSubscribers = [];
 // 是否有请求正在刷新token
-window.isRefreshing = false;
+// window.isRefreshing = false;
 
 
+//axios实例对象
 const request = axios.create({
 	timeout: 5000,
 	headers: {
@@ -19,10 +23,15 @@ const request = axios.create({
 	}
 })
 
+//axios请求拦截
 request.interceptors.request.use(config => {
 	config.headers['Authorization'] = localStorage.getItem("token")
 	return config
 })
+
+
+export default request
+
 
 // request.interceptors.response.use(
 // 	response => {
@@ -55,7 +64,7 @@ request.interceptors.request.use(config => {
 // 	}
 // )
 
-// export default request
+
 
 
 

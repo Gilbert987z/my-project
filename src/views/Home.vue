@@ -2,12 +2,13 @@
 	<el-container>
 		<el-aside width="200px">
 
+			<!-- 导入菜单组件 -->
 			<SideMenu></SideMenu>
 
 		</el-aside>
 		<el-container>
 			<el-header>
-				<strong>VueAdmin后台管理系统</strong>
+				<strong>图书管理系统</strong>
 
 				<div class="header-avatar">
 
@@ -31,9 +32,11 @@
 
 			</el-header>
 			<el-main>
+				<!-- 标签栏 -->
 				<Tabs></Tabs>
 				<div style="margin: 0 15px;">
-					<router-view/>
+					<!-- 将菜单的内容展示在这里 -->
+					<router-view/> 
 				</div>
 			</el-main>
 		</el-container>
@@ -59,12 +62,13 @@
 			}
 		},
 		created() {
-			this.getUserInfo()
+			this.getUserInfo() //进入首页，就获取用户信息
 		},
 		methods: {
 			getUserInfo() {
-				this.$axios.get("/info").then(res => {
-					this.userInfo = res.data.data.detatail
+				this.$axios.get("/user/info").then(res => {
+					this.userInfo = res.data.data
+					console.log(this.userInfo)
 				})
 			},
 			logout() {
@@ -101,7 +105,7 @@
 	}
 
 	.el-header {
-		background-color: #17B3A3;
+		background-color: #16c3ee;
 		color: #333;
 		text-align: center;
 		line-height: 60px;
