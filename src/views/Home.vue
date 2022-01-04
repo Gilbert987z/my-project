@@ -23,11 +23,9 @@
 
               <el-popconfirm title="是否登出?" @confirm="logout">
                 <template #reference>
-                   <el-dropdown-item>退出</el-dropdown-item>
+                  <el-dropdown-item>退出</el-dropdown-item>
                 </template>
               </el-popconfirm>
-
-             
             </el-dropdown-menu>
           </el-dropdown>
 
@@ -42,9 +40,9 @@
         </div>
       </el-header>
       <el-main>
-        <!-- 标签栏 -->
-        <Tabs></Tabs>
-        <div style="margin: 0 15px;">
+        <div style="margin: 15px;">
+          <Breadcrumb style="margin-bottom:25px"></Breadcrumb>
+
           <!-- 将菜单的内容展示在这里 -->
           <router-view />
         </div>
@@ -55,13 +53,14 @@
 
 <script>
 import SideMenu from "./inc/SideMenu";
-import Tabs from "./inc/Tabs";
+import Breadcrumb from "./inc/Breadcrumb";
 
 export default {
   name: "Home",
   components: {
+    //引用组件
     SideMenu,
-    Tabs,
+    Breadcrumb,
   },
   data() {
     return {

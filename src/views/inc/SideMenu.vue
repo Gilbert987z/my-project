@@ -2,6 +2,9 @@
   <el-menu
     default-active="2"
     class="el-menu-vertical-demo"
+    background-color="#545c64"
+    text-color="#fff"
+    active-text-color="#ffd04b"
     @open="handleOpen"
     @close="handleClose"
   >
@@ -74,3 +77,9 @@ export default {
   },
 };
 </script>
+
+<style scoped>
+.el-menu-vertical-demo {
+  height: 100%;
+}
+</style>

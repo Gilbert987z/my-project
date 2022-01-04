@@ -1,8 +1,8 @@
 <template>
   <div>
     <div class="demo-input-suffix">
-      属性方式：
-      <el-input
+
+      <el-input 
         placeholder="请输入角色名称"
         clearable
         prefix-icon="el-icon-search"
@@ -12,30 +12,37 @@
       </el-input>
     </div>
 
-
-
     <el-row>
+      <el-popconfirm  title="这是确定批量删除吗？" @confirm="delHandle(null)">
+        <el-button type="danger" icon="el-icon-remove" slot="reference" :disabled="delBtlStatu"
+          >批量删除</el-button
+        >
+      </el-popconfirm>
+
       <el-button type="primary" icon="el-icon-circle-plus" @click="saveBook"
         >新增</el-button
       >
     </el-row>
 
     <el-table :data="info" border style="width: 100%">
+      <el-table-column type="selection" width="55"> </el-table-column>
+
       <el-table-column prop="id" label="id" width="180"> </el-table-column>
 
- 
       <el-table-column prop="name" label="名称"> </el-table-column>
       <el-table-column prop="remark" label="备注"> </el-table-column>
       <el-table-column prop="createdAt" label="创建时间"> </el-table-column>
-    
+      <el-table-column prop="status" label="状态"> </el-table-column>
 
       <el-table-column label="操作">
         <template slot-scope="scope">
-
-          <el-button type="text" size="small" @click="editBook(scope.row.id)"
+          <el-button type="text" @click="permHandle(scope.row.id)">分配权限</el-button>
+          <el-divider direction="vertical"></el-divider>
+          <el-button type="text"  @click="editBook(scope.row.id)"
             >编辑</el-button
           >
-          <el-button type="text" size="small" @click="deleteBook(scope.row.id)"
+          <el-divider direction="vertical"></el-divider>
+          <el-button type="text"  @click="deleteBook(scope.row.id)"
             >删除</el-button
           >
         </template>
@@ -71,7 +78,6 @@ export default {
         total: null,
       },
       queryName: "",
-
     };
   },
   methods: {
@@ -86,7 +92,7 @@ export default {
       // return false;
       this.$axios
         .get("/role/list", {
-          params: params
+          params: params,
         })
         .then((response) => {
           console.log(response);
@@ -115,10 +121,10 @@ export default {
 
       //val 变化后的页码
       this.page.current = val;
-    
+
       this.getListTable(); //重新获取列表数据
     },
-  
+
     bookTypeChange(val) {
       this.bookTypeId = val;
       console.log("bookTypeChange" + val);
@@ -174,13 +180,18 @@ export default {
           });
       });
     },
-  
   },
   created() {
- 
     this.getListTable();
- 
   },
   mounted() {},
 };
 </script>
+<style scoped>
+
+	.el-pagination {
+		float: right;
+		margin-top: 22px;
+	}
+
+</style>
