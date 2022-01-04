@@ -128,6 +128,12 @@ export default router
 
 // 路由拦截，判断是否需要登录
 router.beforeEach((to, from, next) => {
+    /* 路由发生变化修改页面title */
+    if (to.meta.title) {
+        document.title = to.meta.title
+    }
+
+    
     if (to.path === '/login' || to.path==='/404') { //login和404网页不用校验
         next();
         // console.log(11)

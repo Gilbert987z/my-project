@@ -1,3 +1,4 @@
+<!--
 <template>
 	<el-tabs v-model="editableTabsValue" type="card" closable @tab-remove="removeTab" @tab-click="clickTab">
 		<el-tab-pane
@@ -75,3 +76,4 @@
 <style scoped>
 
 </style>
+-->
