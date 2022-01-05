@@ -11,7 +11,7 @@
     <router-link to="/index">
       <el-menu-item
         index="Index"
-        @click="selectMenu({ name: 'Index', title: '首页' })"
+       
       >
         <template slot="title">
           <i class="el-icon-s-home"></i>
@@ -30,7 +30,7 @@
         <router-link to="/role">
           <el-menu-item
             index="1-2"
-            @click="selectMenu({ name: 'Role', title: '角色' })"
+           
             >角色管理</el-menu-item
           >
         </router-link>

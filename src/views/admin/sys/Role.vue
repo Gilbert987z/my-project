@@ -1,8 +1,7 @@
 <template>
   <div>
     <div class="demo-input-suffix">
-
-      <el-input 
+      <el-input
         placeholder="请输入角色名称"
         clearable
         prefix-icon="el-icon-search"
@@ -13,13 +12,20 @@
     </div>
 
     <el-row>
-      <el-popconfirm  title="这是确定批量删除吗？" @confirm="delHandle(null)">
-        <el-button type="danger" icon="el-icon-remove" slot="reference" :disabled="delBtlStatu"
+      <el-popconfirm title="这是确定批量删除吗？" @confirm="delHandle(null)">
+        <el-button
+          type="danger"
+          icon="el-icon-remove"
+          slot="reference"
+          :disabled="delBtlStatu"
           >批量删除</el-button
         >
       </el-popconfirm>
 
-      <el-button type="primary" icon="el-icon-circle-plus" @click="saveBook"
+      <el-button
+        type="primary"
+        icon="el-icon-circle-plus"
+        @click="dialogVisible = true"
         >新增</el-button
       >
     </el-row>
@@ -36,13 +42,17 @@
 
       <el-table-column label="操作">
         <template slot-scope="scope">
-          <el-button type="text" @click="permHandle(scope.row.id)">分配权限</el-button>
+          <el-button type="text" @click="permHandle(scope.row.id)"
+            >分配权限</el-button
+          >
           <el-divider direction="vertical"></el-divider>
-          <el-button type="text"  @click="editBook(scope.row.id)"
+          <el-button type="text" @click="editBook(scope.row.id)"
             >编辑</el-button
           >
           <el-divider direction="vertical"></el-divider>
-          <el-button type="text"  @click="deleteBook(scope.row.id)"
+          <el-button
+            type="text"
+            @click="deleteBook(scope.row.id, scope.row.name)"
             >删除</el-button
           >
         </template>
@@ -61,6 +71,68 @@
       :total="page.total"
     >
     </el-pagination>
+
+    <!--角色的对话框-->
+    <el-dialog
+      title="新增"
+      :visible.sync="dialogVisible"
+      width="600px"
+      :before-close="handleClose"
+    >
+      <el-form
+        :model="editForm"
+        :rules="editFormRules"
+        ref="editForm"
+        label-width="100px"
+        class="demo-editForm"
+      >
+        <el-form-item label="名称" prop="name" label-width="100px">
+          <el-input v-model="editForm.name" autocomplete="off"></el-input>
+        </el-form-item>
+        <el-form-item label="状态" prop="statu" label-width="100px">
+          <el-radio-group v-model="editForm.status">
+            <el-radio :label="1">正常</el-radio>
+            <el-radio :label="0">禁用</el-radio>
+          </el-radio-group>
+        </el-form-item>
+        <el-form-item label="备注" prop="remark" label-width="100px">
+          <el-input
+            type="textarea"
+            v-model="editForm.remark"
+            autocomplete="off"
+          ></el-input>
+        </el-form-item>
+
+        <el-form-item>
+          <el-button type="primary" @click="submitForm('editForm')"
+            >立即创建</el-button
+          >
+          <el-button @click="resetForm('editForm')">重置</el-button>
+        </el-form-item>
+      </el-form>
+    </el-dialog>
+
+    <el-dialog title="分配权限" :visible.sync="permDialogVisible" width="600px">
+      <el-form :model="permForm">
+        <el-tree
+          :data="permTreeData"
+          show-checkbox
+          ref="permTree"
+          :default-expand-all="true"
+          node-key="id"
+          :check-strictly="true"
+          :props="defaultProps"
+        >
+        </el-tree>
+      </el-form>
+
+      <span slot="footer" class="dialog-footer">
+        <el-button @click="permDialogVisible = false">取 消</el-button>
+        <el-button type="primary" @click="submitPermFormHandle('permForm')"
+          >确 定</el-button
+        >
+      </span>
+    </el-dialog>
   </div>
 </template>
 
@@ -70,14 +142,29 @@ import axios from "axios";
 export default {
   data() {
     return {
-      info: [],
+      delBtlStatu: true, //批量删除
+      //角色对话框
+      dialogVisible: false, //新增对话框 默认关闭
+      editForm: {
+        status: 1, //默认是正常
+      },
+      editFormRules: {
+        name: [{ required: true, message: "请输入角色名称", trigger: "blur" }],
+        code: [{ required: true, message: "请输入唯一编码", trigger: "blur" }],
+        statu: [{ required: true, message: "请选择状态", trigger: "blur" }],
+      },
+      //分配权限对话框
+      permDialogVisible: false,
+      //列表
+      info: [], //列表数据
       page: {
+        //分页
         size: 10,
         current: 1,
         // pages:null,
         total: null,
       },
-      queryName: "",
+      queryName: "", //查询名称
     };
   },
   methods: {
@@ -125,48 +212,32 @@ export default {
       this.getListTable(); //重新获取列表数据
     },
 
-    bookTypeChange(val) {
-      this.bookTypeId = val;
-      console.log("bookTypeChange" + val);
-      this.getListTable();
-    },
-    publisherChange(val) {
-      this.publisherId = val;
-      console.log("publisherChange" + val);
-      this.getListTable();
-    },
+    //按角色名称查询
     bookHandleSearchEvent(val) {
       this.inputBookName = val;
       console.log("inputBookName" + val);
       this.getListTable();
     },
-    saveBook() {
-      //新增按钮操作
-      //通过push进行跳转
-      this.$router.push("/book/add");
+    //重置表单数据
+    resetForm(formName) {
+      this.$refs[formName].resetFields();
+      this.dialogVisible = false; //关闭弹窗
+      this.editForm = {};
     },
-    editBook(id) {
-      //编辑
-      //通过push进行跳转
-      this.$router.push({ path: "/book/edit", query: { id: id } });
+    //关闭角色对话框
+    handleClose() {
+      this.resetForm("editForm");
     },
-    deleteBook(id) {
-      //单个删除
-      this.$confirm("确定删除该公告吗", "删除公告", {
+
+    //单个删除
+    deleteBook(id, name) {
+      this.$confirm("确定删除该角色吗", "删除", {
         confirmButtonText: "确定",
         cancelButtonText: "取消",
         type: "error",
       }).then(() => {
-        axios({
-          method: "post",
-          url: "http://127.0.0.1:8088/admin/book/delete",
-          headers: {
-            token: this.token,
-          },
-          data: {
-            id: id,
-          },
-        })
+        this.$axios
+          .post("/admin/book/delete", id)
           .then(() => {
             this.getListTable(); //请求刷新
             this.$message.success("已成功删除!");
@@ -188,10 +259,8 @@ export default {
 };
 </script>
 <style scoped>
-
-	.el-pagination {
-		float: right;
-		margin-top: 22px;
-	}
-
+.el-pagination {
+  float: right;
+  margin-top: 22px;
+}
 </style>
