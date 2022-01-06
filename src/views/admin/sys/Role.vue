@@ -38,7 +38,16 @@
       <el-table-column prop="name" label="名称"> </el-table-column>
       <el-table-column prop="remark" label="备注"> </el-table-column>
       <el-table-column prop="createdAt" label="创建时间"> </el-table-column>
-      <el-table-column prop="status" label="状态"> </el-table-column>
+      <el-table-column prop="status" label="状态">
+        <template slot-scope="scope">
+          <el-tag size="small" v-if="scope.row.status === 1" type="success" effect="dark"
+            >正常</el-tag
+          >
+          <el-tag size="small" v-else-if="scope.row.status === 0" type="danger" effect="dark"
+            >禁用</el-tag
+          >
+        </template>
+      </el-table-column>
 
       <el-table-column label="操作">
         <template slot-scope="scope">
@@ -137,8 +146,6 @@
 </template>
 
 <script>
-import axios from "axios";
-
 export default {
   data() {
     return {
@@ -150,8 +157,7 @@ export default {
       },
       editFormRules: {
         name: [{ required: true, message: "请输入角色名称", trigger: "blur" }],
-        code: [{ required: true, message: "请输入唯一编码", trigger: "blur" }],
-        statu: [{ required: true, message: "请选择状态", trigger: "blur" }],
+        status: [{ required: true, message: "请选择状态", trigger: "blur" }],
       },
       //分配权限对话框
       permDialogVisible: false,
@@ -178,7 +184,7 @@ export default {
       console.log(params);
       // return false;
       this.$axios
-        .get("/role/list", {
+        .get("/sys/role/list", {
           params: params,
         })
         .then((response) => {
@@ -229,15 +235,45 @@ export default {
       this.resetForm("editForm");
     },
 
+    //新增修改角色
+    submitForm(formName) {
+      this.$refs[formName].validate((valid) => {
+        if (valid) {
+          this.$axios
+            .post(
+              "/sys/role/" + (this.editForm.id ? "update" : "save"), //根据有没有id判断
+              this.editForm
+            )
+            .then((res) => {
+              console.log(res);
+              this.$message({
+                showClose: true,
+                message: "恭喜你，操作成功",
+                type: "success",
+                onClose: () => {
+                  this.getRoleList();
+                },
+              });
+
+              this.dialogVisible = false;
+              this.resetForm(formName);
+            });
+        } else {
+          console.log("error submit!!");
+          return false;
+        }
+      });
+    },
+
     //单个删除
     deleteBook(id, name) {
-      this.$confirm("确定删除该角色吗", "删除", {
+      this.$confirm("确定删除该角色（" + name + "）吗?", "删除", {
         confirmButtonText: "确定",
         cancelButtonText: "取消",
         type: "error",
       }).then(() => {
         this.$axios
-          .post("/admin/book/delete", id)
+          .post("/sys/role/delete", id)
           .then(() => {
             this.getListTable(); //请求刷新
             this.$message.success("已成功删除!");
