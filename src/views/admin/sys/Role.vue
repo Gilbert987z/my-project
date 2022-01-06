@@ -22,10 +22,7 @@
         >
       </el-popconfirm>
 
-      <el-button
-        type="primary"
-        icon="el-icon-circle-plus"
-        @click="dialogVisible = true"
+      <el-button type="primary" icon="el-icon-circle-plus" @click="addHandle()"
         >新增</el-button
       >
     </el-row>
@@ -40,10 +37,18 @@
       <el-table-column prop="createdAt" label="创建时间"> </el-table-column>
       <el-table-column prop="status" label="状态">
         <template slot-scope="scope">
-          <el-tag size="small" v-if="scope.row.status === 1" type="success" effect="dark"
+          <el-tag
+            size="small"
+            v-if="scope.row.status === 1"
+            type="success"
+            effect="dark"
             >正常</el-tag
           >
-          <el-tag size="small" v-else-if="scope.row.status === 0" type="danger" effect="dark"
+          <el-tag
+            size="small"
+            v-else-if="scope.row.status === 0"
+            type="danger"
+            effect="dark"
             >禁用</el-tag
           >
         </template>
@@ -55,13 +60,13 @@
             >分配权限</el-button
           >
           <el-divider direction="vertical"></el-divider>
-          <el-button type="text" @click="editBook(scope.row.id)"
+          <el-button type="text" @click="editHandle(scope.row.id)"
             >编辑</el-button
           >
           <el-divider direction="vertical"></el-divider>
           <el-button
             type="text"
-            @click="deleteBook(scope.row.id, scope.row.name)"
+            @click="delHandle(scope.row.id, scope.row.name)"
             >删除</el-button
           >
         </template>
@@ -83,7 +88,7 @@
 
     <!--角色的对话框-->
     <el-dialog
-      title="新增"
+      :title="dialogData.dialogTitle"
       :visible.sync="dialogVisible"
       width="600px"
       :before-close="handleClose"
@@ -114,7 +119,7 @@
 
         <el-form-item>
           <el-button type="primary" @click="submitForm('editForm')"
-            >立即创建</el-button
+            >{{dialogData.dialogSubmit}}</el-button
           >
           <el-button @click="resetForm('editForm')">重置</el-button>
         </el-form-item>
@@ -151,6 +156,10 @@ export default {
     return {
       delBtlStatu: true, //批量删除
       //角色对话框
+      dialogData: {
+        dialogTitle: null,
+        dialogSubmit: null,
+      },
       dialogVisible: false, //新增对话框 默认关闭
       editForm: {
         status: 1, //默认是正常
@@ -227,12 +236,29 @@ export default {
     //重置表单数据
     resetForm(formName) {
       this.$refs[formName].resetFields();
-      this.dialogVisible = false; //关闭弹窗
+      this.dialogVisible = false; //关闭对话框
       this.editForm = {};
     },
-    //关闭角色对话框
+    //关闭对话框
     handleClose() {
       this.resetForm("editForm");
+    },
+    //新增按钮操作
+    addHandle() {
+      this.dialogData.dialogTitle = "新增";
+      this.dialogData.dialogSubmit = "创建";
+      this.dialogVisible = true; //打开对话框
+    },
+    //修改按钮操作
+    editHandle(id) {
+      this.dialogData.dialogTitle= "编辑";
+      this.dialogData.dialogSubmit = "编辑";
+      //请求详情
+      this.$axios.get("/sys/role/info/" + id).then((res) => {
+        this.editForm = res.data.data;
+
+        this.dialogVisible = true; //打开对话框
+      });
     },
 
     //新增修改角色
@@ -246,12 +272,13 @@ export default {
             )
             .then((res) => {
               console.log(res);
+              this.getListTable(); //刷新列表
               this.$message({
                 showClose: true,
-                message: "恭喜你，操作成功",
+                message: "操作成功",
                 type: "success",
                 onClose: () => {
-                  this.getRoleList();
+                  //此处写提示关闭后需要执行的函数
                 },
               });
 
@@ -266,7 +293,7 @@ export default {
     },
 
     //单个删除
-    deleteBook(id, name) {
+    delHandle(id, name) {
       this.$confirm("确定删除该角色（" + name + "）吗?", "删除", {
         confirmButtonText: "确定",
         cancelButtonText: "取消",
