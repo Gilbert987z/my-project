@@ -1,5 +1,50 @@
 <template>
   <div>
+<el-form :inline="true" :model="formInline" class="demo-form-inline">
+  <el-form-item label="审批人">
+    <el-input v-model="formInline.user" placeholder="审批人"></el-input>
+  </el-form-item>
+  <el-form-item label="活动区域">
+    <el-select v-model="formInline.region" placeholder="活动区域">
+      <el-option label="区域一" value="shanghai"></el-option>
+      <el-option label="区域二" value="beijing"></el-option>
+    </el-select>
+  </el-form-item>
+  <el-form-item label="活动区域">
+    <el-select v-model="formInline.region" placeholder="活动区域">
+      <el-option label="区域一" value="shanghai"></el-option>
+      <el-option label="区域二" value="beijing"></el-option>
+    </el-select>
+  </el-form-item>
+  <el-form-item label="活动区域">
+    <el-select v-model="formInline.region" placeholder="活动区域">
+      <el-option label="区域一" value="shanghai"></el-option>
+      <el-option label="区域二" value="beijing"></el-option>
+    </el-select>
+  </el-form-item>
+  <el-form-item label="活动区域">
+    <el-select v-model="formInline.region" placeholder="活动区域">
+      <el-option label="区域一" value="shanghai"></el-option>
+      <el-option label="区域二" value="beijing"></el-option>
+    </el-select>
+  </el-form-item>
+   <el-form-item label="活动区域">
+    <el-select v-model="formInline.region" placeholder="活动区域">
+      <el-option label="区域一" value="shanghai"></el-option>
+      <el-option label="区域二" value="beijing"></el-option>
+    </el-select>
+  </el-form-item>
+   <el-form-item label="活动区域">
+    <el-select v-model="formInline.region" placeholder="活动区域">
+      <el-option label="区域一" value="shanghai"></el-option>
+      <el-option label="区域二" value="beijing"></el-option>
+    </el-select>
+  </el-form-item>
+  <el-form-item>
+    <el-button type="primary" @click="onSubmit">查询</el-button>
+  </el-form-item>
+</el-form>
+
     <div class="demo-input-suffix">
       <el-input
         placeholder="请输入角色名称"
@@ -9,15 +54,18 @@
         v-model="queryName"
       >
       </el-input>
+      <el-button @click="getTableList">搜索</el-button>
+      <el-button @click="reset">重置</el-button>
     </div>
 
     <el-row>
+      <h1>角色列表</h1>
       <el-popconfirm title="这是确定批量删除吗？" @confirm="delHandle(null)">
         <el-button
           type="danger"
           icon="el-icon-remove"
           slot="reference"
-          :disabled="delBtlStatu"
+          :disabled="delBtlStatus"
           >批量删除</el-button
         >
       </el-popconfirm>
@@ -27,7 +75,12 @@
       >
     </el-row>
 
-    <el-table :data="info" border style="width: 100%">
+    <el-table
+      :data="info"
+      border
+      style="width: 100%"
+      @selection-change="handleSelectionChange"
+    >
       <el-table-column type="selection" width="55"> </el-table-column>
 
       <el-table-column prop="id" label="id" width="180"> </el-table-column>
@@ -64,9 +117,7 @@
             >编辑</el-button
           >
           <el-divider direction="vertical"></el-divider>
-          <el-button
-            type="text"
-            @click="delHandle(scope.row.id, scope.row.name)"
+          <el-button type="text" @click="delHandle(scope.row.id)"
             >删除</el-button
           >
         </template>
@@ -118,10 +169,11 @@
         </el-form-item>
 
         <el-form-item>
-          <el-button type="primary" @click="submitForm('editForm')"
-            >{{dialogData.dialogSubmit}}</el-button
-          >
-          <el-button @click="resetForm('editForm')">重置</el-button>
+          <el-button type="primary" @click="submitForm('editForm')">{{
+            dialogData.dialogSubmit
+          }}</el-button>
+          <el-button @click="dialogVisible = false">取消</el-button>
+          <!-- <el-button @click="resetForm('editForm')">重置</el-button> -->
         </el-form-item>
       </el-form>
     </el-dialog>
@@ -154,16 +206,21 @@
 export default {
   data() {
     return {
-      delBtlStatu: true, //批量删除
+formInline: {
+          user: '',
+          region: ''
+        },
+
+
+      multipleSelection: [], //多选的勾选列表
+      delBtlStatus: true, //批量删除按钮的禁用
       //角色对话框
       dialogData: {
         dialogTitle: null,
         dialogSubmit: null,
       },
       dialogVisible: false, //新增对话框 默认关闭
-      editForm: {
-        status: 1, //默认是正常
-      },
+      editForm: {},
       editFormRules: {
         name: [{ required: true, message: "请输入角色名称", trigger: "blur" }],
         status: [{ required: true, message: "请选择状态", trigger: "blur" }],
@@ -184,7 +241,7 @@ export default {
   },
   methods: {
     //获取列表
-    getListTable() {
+    getTableList() {
       var params = {
         page: this.page.current,
         size: this.page.size,
@@ -216,7 +273,7 @@ export default {
       // val变化后的每页的条数
       this.page.size = val; //更新每页的条数
 
-      this.getListTable(); //重新获取列表数据
+      this.getTableList(); //重新获取列表数据
     },
     handleCurrentChange(val) {
       console.log(`当前页: ${val}`);
@@ -224,14 +281,14 @@ export default {
       //val 变化后的页码
       this.page.current = val;
 
-      this.getListTable(); //重新获取列表数据
+      this.getTableList(); //重新获取列表数据
     },
 
     //按角色名称查询
     bookHandleSearchEvent(val) {
       this.inputBookName = val;
       console.log("inputBookName" + val);
-      this.getListTable();
+      this.getTableList();
     },
     //重置表单数据
     resetForm(formName) {
@@ -241,17 +298,27 @@ export default {
     },
     //关闭对话框
     handleClose() {
-      this.resetForm("editForm");
+      this.resetForm("editForm"); //重置表单数据
+    },
+    //分配权限按钮操作
+    permHandle(id) {
+      this.permDialogVisible = true; //打开对话框
+
+      this.$axios.get("/sys/role/info/" + id).then((res) => {
+        this.$refs.permTree.setCheckedKeys(res.data.data.menuIds);
+        this.permForm = res.data.data;
+      });
     },
     //新增按钮操作
     addHandle() {
-      this.dialogData.dialogTitle = "新增";
+      (this.editForm.status = 1), //默认是正常
+        (this.dialogData.dialogTitle = "新增");
       this.dialogData.dialogSubmit = "创建";
       this.dialogVisible = true; //打开对话框
     },
     //修改按钮操作
     editHandle(id) {
-      this.dialogData.dialogTitle= "编辑";
+      this.dialogData.dialogTitle = "编辑";
       this.dialogData.dialogSubmit = "编辑";
       //请求详情
       this.$axios.get("/sys/role/info/" + id).then((res) => {
@@ -272,7 +339,7 @@ export default {
             )
             .then((res) => {
               console.log(res);
-              this.getListTable(); //刷新列表
+              this.getTableList(); //刷新列表
               this.$message({
                 showClose: true,
                 message: "操作成功",
@@ -292,17 +359,45 @@ export default {
       });
     },
 
+    // toggleSelection(rows) {
+    //   if (rows) {
+    //     rows.forEach((row) => {
+    //       this.$refs.multipleTable.toggleRowSelection(row);
+    //     });
+    //   } else {
+    //     this.$refs.multipleTable.clearSelection();
+    //   }
+    // },
+    //勾选改变
+    handleSelectionChange(val) {
+      console.log("勾选");
+      console.log(val);
+      this.multipleSelection = val;
+
+      this.delBtlStatus = val.length == 0; //没有勾选，就是true,禁用
+    },
+
     //单个删除
-    delHandle(id, name) {
-      this.$confirm("确定删除该角色（" + name + "）吗?", "删除", {
+    delHandle(id) {
+      var ids = [];
+
+      if (id) {
+        ids.push(id);
+      } else {
+        this.multipleSelection.forEach((row) => {
+          ids.push(row.id);
+        });
+      }
+
+      this.$confirm("确定删除选中的角色吗?", "删除", {
         confirmButtonText: "确定",
         cancelButtonText: "取消",
         type: "error",
       }).then(() => {
         this.$axios
-          .post("/sys/role/delete", id)
+          .post("/sys/role/delete", ids)
           .then(() => {
-            this.getListTable(); //请求刷新
+            this.getTableList(); //请求刷新
             this.$message.success("已成功删除!");
           })
           .catch(() => {
@@ -316,14 +411,14 @@ export default {
     },
   },
   created() {
-    this.getListTable();
+    this.getTableList();
   },
   mounted() {},
 };
 </script>
 <style scoped>
 .el-pagination {
-  float: right;
+  float: right; 
   margin-top: 22px;
 }
 </style>
