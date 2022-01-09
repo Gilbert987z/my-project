@@ -1,84 +1,56 @@
 <template>
   <div>
-<el-form :inline="true" :model="formInline" class="demo-form-inline">
-  <el-form-item label="审批人">
-    <el-input v-model="formInline.user" placeholder="审批人"></el-input>
-  </el-form-item>
-  <el-form-item label="活动区域">
-    <el-select v-model="formInline.region" placeholder="活动区域">
-      <el-option label="区域一" value="shanghai"></el-option>
-      <el-option label="区域二" value="beijing"></el-option>
-    </el-select>
-  </el-form-item>
-  <el-form-item label="活动区域">
-    <el-select v-model="formInline.region" placeholder="活动区域">
-      <el-option label="区域一" value="shanghai"></el-option>
-      <el-option label="区域二" value="beijing"></el-option>
-    </el-select>
-  </el-form-item>
-  <el-form-item label="活动区域">
-    <el-select v-model="formInline.region" placeholder="活动区域">
-      <el-option label="区域一" value="shanghai"></el-option>
-      <el-option label="区域二" value="beijing"></el-option>
-    </el-select>
-  </el-form-item>
-  <el-form-item label="活动区域">
-    <el-select v-model="formInline.region" placeholder="活动区域">
-      <el-option label="区域一" value="shanghai"></el-option>
-      <el-option label="区域二" value="beijing"></el-option>
-    </el-select>
-  </el-form-item>
-   <el-form-item label="活动区域">
-    <el-select v-model="formInline.region" placeholder="活动区域">
-      <el-option label="区域一" value="shanghai"></el-option>
-      <el-option label="区域二" value="beijing"></el-option>
-    </el-select>
-  </el-form-item>
-   <el-form-item label="活动区域">
-    <el-select v-model="formInline.region" placeholder="活动区域">
-      <el-option label="区域一" value="shanghai"></el-option>
-      <el-option label="区域二" value="beijing"></el-option>
-    </el-select>
-  </el-form-item>
-  <el-form-item>
-    <el-button type="primary" @click="onSubmit">查询</el-button>
-  </el-form-item>
-</el-form>
-
-    <div class="demo-input-suffix">
-      <el-input
-        placeholder="请输入角色名称"
-        clearable
-        prefix-icon="el-icon-search"
-        @input="bookHandleSearchEvent"
-        v-model="queryName"
-      >
-      </el-input>
-      <el-button @click="getTableList">搜索</el-button>
-      <el-button @click="reset">重置</el-button>
-    </div>
-
-    <el-row>
-      <h1>角色列表</h1>
-      <el-popconfirm title="这是确定批量删除吗？" @confirm="delHandle(null)">
-        <el-button
-          type="danger"
-          icon="el-icon-remove"
-          slot="reference"
-          :disabled="delBtlStatus"
-          >批量删除</el-button
+    <el-form
+      :inline="true"
+      :model="formSearch"
+      ref="formSearch"
+      class="demo-form-inline"
+    >
+      <el-form-item prop="queryName">
+        <el-input
+          placeholder="请输入角色名称"
+          clearable
+          prefix-icon="el-icon-search"
+          @input="bookHandleSearchEvent"
+          v-model="formSearch.queryName"
         >
-      </el-popconfirm>
+        </el-input>
+      </el-form-item>
+      <el-form-item>
+        <el-button type="primary" @click="getTableList">搜索</el-button>
+        <el-button @click="resetSearch('formSearch')">重置</el-button>
+      </el-form-item>
+    </el-form>
 
-      <el-button type="primary" icon="el-icon-circle-plus" @click="addHandle()"
-        >新增</el-button
+    <div>
+      <span style="font-weight:bold;font-size:20px;line-height:40px"
+        >角色列表</span
       >
-    </el-row>
+      <el-row style="float:right">
+        <el-popconfirm title="这是确定批量删除吗？" @confirm="delHandle(null)">
+          <el-button
+            style="margin-right:10px"
+            type="danger"
+            icon="el-icon-remove"
+            slot="reference"
+            :disabled="delBtlStatus"
+            >批量删除</el-button
+          >
+        </el-popconfirm>
+
+        <el-button
+          type="primary"
+          icon="el-icon-circle-plus"
+          @click="addHandle()"
+          >新增</el-button
+        >
+      </el-row>
+    </div>
 
     <el-table
       :data="info"
       border
-      style="width: 100%"
+      style="width: 100%;margin-top:20px"
       @selection-change="handleSelectionChange"
     >
       <el-table-column type="selection" width="55"> </el-table-column>
@@ -206,11 +178,10 @@
 export default {
   data() {
     return {
-formInline: {
-          user: '',
-          region: ''
-        },
-
+      formInline: {
+        user: "",
+        region: "",
+      },
 
       multipleSelection: [], //多选的勾选列表
       delBtlStatus: true, //批量删除按钮的禁用
@@ -236,7 +207,9 @@ formInline: {
         // pages:null,
         total: null,
       },
-      queryName: "", //查询名称
+      formSearch: {
+        queryName: "", //查询名称
+      },
     };
   },
   methods: {
@@ -245,7 +218,7 @@ formInline: {
       var params = {
         page: this.page.current,
         size: this.page.size,
-        name: this.queryName,
+        name: this.formSearch.queryName,
       };
       console.log(params);
       // return false;
@@ -266,6 +239,11 @@ formInline: {
           // 请求失败处理
           console.log(error);
         });
+    },
+    //重置表单数据
+    resetSearch(formName) {
+      this.$refs[formName].resetFields();
+      this.getTableList();
     },
     handleSizeChange(val) {
       console.log(`每页 ${val} 条`);
@@ -418,7 +396,7 @@ formInline: {
 </script>
 <style scoped>
 .el-pagination {
-  float: right; 
+  float: right;
   margin-top: 22px;
 }
 </style>

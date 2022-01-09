@@ -75,6 +75,15 @@ const router = new Router({
                     name: "Book",
                     component: () => import('../views/admin/book/Book.vue')
                 },
+
+                {
+                    path: "/test", //列表页
+                    name: "test",
+                    meta: {
+                        title: "测试"
+                    },
+                    component: () => import('../views/test.vue')
+                },
             ]
         },
         
