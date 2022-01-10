@@ -27,16 +27,16 @@
         >角色列表</span
       >
       <el-row style="float:right">
-        <el-popconfirm title="这是确定批量删除吗？" @confirm="delHandle(null)">
-          <el-button
-            style="margin-right:10px"
-            type="danger"
-            icon="el-icon-remove"
-            slot="reference"
-            :disabled="delBtlStatus"
-            >批量删除</el-button
-          >
-        </el-popconfirm>
+        <!-- <el-popconfirm title="这是确定批量删除吗？" @confirm="delHandle(null)"> -->
+        <el-button
+          style="margin-right:10px"
+          type="danger"
+          icon="el-icon-remove"
+          :disabled="delBtlStatus"
+          @click="delHandle(null)"
+          >批量删除</el-button
+        >
+        <!-- </el-popconfirm>      slot="reference"-->
 
         <el-button
           type="primary"
@@ -282,7 +282,7 @@ export default {
     permHandle(id) {
       this.permDialogVisible = true; //打开对话框
 
-      this.$axios.get("/sys/role/info/" + id).then((res) => {
+      this.$axios.get("/sys/role/info", { id: id }).then((res) => {
         this.$refs.permTree.setCheckedKeys(res.data.data.menuIds);
         this.permForm = res.data.data;
       });
@@ -299,7 +299,7 @@ export default {
       this.dialogData.dialogTitle = "编辑";
       this.dialogData.dialogSubmit = "编辑";
       //请求详情
-      this.$axios.get("/sys/role/info/" + id).then((res) => {
+      this.$axios.get("/sys/role/info", { params: { id: id } }).then((res) => {
         this.editForm = res.data.data;
 
         this.dialogVisible = true; //打开对话框
@@ -318,17 +318,20 @@ export default {
             .then((res) => {
               console.log(res);
               this.getTableList(); //刷新列表
-              this.$message({
-                showClose: true,
-                message: "操作成功",
-                type: "success",
-                onClose: () => {
-                  //此处写提示关闭后需要执行的函数
-                },
-              });
 
-              this.dialogVisible = false;
-              this.resetForm(formName);
+              if (res.data.code == 20000) {
+                this.$message({
+                  showClose: true,
+                  message: "操作成功",
+                  type: "success",
+                  onClose: () => {
+                    //此处写提示关闭后需要执行的函数
+                  },
+                });
+
+                this.dialogVisible = false; //成功了，才会关闭对话框
+                this.resetForm(formName);
+              }
             });
         } else {
           console.log("error submit!!");
