@@ -1,14 +1,11 @@
 <template>
-  
   <div>
-      <h1 style = "text-align: center;">LMS</h1>
+    <h1 style="text-align: center;">LMS</h1>
 
-  <div class="login-container">
-  
-
-    <el-image class="login-pic" :src="require('../assets/login.png')">
-    </el-image>
-    <!-- <el-form
+    <div class="login-container">
+      <el-image class="login-pic" :src="require('../assets/login.png')">
+      </el-image>
+      <!-- <el-form
       class="login-form"
       label-width="80px"
       :model="user"
@@ -36,77 +33,102 @@
       </el-form-item>
     </el-form> -->
 
-    <el-tabs
-      class="login-form"
-      v-model="activeName"
-      type="card"
-      @tab-click="handleClick"
-    >
-      <el-tab-pane label="登录" name="first">
-        <el-form
-          label-position="left"
-          label-width="80px"
-          :model="loginForm"
-          ref="loginForm"
-          :rules="loginRules"
-        >
-          <el-form-item label="用户名"  prop="username">
-            <el-input v-model="loginForm.username"></el-input>
-          </el-form-item>
-          <el-form-item label="密码" prop="password">
-            <el-input v-model="loginForm.password" type="password"  prefix-icon="el-icon-lock" show-password></el-input>
-          </el-form-item>
-          <el-form-item label="验证码" prop="code">
-            <el-input v-model="loginForm.code"></el-input>
-            <el-image
-              :src="captchaImg"
-              class="captchaImg"
-              @click="getCaptcha"
-            ></el-image>
-          </el-form-item>
-          <el-form-item>
-            <el-button type="primary" @click="loginSubmit('loginForm')">登录</el-button>
-            <!--          <el-button>取消</el-button>-->
-          </el-form-item>
-        </el-form>
-      </el-tab-pane>
+      <el-tabs
+        class="login-form"
+        v-model="activeName"
+        type="card"
+        @tab-click="handleClick"
+      >
+        <el-tab-pane label="登录" name="first">
+          <el-form
+            label-position="left"
+            label-width="80px"
+            :model="loginForm"
+            ref="loginForm"
+            :rules="loginRules"
+          >
+            <el-form-item label="用户名" prop="username">
+              <el-input
+                v-model="loginForm.username"
+                prefix-icon="el-icon-user"
+              ></el-input>
+            </el-form-item>
+            <el-form-item label="密码" prop="password">
+              <el-input
+                v-model="loginForm.password"
+                type="password"
+                prefix-icon="el-icon-lock"
+                show-password
+              ></el-input>
+            </el-form-item>
+            <el-form-item label="验证码" prop="code">
+              <el-input
+                v-model="loginForm.code"
+                prefix-icon="el-icon-key"
+              ></el-input>
+              <el-image
+                :src="captchaImg"
+                class="captchaImg"
+                @click="getCaptcha"
+              ></el-image>
+            </el-form-item>
+            <el-form-item>
+              <el-button type="primary" @click="loginSubmit('loginForm')"
+                >登录</el-button
+              >
+              <!--          <el-button>取消</el-button>-->
+            </el-form-item>
+          </el-form>
+        </el-tab-pane>
 
-      <el-tab-pane label="注册" name="second">
-        <el-form label-position="left" label-width="80px" :model="registerForm">
-          <el-form-item label="用户名">
-            <el-input v-model="registerForm.username"></el-input>
-          </el-form-item>
-          <el-form-item label="手机号">
-            <el-input
-              v-model="registerForm.mobile"
-              name="phone"
-              pattern="[0-9]*"
-              class="y_input"
-              type="tel"
-              maxlength="11"
-            ></el-input>
-          </el-form-item>
-          <el-form-item label="密码">
-            <el-input
-              v-model="registerForm.password"
-              type="password"
-            ></el-input>
-          </el-form-item>
-          <el-form-item label="重复密码">
-            <el-input
-              v-model="registerForm.rePassword"
-              type="password"
-            ></el-input>
-          </el-form-item>
-          <el-form-item>
-            <el-button type="primary" @click="registerSubmit">注册</el-button>
-            <!--          <el-button>取消</el-button>-->
-          </el-form-item>
-        </el-form>
-      </el-tab-pane>
-    </el-tabs>
-  </div>
+        <el-tab-pane label="注册" name="second">
+          <el-form
+            label-position="left"
+            label-width="80px"
+            :model="registerForm"
+          >
+            <el-form-item label="用户名">
+              <el-input
+                v-model="registerForm.username"
+                prefix-icon="el-icon-user"
+              ></el-input>
+            </el-form-item>
+            <el-form-item label="手机号">
+              <el-input
+                v-model="registerForm.mobile"
+                prefix-icon="el-icon-mobile-phone"
+                name="phone"
+                pattern="[0-9]*"
+                class="y_input"
+                type="tel"
+                maxlength="11"
+              ></el-input>
+            </el-form-item>
+            <el-form-item label="密码">
+              <el-input
+                v-model="registerForm.password"
+                type="password"
+                prefix-icon="el-icon-lock"
+                show-password
+              ></el-input>
+            </el-form-item>
+            <el-form-item label="重复密码">
+              <el-input
+                v-model="registerForm.rePassword"
+                type="password"
+                prefix-icon="el-icon-lock"
+                show-password
+              ></el-input>
+            </el-form-item>
+            <el-form-item>
+              <el-button type="primary" @click="registerSubmit">注册</el-button>
+              <!--          <el-button>取消</el-button>-->
+            </el-form-item>
+          </el-form>
+        </el-tab-pane>
+      </el-tabs>
     </div>
+  </div>
 </template>
 
 <script>
@@ -132,19 +154,15 @@ export default {
         rePassword: "",
       },
       loginRules: {
-        username: [
-          { required: true, message: '用户名必填', trigger: 'blur' },
-        ],
-        password: [
-          { required: true, message: '密码必填', trigger: 'blur' },
-        ],
+        username: [{ required: true, message: "用户名必填", trigger: "blur" }],
+        password: [{ required: true, message: "密码必填", trigger: "blur" }],
       },
-    }
+    };
   },
   computed: {
     canSubmit() {
-      const { username, password } = this.loginForm
-      return Boolean(username && password)
+      const { username, password } = this.loginForm;
+      return Boolean(username && password);
     },
   },
   methods: {
@@ -152,16 +170,13 @@ export default {
       console.log(tab, event);
     },
     loginSubmit(formName) {
-      this.$refs[formName].validate((valid) => { //表单校验
+      this.$refs[formName].validate((valid) => {
+        //表单校验
         if (valid) {
           axios
-            .post(
-              "/login",
-              this.$qs.stringify(this.loginForm),
-              {
-                headers: { "Content-Type": "application/x-www-form-urlencoded" },
-              }
-            )
+            .post("/login", this.$qs.stringify(this.loginForm), {
+              headers: { "Content-Type": "application/x-www-form-urlencoded" },
+            })
             .then((response) => {
               console.log(response);
               var message = response.data.message;
@@ -187,7 +202,7 @@ export default {
               if (token) {
                 //token有值
                 localStorage.setItem("token", token); //将token存入本地
-                this.$router.push("/index"); //跳转到首页
+                this.$router.push({name:"Index"}); //跳转到首页
               }
             })
             .catch(function(error) {
@@ -195,9 +210,9 @@ export default {
               console.log(error);
             });
           console.log("submit!");
-        }else{
-          console.log('error submit!!')
-          return false
+        } else {
+          console.log("error submit!!");
+          return false;
         }
       });
     },
@@ -254,7 +269,7 @@ export default {
   created() {
     this.getCaptcha();
   },
-}
+};
 </script>
 
 <style lang="scss" scoped>

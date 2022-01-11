@@ -8,7 +8,7 @@
     >
       <el-form-item prop="queryName">
         <el-input
-          placeholder="请输入角色名称"
+          placeholder="请输入用户名称"
           clearable
           prefix-icon="el-icon-search"
           @input="bookHandleSearchEvent"
@@ -24,7 +24,7 @@
 
     <div>
       <span style="font-weight:bold;font-size:20px;line-height:40px"
-        >角色列表</span
+        >用户列表</span
       >
       <el-row style="float:right">
         <!-- <el-popconfirm title="这是确定批量删除吗？" @confirm="delHandle(null)"> -->

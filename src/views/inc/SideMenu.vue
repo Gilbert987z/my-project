@@ -8,7 +8,8 @@
     @open="handleOpen"
     @close="handleClose"
   >
-    <router-link to="/index">
+    <!-- 真的要取name吗？ -->
+    <router-link :to="{ name: 'Index' }">
       <el-menu-item index="Index">
         <template slot="title">
           <i class="el-icon-s-home"></i>
@@ -23,11 +24,16 @@
         <span>系统管理</span>
       </template>
       <el-menu-item-group>
-        <el-menu-item index="1-1">用户管理</el-menu-item>
-        <router-link to="/role">
+        <router-link :to="{ name: 'User' }">
+          <!-- <router-link to="/sys/user"> -->
+          <el-menu-item index="1-1">用户管理</el-menu-item>
+        </router-link>
+        <router-link :to="{ name: 'Role' }">
           <el-menu-item index="1-2">角色管理</el-menu-item>
         </router-link>
-        <el-menu-item index="1-3">菜单管理</el-menu-item>
+        <router-link :to="{ name: 'Permission' }">
+          <el-menu-item index="1-3">权限管理</el-menu-item>
+        </router-link>
       </el-menu-item-group>
       <el-submenu index="1-4">
         <template slot="title">选项4</template>
@@ -52,10 +58,10 @@
       <span slot="title">导航三</span>
     </el-menu-item>
     <router-link to="/test">
-    <el-menu-item index="4">
-      <i class="el-icon-location"></i>
-      <span slot="title">测试</span>
-    </el-menu-item>
+      <el-menu-item index="4">
+        <i class="el-icon-location"></i>
+        <span slot="title">测试</span>
+      </el-menu-item>
     </router-link>
   </el-menu>
 </template>

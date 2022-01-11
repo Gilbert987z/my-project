@@ -21,11 +21,11 @@
                 <router-link :to="{ name: 'UserCenter' }">个人中心</router-link>
               </el-dropdown-item>
 
-              <el-popconfirm title="是否登出?" @confirm="logout">
-                <template #reference>
-                  <el-dropdown-item>退出</el-dropdown-item>
-                </template>
-              </el-popconfirm>
+              <!-- <el-popconfirm title="是否登出?" @confirm="logout"> -->
+              <!-- <template #reference> -->
+              <el-dropdown-item @click.native="logout()">退出</el-dropdown-item>
+              <!-- </template> -->
+              <!-- </el-popconfirm> -->
             </el-dropdown-menu>
           </el-dropdown>
 
@@ -83,14 +83,60 @@ export default {
       });
     },
     logout() {
-      this.$axios.post("/logout").then(() => {
-        localStorage.clear();
-        sessionStorage.clear();
+      const h = this.$createElement;
+      this.$msgbox({
+        title: "登出",
+        message: h("p", null, [
+          h("span", null, "确认是否登出？ "),
+          // h("i", { style: "color: teal" }, "VNode"),
+        ]),
+        showCancelButton: true,
+        confirmButtonText: "确定",
+        cancelButtonText: "取消",
+        beforeClose: (action, instance, done) => {
+          if (action === "confirm") {
+            instance.confirmButtonLoading = true;
+            instance.confirmButtonText = "执行中...";
 
-        // this.$store.commit("resetState");
+            this.$axios.post("/logout").then(() => {
+              localStorage.clear();
+              sessionStorage.clear();
 
-        this.$router.push("/login");
+              // this.$store.commit("resetState");
+
+              this.$router.push({name:"Login"}); //跳转到登录页
+            });
+
+            done();
+            setTimeout(() => {
+              instance.confirmButtonLoading = false;
+            }, 300);
+          } else {
+            done();
+          }
+        },
+      }).then(() => { //登出后，弹出成功信息
+        this.$message({
+          type: "success",
+          message: "登出成功",
+        });
       });
+
+      // console.log("test");
+      // this.$confirm("确定删除选中的角色吗?", "删除", {
+      //   confirmButtonText: "确定",
+      //   cancelButtonText: "取消",
+      //   type: "error",
+      // }).then(() => {
+      //   this.$axios.post("/logout").then(() => {
+      //     localStorage.clear();
+      //     sessionStorage.clear();
+
+      //     // this.$store.commit("resetState");
+
+      //     this.$router.push("/login");
+      //   });
+      // });
     },
   },
 };

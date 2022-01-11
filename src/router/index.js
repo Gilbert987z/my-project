@@ -8,8 +8,8 @@ import bookType from "../components/bookType.vue";
 import bookBorrow from "../components/bookBorrow.vue";
 import userlist from "../components/userlist.vue";
 import naviMenu from "../components/layout/naviMenu.vue";
-import notFound from "../components/error-page/404.vue";
-import authorization from "../components/error-page/401.vue";
+
+
 
 Vue.use(Router);
 
@@ -24,12 +24,14 @@ const router = new Router({
     routes: [
         {
             path: '/404',
-            component: notFound,
+            name:'404',
+            component: () => import("../components/error-page/404.vue"),
             hidden: true
         },
         {
             path: '/401',
-            component: authorization,
+            name:'401',
+            component: () => import('../components/error-page/401.vue'),
             hidden: true
         },
         {
@@ -57,16 +59,32 @@ const router = new Router({
                 },
                 {
                     path:'/sys',
-                    name:'Home',
+                    name:'Sys',
                     component:()=>import('../views/admin/sys/Role.vue'),  
                     children:[
                         {
-                            path: "/role",  
+                            path: "/sys/user",  
+                            name: "User",
+                            meta: {
+                                title: "用户"
+                            },
+                            component: () => import('../views/admin/sys/User.vue')
+                        },
+                        {
+                            path: "/sys/role",  
                             name: "Role",
                             meta: {
                                 title: "角色"
                             },
                             component: () => import('../views/admin/sys/Role.vue')
+                        },
+                        {
+                            path: "/sys/permission",  
+                            name: "Permission",
+                            meta: {
+                                title: "权限"
+                            },
+                            component: () => import('../views/admin/sys/Permission.vue')
                         },
                     ]
                 },
