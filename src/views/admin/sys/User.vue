@@ -11,7 +11,7 @@
           placeholder="请输入用户名称"
           clearable
           prefix-icon="el-icon-search"
-          @input="bookHandleSearchEvent"
+          @input="handleSearchEvent"
           v-model="formSearch.queryName"
         >
         </el-input>
@@ -57,7 +57,19 @@
 
       <el-table-column prop="id" label="id" width="180"> </el-table-column>
 
-      <el-table-column prop="name" label="名称"> </el-table-column>
+      <el-table-column label="名称">
+        <template slot-scope="scope">
+          <img
+            alt
+            :src="scope.row.avatar"
+            width="40"
+            height="40"
+            class="head_pic"
+          />
+          <span>{{ scope.row.username }}</span>
+        </template>
+      </el-table-column>
+      <el-table-column prop="mobile" label="手机号"> </el-table-column>
       <el-table-column prop="remark" label="备注"> </el-table-column>
       <el-table-column prop="createdAt" label="创建时间"> </el-table-column>
       <el-table-column prop="status" label="状态">
@@ -81,13 +93,18 @@
 
       <el-table-column label="操作">
         <template slot-scope="scope">
-          <el-button type="text" @click="permHandle(scope.row.id)"
-            >分配权限</el-button
+          <el-button type="text" @click="roleHandle(scope.row.id)"
+            >分配角色</el-button
+          >
+          <el-divider direction="vertical"></el-divider>
+          <el-button type="text" @click="editHandle(scope.row.id)"
+            >修改密码</el-button
           >
           <el-divider direction="vertical"></el-divider>
           <el-button type="text" @click="editHandle(scope.row.id)"
             >编辑</el-button
           >
+
           <el-divider direction="vertical"></el-divider>
           <el-button type="text" @click="delHandle(scope.row.id)"
             >删除</el-button
@@ -150,26 +167,31 @@
       </el-form>
     </el-dialog>
 
-    <el-dialog title="分配权限" :visible.sync="permDialogVisible" width="600px">
-      <el-form :model="permForm">
+    <!-- 分配权限对话框 -->
+    <el-dialog
+      title="分配角色"
+      :visible.sync="roleDialogFormVisible"
+      width="600px"
+    >
+      <el-form :model="roleForm">
         <el-tree
-          :data="permTreeData"
+          :data="roleTreeData"
           show-checkbox
-          ref="permTree"
-          :default-expand-all="true"
+          ref="roleTree"
+          :check-strictly="checkStrictly"
           node-key="id"
-          :check-strictly="true"
+          :default-expand-all="true"
           :props="defaultProps"
         >
         </el-tree>
       </el-form>
 
-      <span slot="footer" class="dialog-footer">
-        <el-button @click="permDialogVisible = false">取 消</el-button>
-        <el-button type="primary" @click="submitPermFormHandle('permForm')"
+      <div slot="footer" class="dialog-footer">
+        <el-button @click="roleDialogFormVisible = false">取 消</el-button>
+        <el-button type="primary" @click="submitRoleHandle('roleForm')"
           >确 定</el-button
         >
-      </span>
+      </div>
     </el-dialog>
   </div>
 </template>
@@ -196,14 +218,14 @@ export default {
         name: [{ required: true, message: "请输入角色名称", trigger: "blur" }],
         status: [{ required: true, message: "请选择状态", trigger: "blur" }],
       },
-      //分配权限对话框
-      permDialogVisible: false,
-      permForm: {},
+      //分配角色对话框
+      roleDialogFormVisible: false,
+      roleForm: {},
       defaultProps: {
         children: "children",
         label: "name",
       },
-      permTreeData: [],
+      roleTreeData: [],
 
       //列表
       info: [], //列表数据
@@ -225,12 +247,12 @@ export default {
       var params = {
         page: this.page.current,
         size: this.page.size,
-        name: this.formSearch.queryName,
+        username: this.formSearch.queryName,
       };
       console.log(params);
       // return false;
       this.$axios
-        .get("/sys/role/list", {
+        .get("/sys/user/list", {
           params: params,
         })
         .then((response) => {
@@ -269,10 +291,9 @@ export default {
       this.getTableList(); //重新获取列表数据
     },
 
-    //按角色名称查询
-    bookHandleSearchEvent(val) {
-      this.inputBookName = val;
-      console.log("inputBookName" + val);
+    //按名称查询
+    handleSearchEvent(val) {
+      this.inputName = val;
       this.getTableList();
     },
     //重置表单数据
@@ -284,6 +305,24 @@ export default {
     //关闭对话框
     handleClose() {
       this.resetForm("editForm"); //重置表单数据
+    },
+    //分配角色按钮操作
+    roleHandle(id) {
+      this.roleDialogFormVisible = true;
+
+      console.log(id)
+      this.$axios
+        .get("/sys/user/detail" , { params: { id: id } })
+        .then((res) => {
+          this.roleForm = res.data.data;
+
+          let roleIds = [];
+          res.data.data.sysRoles.forEach((row) => {
+            roleIds.push(row.id);
+          });
+
+          this.$refs.roleTree.setCheckedKeys(roleIds);
+        });
     },
     //分配权限按钮操作
     permHandle(id) {
@@ -377,13 +416,13 @@ export default {
         });
       }
 
-      this.$confirm("确定删除选中的角色吗?", "删除", {
+      this.$confirm("确定删除选中的用户吗?", "删除", {
         confirmButtonText: "确定",
         cancelButtonText: "取消",
         type: "error",
       }).then(() => {
         this.$axios
-          .post("/sys/role/delete", ids)
+          .post("/sys/user/delete", ids)
           .then(() => {
             this.getTableList(); //请求刷新
             this.$message.success("已成功删除!");
@@ -401,9 +440,9 @@ export default {
   created() {
     this.getTableList();
 
-    this.$axios.get('/sys/permission/list').then(res => {
-				this.permTreeData = res.data.data
-			})
+    this.$axios.get("/sys/permission/list").then((res) => {
+      this.permTreeData = res.data.data;
+    });
   },
   mounted() {},
 };

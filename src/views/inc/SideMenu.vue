@@ -23,6 +23,7 @@
         <i class="el-icon-setting"></i>
         <span>系统管理</span>
       </template>
+
       <el-menu-item-group>
         <router-link :to="{ name: 'User' }">
           <!-- <router-link to="/sys/user"> -->
@@ -35,6 +36,7 @@
           <el-menu-item index="1-3">权限管理</el-menu-item>
         </router-link>
       </el-menu-item-group>
+      
       <el-submenu index="1-4">
         <template slot="title">选项4</template>
         <el-menu-item index="1-4-1">选项1</el-menu-item>

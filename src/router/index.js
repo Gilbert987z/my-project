@@ -42,9 +42,19 @@ const router = new Router({
       component: () => import("../views/Login.vue"),
     },
 
+    // {
+    //   path: "/",
+    //   name: "Home",
+    //   redirect: "/index", //跳转到首页
+    //   // component: () => import("../views/Home.vue"), //header的页面
+    // },
     {
       path: "/",
       name: "Home",
+      meta: {
+        title: "图书管理系统",
+      },
+      redirect: "/index", //跳转到首页
       component: () => import("../views/Home.vue"), //header的页面
       children: [
         {
@@ -55,12 +65,30 @@ const router = new Router({
           },
           component: () => import("../views/Index.vue"), //main的页面
         },
-
+        {
+            path: "/test", //列表页
+            name: "test",
+            meta: {
+              title: "测试",
+            },
+            component: () => import("../views/test.vue"),
+          },
+      ],
+    },
+    {
+      path: "/sys",
+      name: "Sys",
+      meta: {
+        title: "系统管理",
+      },
+      redirect: "/sys/user", //跳转到首页
+      component: () => import("../views/Home.vue"), //header的页面
+      children: [
         {
           path: "/sys/user",
           name: "User",
           meta: {
-            title: "用户",
+            title: "用户管理",
           },
           component: () => import("../views/admin/sys/User.vue"),
         },
@@ -68,7 +96,7 @@ const router = new Router({
           path: "/sys/role",
           name: "Role",
           meta: {
-            title: "角色",
+            title: "角色管理",
           },
           component: () => import("../views/admin/sys/Role.vue"),
         },
@@ -76,27 +104,73 @@ const router = new Router({
           path: "/sys/permission",
           name: "Permission",
           meta: {
-            title: "权限",
+            title: "权限管理",
           },
           component: () => import("../views/admin/sys/Permission.vue"),
         },
-
-        {
-          path: "/book", //列表页
-          name: "Book",
-          component: () => import("../views/admin/book/Book.vue"),
-        },
-
-        {
-          path: "/test", //列表页
-          name: "test",
-          meta: {
-            title: "测试",
-          },
-          component: () => import("../views/test.vue"),
-        },
       ],
     },
+
+    // {
+    //   path: "/",
+    //   name: "Home",
+    //   redirect:'/index',//跳转到首页
+    //   component: () => import("../views/Home.vue"), //header的页面
+    //   children: [
+    //     {
+    //       path: "/index",
+    //       name: "Index",
+    //       meta: {
+    //         title: "首页",
+    //       },
+    //       component: () => import("../views/Index.vue"), //main的页面
+    //     },
+
+    //     {
+    //         path: "/sys",
+    //         name: "Sys",
+    //         meta: {
+    //             title: "管理",
+    //         },
+    //         redirect:'/sys/user',//跳转到首页
+    //         // component: () => import("../views/Home.vue"), //header的页面
+    //         children: [
+    //             {
+    //                 path: "/sys/user",
+    //                 name: "User",
+    //                 meta: {
+    //                   title: "用户",
+    //                 },
+    //                 component: () => import("../views/admin/sys/User.vue"),
+    //               },
+    //             {
+    //             path: "/sys/role",
+    //             name: "Role",
+    //             meta: {
+    //                 title: "角色",
+    //             },
+    //             component: () => import("../views/admin/sys/Role.vue"),
+    //             },
+    //             {
+    //             path: "/sys/permission",
+    //             name: "Permission",
+    //             meta: {
+    //                 title: "权限",
+    //             },
+    //             component: () => import("../views/admin/sys/Permission.vue"),
+    //             },
+    //         ]
+    //     }
+    //   ],
+    // },
+
+    {
+      path: "/book", //列表页
+      name: "Book",
+      component: () => import("../views/admin/book/Book.vue"),
+    },
+
+  
 
     {
       path: "/book/detail", //图书详情页

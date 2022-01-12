@@ -58,26 +58,11 @@
       <el-table-column prop="id" label="id" width="180"> </el-table-column>
 
       <el-table-column prop="name" label="名称"> </el-table-column>
+            <el-table-column prop="path" label="路径"> </el-table-column>
       <el-table-column prop="remark" label="备注"> </el-table-column>
       <el-table-column prop="createdAt" label="创建时间"> </el-table-column>
-      <el-table-column prop="status" label="状态">
-        <template slot-scope="scope">
-          <el-tag
-            size="small"
-            v-if="scope.row.status === 1"
-            type="success"
-            effect="dark"
-            >正常</el-tag
-          >
-          <el-tag
-            size="small"
-            v-else-if="scope.row.status === 0"
-            type="danger"
-            effect="dark"
-            >禁用</el-tag
-          >
-        </template>
-      </el-table-column>
+  
+      
 
       <el-table-column label="操作">
         <template slot-scope="scope">
@@ -230,7 +215,7 @@ export default {
       console.log(params);
       // return false;
       this.$axios
-        .get("/sys/role/list", {
+        .get("/sys/permission/list", {
           params: params,
         })
         .then((response) => {
