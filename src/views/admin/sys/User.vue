@@ -69,7 +69,19 @@
           <span>{{ scope.row.username }}</span>
         </template>
       </el-table-column>
+      <el-table-column label="角色名称">
+        <template slot-scope="scope">
+          <el-tag
+            size="small"
+            type="info"
+            v-for="item in scope.row.sysRoles"
+            :key="item.name"
+            >{{ item.name }}</el-tag
+          >
+        </template>
+      </el-table-column>
       <el-table-column prop="mobile" label="手机号"> </el-table-column>
+
       <el-table-column prop="remark" label="备注"> </el-table-column>
       <el-table-column prop="createdAt" label="创建时间"> </el-table-column>
       <el-table-column prop="status" label="状态">
@@ -310,9 +322,16 @@ export default {
     roleHandle(id) {
       this.roleDialogFormVisible = true;
 
-      console.log(id)
+      console.log(id);
+
+      //获取角色列表
+      this.$axios.get("/sys/role/list").then((res) => {
+        this.roleTreeData = res.data.data.records;
+      });
+
+      //获取用户拥有的角色
       this.$axios
-        .get("/sys/user/detail" , { params: { id: id } })
+        .get("/sys/user/detail", { params: { id: id } })
         .then((res) => {
           this.roleForm = res.data.data;
 
@@ -321,17 +340,38 @@ export default {
             roleIds.push(row.id);
           });
 
+          //拥有的角色默认选中
           this.$refs.roleTree.setCheckedKeys(roleIds);
         });
     },
-    //分配权限按钮操作
-    permHandle(id) {
-      this.permDialogVisible = true; //打开对话框
+    //分配角色按钮操作
+    submitRoleHandle(formName) {
+      console.log(formName);
+      var roleIds = this.$refs.roleTree.getCheckedKeys(); //获取选中的roleId
 
-      this.$axios.get("/sys/role/info", { params: { id: id } }).then((res) => {
-        this.$refs.permTree.setCheckedKeys(res.data.data.menuIds);
-        this.permForm = res.data.data;
-      });
+      console.log(roleIds);
+
+      this.$axios
+        .post("/sys/user/role/update", {
+          id: this.roleForm.id,
+          roleIds: roleIds,
+        })
+        .then((res) => {
+          console.log(res);
+          if(res.data.code==20000){
+          this.$message({
+            showClose: true,
+            message: "恭喜你，操作成功",
+            type: "success",
+            onClose: () => {
+              this.getUserList();
+            },
+          });
+
+          this.roleDialogFormVisible = false; //关闭弹窗
+          }
+
+        });
     },
     //新增按钮操作
     addHandle() {
@@ -386,15 +426,6 @@ export default {
       });
     },
 
-    // toggleSelection(rows) {
-    //   if (rows) {
-    //     rows.forEach((row) => {
-    //       this.$refs.multipleTable.toggleRowSelection(row);
-    //     });
-    //   } else {
-    //     this.$refs.multipleTable.clearSelection();
-    //   }
-    // },
     //勾选改变
     handleSelectionChange(val) {
       console.log("勾选");

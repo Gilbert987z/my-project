@@ -142,8 +142,8 @@ export default {
       captchaImg: null,
 
       loginForm: {
-        username: "",
-        password: "",
+        username: "lisi",
+        password: "1234",
         code: "",
         token: "",
       },

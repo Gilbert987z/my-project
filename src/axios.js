@@ -71,6 +71,10 @@ request.interceptors.response.use(
           //       redirect: router.currentRoute.fullPath,
           //     },
           //   });
+          Notification.error({
+            title: "401",
+            message: error.response.data,
+          });
           break;
 
         // 403 token过期
@@ -99,6 +103,10 @@ request.interceptors.response.use(
 
         // 404请求不存在
         case 404:
+          Notification.error({
+            title: "404",
+            message: error.response.data,
+          });
           //   Message({
           //     message: "网络请求不存在",
           //     duration: 1500,
