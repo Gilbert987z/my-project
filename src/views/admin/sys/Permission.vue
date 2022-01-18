@@ -11,7 +11,7 @@
           placeholder="请输入权限名称"
           clearable
           prefix-icon="el-icon-search"
-          @input="bookHandleSearchEvent"
+          @input="searchEvent"
           v-model="formSearch.queryName"
         >
         </el-input>
@@ -58,18 +58,31 @@
       <el-table-column prop="id" label="id" width="180"> </el-table-column>
 
       <el-table-column prop="name" label="名称"> </el-table-column>
-            <el-table-column prop="path" label="路径"> </el-table-column>
+      <el-table-column prop="path" label="路径"> </el-table-column>
       <el-table-column prop="remark" label="备注"> </el-table-column>
       <el-table-column prop="createdAt" label="创建时间"> </el-table-column>
-  
-      
+
+      <el-table-column prop="status" label="状态">
+        <template slot-scope="scope">
+          <el-tag
+            size="small"
+            v-if="scope.row.status === 1"
+            type="success"
+            effect="dark"
+            >正常</el-tag
+          >
+          <el-tag
+            size="small"
+            v-else-if="scope.row.status === 0"
+            type="danger"
+            effect="dark"
+            >禁用</el-tag
+          >
+        </template>
+      </el-table-column>
 
       <el-table-column label="操作">
         <template slot-scope="scope">
-          <el-button type="text" @click="permHandle(scope.row.id)"
-            >分配权限</el-button
-          >
-          <el-divider direction="vertical"></el-divider>
           <el-button type="text" @click="editHandle(scope.row.id)"
             >编辑</el-button
           >
@@ -134,28 +147,6 @@
         </el-form-item>
       </el-form>
     </el-dialog>
-
-    <el-dialog title="分配权限" :visible.sync="permDialogVisible" width="600px">
-      <el-form :model="permForm">
-        <el-tree
-          :data="permTreeData"
-          show-checkbox
-          ref="permTree"
-          :default-expand-all="true"
-          node-key="id"
-          :check-strictly="true"
-          :props="defaultProps"
-        >
-        </el-tree>
-      </el-form>
-
-      <span slot="footer" class="dialog-footer">
-        <el-button @click="permDialogVisible = false">取 消</el-button>
-        <el-button type="primary" @click="submitPermFormHandle('permForm')"
-          >确 定</el-button
-        >
-      </span>
-    </el-dialog>
   </div>
 </template>
 
@@ -181,14 +172,6 @@ export default {
         name: [{ required: true, message: "请输入角色名称", trigger: "blur" }],
         status: [{ required: true, message: "请选择状态", trigger: "blur" }],
       },
-      //分配权限对话框
-      permDialogVisible: false,
-      permForm: {},
-      defaultProps: {
-        children: "children",
-        label: "name",
-      },
-      permTreeData: [],
 
       //列表
       info: [], //列表数据
@@ -255,9 +238,9 @@ export default {
     },
 
     //按角色名称查询
-    bookHandleSearchEvent(val) {
-      this.inputBookName = val;
-      console.log("inputBookName" + val);
+    searchEvent(val) {
+      this.inputName = val;
+      console.log("inputName" + val);
       this.getTableList();
     },
     //重置表单数据
@@ -270,15 +253,7 @@ export default {
     handleClose() {
       this.resetForm("editForm"); //重置表单数据
     },
-    //分配权限按钮操作
-    permHandle(id) {
-      this.permDialogVisible = true; //打开对话框
 
-      this.$axios.get("/sys/role/info", { params: { id: id } }).then((res) => {
-        this.$refs.permTree.setCheckedKeys(res.data.data.menuIds);
-        this.permForm = res.data.data;
-      });
-    },
     //新增按钮操作
     addHandle() {
       (this.editForm.status = 1), //默认是正常
@@ -386,9 +361,9 @@ export default {
   created() {
     this.getTableList();
 
-    this.$axios.get('/sys/permission/list').then(res => {
-				this.permTreeData = res.data.data
-			})
+    this.$axios.get("/sys/permission/list").then((res) => {
+      this.permTreeData = res.data.data;
+    });
   },
   mounted() {},
 };

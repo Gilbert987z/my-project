@@ -271,8 +271,8 @@ export default {
 
     //按角色名称查询
     bookHandleSearchEvent(val) {
-      this.inputBookName = val;
-      console.log("inputBookName" + val);
+      this.inputName = val;
+      console.log("inputName" + val);
       this.getTableList();
     },
     //重置表单数据

@@ -353,7 +353,7 @@ export default {
 
       this.$axios
         .post("/sys/user/role/update", {
-          id: this.roleForm.id,
+          userId: this.roleForm.id,
           roleIds: roleIds,
         })
         .then((res) => {
