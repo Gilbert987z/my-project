@@ -74,12 +74,19 @@ export default {
   },
   created() {
     this.getUserInfo(); //进入首页，就获取用户信息
+    this.getUserPermissions();
   },
   methods: {
     getUserInfo() {
       this.$axios.get("/user/info").then((res) => {
         this.userInfo = res.data.data;
         console.log(this.userInfo);
+      });
+    },
+       getUserPermissions() {
+      this.$axios.get("/user/permissions").then((res) => {
+        this.userPermissions = res.data.data;
+        console.log(this.userPermissions);
       });
     },
     logout() {
