@@ -173,6 +173,7 @@ export default {
       this.$refs[formName].validate((valid) => {
         //表单校验
         if (valid) {
+          
           axios
             .post("/login", this.$qs.stringify(this.loginForm), {
               headers: { "Content-Type": "application/x-www-form-urlencoded" },
