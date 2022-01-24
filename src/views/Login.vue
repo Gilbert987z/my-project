@@ -144,7 +144,7 @@ export default {
       loginForm: {
         username: "lisi",
         password: "1234",
-        code: "",
+        code: "11111",
         token: "",
       },
       registerForm: {
@@ -156,6 +156,9 @@ export default {
       loginRules: {
         username: [{ required: true, message: "用户名必填", trigger: "blur" }],
         password: [{ required: true, message: "密码必填", trigger: "blur" }],
+        code: [{ required: true, message: "验证码必填", trigger: "blur" },
+        {pattern: /^[a-zA_Z0-9]{5}$/, message:'请输入5位数字或字母的验证码', trigger: 'blur'},
+        ],
       },
     };
   },
