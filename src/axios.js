@@ -37,7 +37,7 @@ request.interceptors.response.use(
       if (response.data.code == 0) {
         console.log("test");
       } else if (response.data.code == 20001) {
-        console.log("test");
+        console.log("20001报错");
       
         Notification.error({
           title: "错误",

@@ -256,16 +256,16 @@ export default {
       console.log("submit!");
     },
     getCaptcha() {
-      console.log("getCaptcha");
+      // console.log("getCaptcha");
 
       this.$axios.get("/captcha").then((res) => {
-        console.log(res);
+        // console.log(res);
         let data = res.data.data;
-        console.log(data);
+        // console.log(data);
         this.loginForm.token = data.token;
         this.captchaImg = data.captchaImg;
-        console.log("token", this.loginForm.token);
-        console.log("captchaImg", this.captchaImg);
+        // console.log("token", this.loginForm.token);
+        // console.log("captchaImg", this.captchaImg);
         // this.loginForm.code = ''
       });
     },
