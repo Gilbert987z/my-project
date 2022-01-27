@@ -33,6 +33,8 @@ request.interceptors.response.use(
     // 如果返回的状态码为200，说明接口请求成功，可以正常拿到数据
     // 否则的话抛出错误
     if (response.status === 200) {
+      console.log(response.data.code)
+
       // 这里可以根据code值进行判断处理，需要与后端协商统一
       if (response.data.code == 0) {
         console.log("test");

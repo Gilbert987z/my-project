@@ -182,7 +182,7 @@ export default {
               headers: { "Content-Type": "application/x-www-form-urlencoded" },
             })
             .then((response) => {
-              console.log(response);
+              console.log(response.data);
               var message = response.data.message;
               var success = response.data.success;
               var token = response.data.data.token;
@@ -195,6 +195,7 @@ export default {
                 messageType = "success";
               } else {
                 messageType = "error";
+                this.getCaptcha();//重新请求验证码接口
               }
               console.log(messageType);
               this.$message({
@@ -213,7 +214,7 @@ export default {
               // 请求失败处理
               console.log(error);
             });
-          console.log("submit!");
+          console.log("login submit!");
         } else {
           console.log("error submit!!");
           return false;
