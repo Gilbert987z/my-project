@@ -110,7 +110,41 @@ const router = new Router({
         },
       ],
     },
-
+    {
+      path: "/book",
+      name: "Book",
+      meta: {
+        title: "图书管理",
+      },
+      redirect: "/book/list", //跳转到图书列表
+      component: () => import("../views/admin/book/Book.vue"), //header的页面
+      children: [
+        {
+          path: "/sys/user",
+          name: "User",
+          meta: {
+            title: "图书列表",
+          },
+          component: () => import("../views/admin/book/Book.vue"),
+        },
+        {
+          path: "/sys/bookType",
+          name: "BookType",
+          meta: {
+            title: "图书类型",
+          },
+          component: () => import("../views/admin/book/BookType.vue"),
+        },
+        {
+          path: "/sys/bookPublisher",
+          name: "BookPublisher",
+          meta: {
+            title: "图书出版商",
+          },
+          component: () => import("../views/admin/book/BookPublisher.vue"),
+        },
+      ],
+    },
     // {
     //   path: "/",
     //   name: "Home",

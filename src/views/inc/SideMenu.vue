@@ -36,11 +36,6 @@
           <el-menu-item index="1-3">权限管理</el-menu-item>
         </router-link>
       </el-menu-item-group>
-      
-      <el-submenu index="1-4">
-        <template slot="title">选项4</template>
-        <el-menu-item index="1-4-1">选项1</el-menu-item>
-      </el-submenu>
     </el-submenu>
     <el-submenu index="2">
       <template slot="title">
@@ -48,11 +43,15 @@
         <span>图书管理</span>
       </template>
       <el-menu-item-group>
-        <el-menu-item index="1-1">图书列表</el-menu-item>
-        <el-submenu index="1-4">
-          <template slot="title">选项4</template>
-          <el-menu-item index="1-4-1">选项1</el-menu-item>
-        </el-submenu>
+        <router-link :to="{ name: 'Book' }">
+          <el-menu-item index="2-1">图书列表</el-menu-item>
+        </router-link>
+        <router-link :to="{ name: 'BookType' }">
+          <el-menu-item index="2-2">图书类型</el-menu-item>
+        </router-link>
+        <router-link :to="{ name: 'BookPublisher' }">
+          <el-menu-item index="2-3">图书出版商</el-menu-item>
+        </router-link>
       </el-menu-item-group>
     </el-submenu>
     <el-menu-item index="3" disabled>
