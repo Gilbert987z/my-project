@@ -17,24 +17,34 @@
         </el-input>
       </el-form-item>
 
-    <el-select v-model="bookTypeValue" @change="bookTypeChange" clearable placeholder="请选择图书类型">
-      <el-option
+      <el-select
+        v-model="bookTypeValue"
+        @change="bookTypeChange"
+        clearable
+        placeholder="请选择图书类型"
+      >
+        <el-option
           v-for="item in bookTypeList"
           :key="item.id"
           :label="item.bookType"
-          :value="item.id">
-      </el-option>
-
-    </el-select>
-    <el-select v-model="publisherValue" @change="publisherChange" clearable placeholder="请选择出版社">
-      <el-option
+          :value="item.id"
+        >
+        </el-option>
+      </el-select>
+      <el-select
+        v-model="publisherValue"
+        @change="publisherChange"
+        clearable
+        placeholder="请选择出版社"
+      >
+        <el-option
           v-for="item in publisherList"
           :key="item.id"
           :label="item.publisher"
-          :value="item.id">
-      </el-option>
-    </el-select>
-
+          :value="item.id"
+        >
+        </el-option>
+      </el-select>
 
       <el-form-item>
         <el-button type="primary" @click="getTableList">搜索</el-button>
@@ -48,6 +58,15 @@
       >
       <el-row style="float:right">
         <!-- <el-popconfirm title="这是确定批量删除吗？" @confirm="delHandle(null)"> -->
+
+        <el-button
+          style="margin-right:10px"
+          type="success"
+          icon="el-icon-export"
+          @click="exportData()"
+          >导出</el-button
+        >
+
         <el-button
           style="margin-right:10px"
           type="danger"
@@ -275,6 +294,7 @@ export default {
         page: this.page.current,
         size: this.page.size,
         name: this.formSearch.queryName,
+        action: "export",
       };
       console.log(params);
       // return false;
@@ -290,6 +310,48 @@ export default {
 
           // this.$router.push({path: '/movie?page=' + this.page.current_page});
           //+'&size='+this.page.pageSize
+        })
+        .catch(function(error) {
+          // 请求失败处理
+          console.log(error);
+        });
+    },
+    //导出excel
+    exportData() {
+      var params = {
+        action: "export",
+      };
+      console.log(params);
+      // return false;
+      // this.$axios
+      //   .get("/book/export", {
+      //     params: params,
+      //   })
+      this.$axios({
+        method: "get",
+        url: "/book/export",
+        params: params,
+        // data: formData, // 参数
+        responseType: "blob", // 表明返回服务器返回的数据类型
+      })
+        .then((res) => {
+          console.log(res);
+          console(res.headers)
+          let fileName1 = res.headers['content-disposition'];
+          console('weqrqwerwqe'+fileName1);
+
+          // 处理返回的文件流
+          let blob = new Blob([res.data], { type: res.data.type });
+          const fileName = "ProductTemplateCopy.xls";
+          let downloadElement = document.createElement("a");
+          let href = window.URL.createObjectURL(blob); //创建下载的链接
+          downloadElement.href = href;
+          downloadElement.download = fileName; //下载后文件名
+          document.body.appendChild(downloadElement);
+          downloadElement.click(); //点击下载
+          document.body.removeChild(downloadElement); //下载完成移除元素
+          window.URL.revokeObjectURL(href); //释放blob
+          this.$message.success("[订单信息查询]已成功导出!");
         })
         .catch(function(error) {
           // 请求失败处理
