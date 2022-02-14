@@ -335,14 +335,9 @@ export default {
         responseType: "blob", // 表明返回服务器返回的数据类型
       })
         .then((res) => {
-          console.log(res);
-          console(res.headers)
-          let fileName1 = res.headers['content-disposition'];
-          console('weqrqwerwqe'+fileName1);
-
           // 处理返回的文件流
           let blob = new Blob([res.data], { type: res.data.type });
-          const fileName = "ProductTemplateCopy.xls";
+          const fileName = decodeURI(res.headers['content-disposition'].split('=')[1], "UTF-8");//截取content-disposition的filename；按=分割，取最后一个
           let downloadElement = document.createElement("a");
           let href = window.URL.createObjectURL(blob); //创建下载的链接
           downloadElement.href = href;
@@ -351,7 +346,7 @@ export default {
           downloadElement.click(); //点击下载
           document.body.removeChild(downloadElement); //下载完成移除元素
           window.URL.revokeObjectURL(href); //释放blob
-          this.$message.success("[订单信息查询]已成功导出!");
+          this.$message.success("[图书信息]已成功导出!");
         })
         .catch(function(error) {
           // 请求失败处理
