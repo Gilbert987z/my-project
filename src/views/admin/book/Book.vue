@@ -105,7 +105,7 @@
             height="40"
             class="head_pic"
           />
-          {{ scope.row.bookName }}/￥{{ scope.row.price }}
+          {{ scope.row.name }}/￥{{ scope.row.price }}
         </template>
       </el-table-column>
       <el-table-column prop="author" label="作者"> </el-table-column>
@@ -116,7 +116,8 @@
           {{ scope.row.inventory }} / {{ scope.row.total }}
         </template>
       </el-table-column>
-      <el-table-column prop="desc" label="备注"> </el-table-column>
+      <el-table-column prop="remark"  label="备注"></el-table-column>
+
 
       <el-table-column prop="status" label="状态">
         <template slot-scope="scope">
@@ -294,7 +295,7 @@ export default {
         page: this.page.current,
         size: this.page.size,
         name: this.formSearch.queryName,
-        action: "export",
+        action: "list",
       };
       console.log(params);
       // return false;

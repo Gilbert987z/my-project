@@ -1,7 +1,6 @@
 <template>
   <div>
     <h1 style="text-align: center;">LMS</h1>
-
     <div class="login-container">
       <el-image class="login-pic" :src="require('../assets/login.png')">
       </el-image>
