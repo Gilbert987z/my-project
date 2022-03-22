@@ -185,6 +185,7 @@ export default {
               var message = response.data.message;
               var success = response.data.success;
               var token = response.data.data.token;
+              var refreshToken = response.data.data.refreshToken;
               console.log(message);
 
               var messageType = null;
@@ -206,6 +207,7 @@ export default {
               if (token) {
                 //token有值
                 localStorage.setItem("token", token); //将token存入本地
+                localStorage.setItem("refreshToken", refreshToken); //将token存入本地
                 this.$router.push({name:"Index"}); //跳转到首页
               }
             })
