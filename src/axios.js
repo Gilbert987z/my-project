@@ -6,7 +6,8 @@ import router from "./router";
 // import Element from "element-ui"
 
 // axios.defaults.baseURL = 'https://api-test.shall-buy.top'  //全局使用的请求域名
-axios.defaults.baseURL = "http://127.0.0.1:8088"; //全局使用的请求域名
+const request_url = "http://127.0.0.1:8088";
+axios.defaults.baseURL = request_url; //全局使用的请求域名
 
 // 以后再做前端的token刷新吧，太难了
 // 被挂起的请求数组
@@ -28,7 +29,9 @@ request.interceptors.request.use((config) => {
   return config;
 });
 
-window.
+
+
+
 // 是否正在刷新的标记
 let isRefreshing = false
 // 重试队列，每一项将是一个待执行的函数形式
@@ -49,6 +52,11 @@ function setToken(token,refreshToken){
     
   window.localStorage.setItem('refreshToken', refreshToken)
 }
+
+
+
+
+
 
 
 ////axios响应拦截
@@ -92,34 +100,36 @@ request.interceptors.response.use(
         // 401: 未登录
         // 未登录则跳转登录页面，并携带当前页面的路径
         // 在登录成功后返回当前页面，这一步需要在登录页操作。
-        case 418:
-          //   router.replace({
-          //     path: "/login",
-          //     query: {
-          //       redirect: router.currentRoute.fullPath,
-          //     },
-          //   });
-          Notification.error({
-            title: "401",
-            message: error.response.data,
-          });
-          router.push("/login"); //跳转到登录页
-          break;
+        // case 418:
+        //   //   router.replace({
+        //   //     path: "/login",
+        //   //     query: {
+        //   //       redirect: router.currentRoute.fullPath,
+        //   //     },
+        //   //   });
+        //   Notification.error({
+        //     title: "401",
+        //     message: error.response.data,
+        //   });
+        //   router.push("/login"); //跳转到登录页
+        //   break;
 
         case 401:
-          var config = error.config;
+        //要看懂需要学习promise的用法*********************************
 
-          if (!isRefreshing) {
+        var config = error.config;
+
+          if (!isRefreshing) { //没有刷新
             isRefreshing = true
-            
-            return refreshToken().then(res => {
+
+            return refreshToken().then(res => {//请求刷新token的接口
         
               const { token ,refreshToken} = res.data.data
              
               
-              setToken(token,refreshToken)
+              setToken(token,refreshToken) //将新的token和refresh_token保存到localStorage中
               config.headers['Authorization'] = `Auth ${token}`
-              config.baseURL = ''
+              config.baseURL = request_url
               console.log('token过期刷新接口');
                //  这里有个小问题  当在重试中 如果接口报错 就会直接跳转到登录页  需要后端配合
               // 已经刷新了token，将所有队列中的请求进行重试
@@ -128,29 +138,39 @@ request.interceptors.response.use(
               requests = []
               return request(config)
             },err=>{
-              console.log(err)
-              
+              console.log("errs",err)
+              Notification.error({
+                title: "401",
+                message: error.response.data.message,
+              });
+              router.push("/login"); //跳转到登录页
+
             }).catch(res => {
     
               console.error('refreshtoken error =>', res)
              
-            }).finally(() => {
-              console.log('这边');
+            }).finally(() => { //无论是否有触发异常，该语句都会执行
+              console.log('finally');
               
               isRefreshing = false
             })
           }else {
+            
+            console.log("else begin")
+            console.log("isRefreshing:",isRefreshing,"刷新")
             // 正在刷新token，将返回一个未执行resolve的promise
             // 保存函数 等待执行
             // 吧请求都保存起来 等刷新完成后再一个一个调用
              new Promise((resolve) => {
               // 将resolve放进队列，用一个函数形式来保存，等token刷新后直接执行
               requests.push((token) => {
-                config.baseURL = ''
+                config.baseURL = request_url
                 config.headers['Authorization'] = `Auth ${token}`
                 resolve(request(config))
               })
             })
+
+            console.log("else finish")
           }
        
           break;
