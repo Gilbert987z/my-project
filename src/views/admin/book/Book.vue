@@ -17,7 +17,7 @@
         </el-input>
       </el-form-item>
 
-      <el-select
+      <!-- <el-select
         v-model="bookTypeValue"
         @change="bookTypeChange"
         clearable
@@ -44,7 +44,7 @@
           :value="item.id"
         >
         </el-option>
-      </el-select>
+      </el-select> -->
 
       <el-form-item>
         <el-button type="primary" @click="getTableList">搜索</el-button>
@@ -215,7 +215,7 @@
     </el-dialog>
 
     <!-- 分配权限对话框 -->
-    <el-dialog
+    <!-- <el-dialog
       title="分配角色"
       :visible.sync="roleDialogFormVisible"
       width="600px"
@@ -239,7 +239,7 @@
           >确 定</el-button
         >
       </div>
-    </el-dialog>
+    </el-dialog> -->
   </div>
 </template>
 

@@ -49,7 +49,7 @@ const router = new Router({
     //   // component: () => import("../views/Home.vue"), //header的页面
     // },
     {
-      path: "/",
+      path: "/",  // path 设置为 “/” ，默认显示该页面
       name: "Home",
       meta: {
         title: "图书管理系统",

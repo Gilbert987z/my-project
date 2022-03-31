@@ -1,6 +1,20 @@
 <template>
   <div>
     <h1 style="text-align: center;">LMS</h1>
+
+    <!-- <div id="example"></div>
+<script>
+txt = "<p>浏览器代号: " + navigator.appCodeName + "</p>";
+txt+= "<p>浏览器名称: " + navigator.appName + "</p>";
+txt+= "<p>浏览器版本: " + navigator.appVersion + "</p>";
+txt+= "<p>启用Cookies: " + navigator.cookieEnabled + "</p>";
+txt+= "<p>硬件平台: " + navigator.platform + "</p>";
+txt+= "<p>用户代理: " + navigator.userAgent + "</p>";
+txt+= "<p>用户代理语言: " + navigator.language + "</p>";
+document.getElementById("example").innerHTML=txt;
+</script> -->
+
+
     <div class="login-container">
       <el-image class="login-pic" :src="require('../assets/login.png')">
       </el-image>
@@ -159,6 +173,9 @@ export default {
         {pattern: /^[a-zA_Z0-9]{5}$/, message:'请输入5位数字或字母的验证码', trigger: 'blur'},
         ],
       },
+
+     
+
     };
   },
   computed: {

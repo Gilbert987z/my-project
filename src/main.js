@@ -9,6 +9,10 @@ import axios from "./axios";
 import ElementUI from "element-ui";
 import "element-ui/lib/theme-chalk/index.css";
 import qs from "qs";
+import vConsole from 'vconsole';
+
+new vConsole();
+
 
 Vue.use(ElementUI);
 // Vue.use(VueAxios, axios)

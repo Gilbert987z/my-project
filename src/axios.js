@@ -6,8 +6,9 @@ import router from "./router";
 // import Element from "element-ui"
 
 // axios.defaults.baseURL = 'https://api-test.shall-buy.top'  //全局使用的请求域名
-const request_url = "http://127.0.0.1:8088";
-axios.defaults.baseURL = request_url; //全局使用的请求域名
+// const request_domain = "http://127.0.0.1:8088";
+const request_domain = "http://192.168.10.158:8088";
+axios.defaults.baseURL = request_domain; //全局使用的请求域名
 
 // 以后再做前端的token刷新吧，太难了
 // 被挂起的请求数组
@@ -29,35 +30,25 @@ request.interceptors.request.use((config) => {
   return config;
 });
 
-
-
-
 // 是否正在刷新的标记
-let isRefreshing = false
+let isRefreshing = false;
 // 重试队列，每一项将是一个待执行的函数形式
-let requests = []
+let requests = [];
 
-
-function refreshToken () {
+function refreshToken() {
   // 我项目中  更新token 需要吧原有的token 换成refreshToken去请求   这里根据需求可以改动
-  window.localStorage.setItem('token', window.localStorage.refreshToken)
-  return request({method:'get',url: '/api-token-refresh'})
+  window.localStorage.setItem("token", window.localStorage.refreshToken);
+  return request({ method: "get", url: "/api-token-refresh" });
 }
 // 给实例添加一个setToken方法，用于登录后将最新token动态添加到header，同时将token保存在localStorage中
-function setToken(token,refreshToken){
-  console.log("重新缓存token")
-  request.defaults.headers['Authorization'] = `Auth ${token}`
+function setToken(token, refreshToken) {
+  console.log("重新缓存token");
+  request.defaults.headers["Authorization"] = `Auth ${token}`;
   // 这里用到的存储是localStorage
-  window.localStorage.setItem('token', token)
-    
-  window.localStorage.setItem('refreshToken', refreshToken)
+  window.localStorage.setItem("token", token);
+
+  window.localStorage.setItem("refreshToken", refreshToken);
 }
-
-
-
-
-
-
 
 ////axios响应拦截
 request.interceptors.response.use(
@@ -65,14 +56,14 @@ request.interceptors.response.use(
     // 如果返回的状态码为200，说明接口请求成功，可以正常拿到数据
     // 否则的话抛出错误
     if (response.status === 200) {
-      console.log(response.data.code)
+      console.log(response.data.code);
 
       // 这里可以根据code值进行判断处理，需要与后端协商统一
       if (response.data.code == 0) {
         console.log("test");
       } else if (response.data.code == 20001) {
         console.log("20001报错");
-      
+
         Notification.error({
           title: "错误",
           message: response.data.message,
@@ -93,8 +84,6 @@ request.interceptors.response.use(
   // 然后根据返回的状态码进行一些操作，例如登录过期提示，错误提示等等
   // 下面列举几个常见的操作，其他需求可自行扩展
   (error) => {
-
-
     if (error.response.status) {
       switch (error.response.status) {
         // 401: 未登录
@@ -115,64 +104,73 @@ request.interceptors.response.use(
         //   break;
 
         case 401:
-        //要看懂需要学习promise的用法*********************************
+          //要看懂需要学习promise的用法*********************************
+          console.log("error1111111",error)
+          console.log("error2222222",error.config)
+          var config = error.config; //获取axios请求的config的配置
 
-        var config = error.config;
-
-          if (!isRefreshing) { //没有刷新
-            isRefreshing = true
-
-            return refreshToken().then(res => {//请求刷新token的接口
-        
-              const { token ,refreshToken} = res.data.data
-             
-              
-              setToken(token,refreshToken) //将新的token和refresh_token保存到localStorage中
-              config.headers['Authorization'] = `Auth ${token}`
-              config.baseURL = request_url
-              console.log('token过期刷新接口');
-               //  这里有个小问题  当在重试中 如果接口报错 就会直接跳转到登录页  需要后端配合
-              // 已经刷新了token，将所有队列中的请求进行重试
-              
-              requests.forEach(cb => cb(token))
-              requests = []
-              return request(config)
-            },err=>{
-              console.log("errs",err)
-              Notification.error({
-                title: "401",
-                message: error.response.data.message,
-              });
-              router.push("/login"); //跳转到登录页
-
-            }).catch(res => {
-    
-              console.error('refreshtoken error =>', res)
-             
-            }).finally(() => { //无论是否有触发异常，该语句都会执行
-              console.log('finally');
-              
-              isRefreshing = false
-            })
-          }else {
+          if (!isRefreshing) {
+            //没有刷新
+            isRefreshing = true;
             
-            console.log("else begin")
-            console.log("isRefreshing:",isRefreshing,"刷新")
+            //执行/api-token-refresh接口的请求
+            return refreshToken()
+              .then(
+                (res) => {
+                  //请求刷新token的接口
+
+                  const { token, refreshToken } = res.data.data;
+
+                  setToken(token, refreshToken); //将新的token和refresh_token保存到localStorage中
+                  config.headers["Authorization"] = `Auth ${token}`; //替换token
+                  // config.baseURL = request_domain;
+                  console.log("token过期刷新接口");
+                  //  这里有个小问题  当在重试中 如果接口报错 就会直接跳转到登录页  需要后端配合
+                  // 已经刷新了token，将所有队列中的请求进行重试
+
+                  requests.forEach((cb) => cb(token));
+                  requests = [];
+                  return request(config); //执行之前401的接口？ 并return 退出？
+                },
+                (err) => {
+                  console.log("errs", err);
+                  Notification.error({
+                    title: "401",
+                    message: error.response.data.message,
+                  });
+
+                  localStorage.clear();  //清空缓存中的数据
+                  sessionStorage.clear();
+                  router.push("/login"); //跳转到登录页
+                }
+              )
+              .catch((res) => {
+                console.error("refreshtoken error =>", res);
+              })
+              .finally(() => {
+                //无论是否有触发异常，该语句都会执行
+                console.log("finally");
+
+                isRefreshing = false;
+              });
+          } else { //异步的处理？
+            console.log("else begin");
+            console.log("isRefreshing:", isRefreshing, "刷新");
             // 正在刷新token，将返回一个未执行resolve的promise
             // 保存函数 等待执行
             // 吧请求都保存起来 等刷新完成后再一个一个调用
-             new Promise((resolve) => {
+            new Promise((resolve) => {
               // 将resolve放进队列，用一个函数形式来保存，等token刷新后直接执行
               requests.push((token) => {
-                config.baseURL = request_url
-                config.headers['Authorization'] = `Auth ${token}`
-                resolve(request(config))
-              })
-            })
+                // config.baseURL = request_domain;
+                config.headers["Authorization"] = `Auth ${token}`;
+                resolve(request(config));
+              });
+            });
 
-            console.log("else finish")
+            console.log("else finish");
           }
-       
+
           break;
 
         // 403 token过期
@@ -223,8 +221,6 @@ request.interceptors.response.use(
     }
   }
 );
- 
-
 
 export default request;
 
