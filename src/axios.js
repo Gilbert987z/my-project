@@ -7,7 +7,8 @@ import router from "./router";
 
 // axios.defaults.baseURL = 'https://api-test.shall-buy.top'  //全局使用的请求域名
 // const request_domain = "http://127.0.0.1:8088";
-const request_domain = "http://192.168.10.158:8088";
+// const request_domain = "http://192.168.10.158:8088";
+const request_domain = "http://192.168.0.105:8088";
 axios.defaults.baseURL = request_domain; //全局使用的请求域名
 
 // 以后再做前端的token刷新吧，太难了

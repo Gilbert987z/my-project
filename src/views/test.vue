@@ -9,6 +9,10 @@
     </el-form-item>
 
     <el-button @click="goOff()">返回</el-button>
+    <!-- <input type="button" value="Toast提示" onclick="myObj.showToast('曹神前来日狗~');"/> -->
+
+    <el-button @click="window.myObj.showToast('曹神前来日狗11~')">测试调用1</el-button>
+    <el-button @click="showToast('曹神前来日狗121212~')">测试调用2</el-button>
   </el-form>
 </template>
 <script>
@@ -18,6 +22,7 @@ export default {
       ruleForm: {
         name: "",
       },
+      msg: "哈哈"
     };
   },
   methods: {
@@ -77,9 +82,21 @@ export default {
         this.$router.go(-1);
       }
     },
+
+    callJsFunction(str) {
+        this.msg = "我通过原生方法改变了文字" + str
+        return "js调用成功"
+	},
+    callAndroidFunction() {
+        window.myObj.showToast('曹神前来日狗~')
+	},
+  showToast(str){
+    window.myObj.showToast(str)
+  }
   },
   created() {
     this.navigatorInfomation();
+    this.callAndroidFunction()
   },
 };
 </script>
