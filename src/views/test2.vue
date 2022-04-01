@@ -1,5 +1,10 @@
 <template>
   <el-row>
+    <p id='p'>hello world</p>
+    <el-button @click="jsfunction()"
+      >hello world</el-button
+    >
+
     <el-button @click="goOff()">返回</el-button>
     <!-- <input type="button" value="Toast提示" onclick="myObj.showToast('曹神前来日狗~');"/> -->
 
@@ -81,10 +86,16 @@ export default {
     showToast(str) {
       window.myObj.showToast(str);
     },
+
+
+    jsfunction(){
+       document.getElementById("p").innerHTML += "str"
+    }
   },
   created() {
     this.navigatorInfomation();
     this.callAndroidFunction();
+    window.jsfunction = this.jsfunction;
   },
 };
 </script>

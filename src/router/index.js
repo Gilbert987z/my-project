@@ -273,7 +273,7 @@ router.beforeEach((to, from, next) => {
     document.title = to.meta.title;
   }
 
-  if (to.path === "/login" || to.path === "/404") {
+  if (to.path === "/login" || to.path === "/404" || to.path == "/test2") {
     //login和404网页不用校验
     next();
     // console.log(11)
