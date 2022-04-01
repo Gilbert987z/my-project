@@ -42,6 +42,16 @@ const router = new Router({
       component: () => import("../views/Login.vue"),
     },
 
+    {
+      path: "/test2",
+      name: "test2",
+      meta: {
+        title: "测试页",
+      },
+      // component: login
+      component: () => import("../views/test2.vue"),
+    },
+
     // {
     //   path: "/",
     //   name: "Home",
