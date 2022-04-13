@@ -15,28 +15,28 @@ export default {
   },
   methods: {
     showToast(str) {
-      let x =window.androidFunction.showToast(str);
-      console.log(x)
+      let android_data =window.androidFunction.showToast(str);//调用Android的toast方法
+      console.log(android_data) //打印Android方法的返回值
     },
 
     jsfunction(str) {
       document.getElementById("p").innerHTML += str;
-    },
+    // },
 
-    jsfunction2(str) {
-      document.getElementById("p").innerHTML += str;
+    // jsfunction2(str) {
+    //   document.getElementById("p").innerHTML += str;
 
-      let str1 = {
-        test:2,
+      let json_data = {
+        test:1,
         test2:"这是js的返回值,可供Android获取"
       }
  
-      return  str1 //Android调用js方法，可获取返回值
+      return  json_data //Android调用js方法，可获取返回值
     },
   },
   created() {
     window.jsfunction = this.jsfunction;
-    window.jsfunction2 = this.jsfunction2;
+    // window.jsfunction2 = this.jsfunction2;
   },
 };
 </script>
