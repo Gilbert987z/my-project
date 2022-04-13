@@ -1,6 +1,8 @@
 <template>
   <el-row>
     <p id='p'>hello world</p>
+    <a href="android://h5/open?type=1&id=7#fragmentTest">打开看看</a>
+   
     <el-button @click="jsfunction()"
       >hello world</el-button
     >
@@ -12,7 +14,11 @@
       >测试调用1</el-button
     >
     <el-button @click="showToast('曹神前来日狗121212~')">测试调用2</el-button>
+
+
+    
   </el-row>
+  
 </template>
 <script>
 export default {
