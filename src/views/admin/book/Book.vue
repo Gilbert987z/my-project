@@ -5,14 +5,17 @@
       :model="formSearch"
       ref="formSearch"
       class="demo-form-inline"
+      action="javascript:return true;"
     >
       <el-form-item prop="queryName">
         <el-input
           placeholder="请输入图书名称"
           clearable
+          type="search"
           prefix-icon="el-icon-search"
           @input="handleSearchEvent"
           v-model="formSearch.queryName"
+         
         >
         </el-input>
       </el-form-item>
@@ -116,8 +119,7 @@
           {{ scope.row.inventory }} / {{ scope.row.total }}
         </template>
       </el-table-column>
-      <el-table-column prop="remark"  label="备注"></el-table-column>
-
+      <el-table-column prop="remark" label="备注"></el-table-column>
 
       <el-table-column prop="status" label="状态">
         <template slot-scope="scope">
@@ -338,7 +340,10 @@ export default {
         .then((res) => {
           // 处理返回的文件流
           let blob = new Blob([res.data], { type: res.data.type });
-          const fileName = decodeURI(res.headers['content-disposition'].split('=')[1], "UTF-8");//截取content-disposition的filename；按=分割，取最后一个
+          const fileName = decodeURI(
+            res.headers["content-disposition"].split("=")[1],
+            "UTF-8"
+          ); //截取content-disposition的filename；按=分割，取最后一个
           let downloadElement = document.createElement("a");
           let href = window.URL.createObjectURL(blob); //创建下载的链接
           downloadElement.href = href;
