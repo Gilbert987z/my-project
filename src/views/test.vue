@@ -8,12 +8,19 @@
       <el-button @click="resetForm('ruleForm')">重置</el-button>
     </el-form-item>
 
-    <el-button @click ="test()">测试</el-button>
+    <el-button @click="test()">测试</el-button>
     <el-button @click="goOff()">返回</el-button>
     <!-- <input type="button" value="Toast提示" onclick="myObj.showToast('曹神前来日狗~');"/> -->
 
-    <el-button @click="window.myObj.showToast('曹神前来日狗11~')">测试调用1</el-button>
+    <el-button @click="window.myObj.showToast('曹神前来日狗11~')"
+      >测试调用1</el-button
+    >
     <el-button @click="showToast('曹神前来日狗121212~')">测试调用2</el-button>
+
+
+    <el-input id="demoInput" value="hello world">
+    <el-button id="btn" @click="clipboard">复制到剪切板</el-button>
+
   </el-form>
 </template>
 <script>
@@ -23,12 +30,25 @@ export default {
       ruleForm: {
         name: "",
       },
-      msg: "哈哈"
+      msg: "哈哈",
     };
   },
   methods: {
     resetForm(formName) {
       this.$refs[formName].resetFields();
+    },
+    clipboard(){
+      const btn = document.querySelector('#btn');
+      btn.addEventListener('click', () => {
+        const input = document.querySelector('#demoInput');
+        input.select();
+        if (document.execCommand('copy')) {
+            document.execCommand('copy');
+            console.log('复制成功');
+        }
+})
+
+
     },
     navigatorInfomation() {
       console.log("浏览器代号: " + navigator.appCodeName);
@@ -85,22 +105,22 @@ export default {
     },
 
     callJsFunction(str) {
-        this.msg = "我通过原生方法改变了文字" + str
-        return "js调用成功"
-	},
+      this.msg = "我通过原生方法改变了文字" + str;
+      return "js调用成功";
+    },
     callAndroidFunction() {
-        window.myObj.showToast('曹神前来日狗~')
-	},
-  showToast(str){
-    window.myObj.showToast(str)
-  },
-  test(){
-    this.$router.push({name:"test2"}); //跳转到测试页面
-  }
+      window.myObj.showToast("曹神前来日狗~");
+    },
+    showToast(str) {
+      window.myObj.showToast(str);
+    },
+    test() {
+      this.$router.push({ name: "test2" }); //跳转到测试页面
+    },
   },
   created() {
     this.navigatorInfomation();
-    this.callAndroidFunction()
+    this.callAndroidFunction();
   },
 };
 </script>
