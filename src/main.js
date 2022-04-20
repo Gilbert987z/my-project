@@ -10,10 +10,10 @@ import ElementUI from "element-ui";
 import "element-ui/lib/theme-chalk/index.css";
 import qs from "qs";
 import vConsole from 'vconsole';
-
+import VueClipboard from 'vue-clipboard2'
 new vConsole();
 
-
+Vue.use(VueClipboard)
 Vue.use(ElementUI);
 // Vue.use(VueAxios, axios)
 

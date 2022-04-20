@@ -17,13 +17,31 @@
     >
     <el-button @click="showToast('曹神前来日狗121212~')">测试调用2</el-button>
 
-
-    <el-input id="demoInput" value="hello world">
+    <el-input id="demoInput" v-model="input"></el-input>
     <el-button id="btn" @click="clipboard">复制到剪切板</el-button>
 
+    <span>我是需要复制的内容</span>
+    <button
+      class="tag-read"
+      data-clipboard-text="我是需要复制的内容"
+      @click="copy"
+    >
+      点击复制
+    </button>
+    <!-- 要复制哪些内容，就放在 data-clipboard-text属性里-->
+
+     <div class="watermark">
+        <div class="watermarkinfo">{{ orderDetail.extract_code }}</div>
+        <el-button v-clipboard:copy="orderDetail.extract_code" v-clipboard:success="onCopy" v-clipboard:error="onError">复制</el-button>
+      </div>
   </el-form>
+  
 </template>
 <script>
+import Clipboard from "clipboard";
+
+
+
 export default {
   data() {
     return {
@@ -31,24 +49,48 @@ export default {
         name: "",
       },
       msg: "哈哈",
+      input: "",
+      orderDetail: {
+        extract_code:"1232132"
+      }
     };
   },
   methods: {
     resetForm(formName) {
       this.$refs[formName].resetFields();
     },
-    clipboard(){
-      const btn = document.querySelector('#btn');
-      btn.addEventListener('click', () => {
-        const input = document.querySelector('#demoInput');
+
+    copy() {
+      var clipboard = new Clipboard(".tag-read");
+      clipboard.on("success", () => {
+        this.$message.success("已成功复制到剪切板")
+        clipboard.destroy(); // 释放内存
+      });
+      clipboard.on("error", () => {
+         this.$message.error('不支持复制,该浏览器不支持自动复制！')
+        clipboard.destroy(); // 释放内存
+      });
+    },
+// 复制成功时的回调函数
+onCopy () {
+   this.$message.success("内容已复制到剪切板！")
+},
+// 复制失败时的回调函数
+onError () {
+   this.$message.error("抱歉，复制失败！")
+},
+
+
+    clipboard() {
+      const btn = document.querySelector("#btn");
+      btn.addEventListener("click", () => {
+        const input = document.querySelector("#demoInput");
         input.select();
-        if (document.execCommand('copy')) {
-            document.execCommand('copy');
-            console.log('复制成功');
+        if (document.execCommand("copy")) {
+          document.execCommand("copy");
+          console.log("复制成功");
         }
-})
-
-
+      });
     },
     navigatorInfomation() {
       console.log("浏览器代号: " + navigator.appCodeName);
