@@ -15,7 +15,7 @@
     >
     <el-button @click="showToast('曹神前来日狗121212~')">测试调用2</el-button>
 
-
+<input multiple="multiple" type="file" accept="image/jpeg, image/jpg, image/png">
     
   </el-row>
   
