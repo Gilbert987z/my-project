@@ -61,6 +61,15 @@ const router = new Router({
       component: () => import("../views/test3.vue"),
     },
     {
+      path: "/testInput",
+      name: "testInput",
+      meta: {
+        title: "测试页",
+      },
+      // component: login
+      component: () => import("../views/testInput.vue"),
+    },
+    {
       path: "/csdntest2",
       name: "csdntest2",
       meta: {
@@ -292,7 +301,7 @@ router.beforeEach((to, from, next) => {
     document.title = to.meta.title;
   }
 
-  if (to.path === "/login" || to.path === "/404" || to.path == "/test2"||to.path == "/test3"|| to.path == "/csdntest2") {
+  if (to.path === "/login" || to.path === "/404" || to.path == "/test2"||to.path == "/test3"|| to.path == "/csdntest2"|| to.path == "/testInput") {
     //login和404网页不用校验
     next();
     // console.log(11)

@@ -1,11 +1,9 @@
 <template>
   <el-row>
-    <p id='p'>hello world</p>
+    <p id="p">hello world</p>
     <a href="android://h5/open?type=1&id=7#fragmentTest">打开看看</a>
-   
-    <el-button @click="jsfunction()"
-      >hello world</el-button
-    >
+
+    <el-button @click="jsfunction()">hello world</el-button>
 
     <el-button @click="goOff()">返回</el-button>
     <!-- <input type="button" value="Toast提示" onclick="myObj.showToast('曹神前来日狗~');"/> -->
@@ -15,10 +13,26 @@
     >
     <el-button @click="showToast('曹神前来日狗121212~')">测试调用2</el-button>
 
-<input multiple="multiple" type="file" placeholder="这是一个提示信息！" title="xxxxx" capture  accept="image/jpeg, image/jpg, image/png,application/pdf">
-    
+    <input
+      multiple="multiple"
+      type="file"
+      placeholder="这是一个提示信息！"
+      title="xxxxx"
+      capture
+      accept="image/jpeg, image/jpg, image/png,application/pdf"
+    />
+    <input
+      multiple="multiple"
+      type="file"
+      placeholder="这是一个提示信息！"
+      title="xxxxx"
+      capture
+      accept="
+      image/*,
+      image/*,application/pdf,application/vnd.openxmlformats-officedocument.wordprocessingml.document,application/x-msdownload,application/vnd.openxmlformats-officedocument.spreadsheetml.sheet
+      "
+    />
   </el-row>
-  
 </template>
 <script>
 export default {
@@ -93,10 +107,9 @@ export default {
       window.myObj.showToast(str);
     },
 
-
-    jsfunction(){
-       document.getElementById("p").innerHTML += "str"
-    }
+    jsfunction() {
+      document.getElementById("p").innerHTML += "str";
+    },
   },
   created() {
     this.navigatorInfomation();
