@@ -9,6 +9,7 @@
       :limit="9"
       accept="image/*,application/pdf,application/vnd.openxmlformats-officedocument.wordprocessingml.document,application/x-msdownload,application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"
     >
+    <!--默认的加号-->
       <i slot="default" class="el-icon-plus"></i>
       <div slot="file" slot-scope="{ file }">
         <!--图片的显示-->
