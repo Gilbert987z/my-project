@@ -1,46 +1,57 @@
 <template>
-  <el-form :model="ruleForm" ref="ruleForm">
-    <el-form-item prop="name">
-      <el-input v-model="ruleForm.name"></el-input>
-    </el-form-item>
+  <div>
+    <el-form :model="ruleForm" ref="ruleForm">
+      <el-form-item prop="name">
+        <el-input v-model="ruleForm.name"></el-input>
+      </el-form-item>
 
-    <el-form-item>
-      <el-button @click="resetForm('ruleForm')">重置</el-button>
-    </el-form-item>
+      <el-form-item>
+        <el-button @click="resetForm('ruleForm')">重置</el-button>
+      </el-form-item>
 
-    <el-button @click="test()">测试</el-button>
-    <el-button @click="goOff()">返回</el-button>
-    <!-- <input type="button" value="Toast提示" onclick="myObj.showToast('曹神前来日狗~');"/> -->
+      <el-button @click="test()">测试</el-button>
+      <el-button @click="goOff()">返回</el-button>
+      <!-- <input type="button" value="Toast提示" onclick="myObj.showToast('曹神前来日狗~');"/> -->
 
-    <el-button @click="window.myObj.showToast('曹神前来日狗11~')"
-      >测试调用1</el-button
-    >
-    <el-button @click="showToast('曹神前来日狗121212~')">测试调用2</el-button>
+      <el-button @click="window.myObj.showToast('曹神前来日狗11~')"
+        >测试调用1</el-button
+      >
+      <el-button @click="showToast('曹神前来日狗121212~')">测试调用2</el-button>
 
-    <el-input id="demoInput" v-model="input"></el-input>
-    <el-button id="btn" @click="clipboard">复制到剪切板</el-button>
+      <el-input id="demoInput" v-model="input"></el-input>
+      <el-button id="btn" @click="clipboard">复制到剪切板</el-button>
 
-    <span>我是需要复制的内容</span>
-    <button
-      class="tag-read"
-      data-clipboard-text="我是需要复制的内容"
-      @click="copy"
-    >
-      点击复制
-    </button>
-    <!-- 要复制哪些内容，就放在 data-clipboard-text属性里-->
+      <span>我是需要复制的内容</span>
+      <button
+        class="tag-read"
+        data-clipboard-text="我是需要复制的内容"
+        @click="copy"
+      >
+        点击复制
+      </button>
+      <!-- 要复制哪些内容，就放在 data-clipboard-text属性里-->
 
-     <div class="watermark">
+      <div class="watermark">
         <div class="watermarkinfo">{{ orderDetail.extract_code }}</div>
-        <el-button v-clipboard:copy="orderDetail.extract_code" v-clipboard:success="onCopy" v-clipboard:error="onError">复制</el-button>
+        <el-button
+          v-clipboard:copy="orderDetail.extract_code"
+          v-clipboard:success="onCopy"
+          v-clipboard:error="onError"
+          >复制</el-button
+        >
       </div>
-  </el-form>
-  
+    </el-form>
+
+    <input
+      type="search"
+      placeholder="搜索2"
+      v-model="searchContext"
+      @keypress="searchInputConHandler"
+    />
+  </div>
 </template>
 <script>
 import Clipboard from "clipboard";
-
-
 
 export default {
   data() {
@@ -51,11 +62,27 @@ export default {
       msg: "哈哈",
       input: "",
       orderDetail: {
-        extract_code:"1232132"
-      }
+        extract_code: "1232132",
+      },
     };
   },
   methods: {
+    searchInputConHandler: function() {
+      var that = this;
+      console.log("文本输入框被触发了");
+      var keycode = event.keyCode;
+      //获取搜索框的值
+      var searchContent = that.searchContext;
+      if (keycode == "13") {
+        event.preventDefault();
+        if (searchContent == "") {
+          console.log("请输入搜索内容");
+        } else {
+          that.toSearch();
+        }
+      }
+    },
+
     resetForm(formName) {
       this.$refs[formName].resetFields();
     },
@@ -63,23 +90,22 @@ export default {
     copy() {
       var clipboard = new Clipboard(".tag-read");
       clipboard.on("success", () => {
-        this.$message.success("已成功复制到剪切板")
+        this.$message.success("已成功复制到剪切板");
         clipboard.destroy(); // 释放内存
       });
       clipboard.on("error", () => {
-         this.$message.error('不支持复制,该浏览器不支持自动复制！')
+        this.$message.error("不支持复制,该浏览器不支持自动复制！");
         clipboard.destroy(); // 释放内存
       });
     },
-// 复制成功时的回调函数
-onCopy () {
-   this.$message.success("内容已复制到剪切板！")
-},
-// 复制失败时的回调函数
-onError () {
-   this.$message.error("抱歉，复制失败！")
-},
-
+    // 复制成功时的回调函数
+    onCopy() {
+      this.$message.success("内容已复制到剪切板！");
+    },
+    // 复制失败时的回调函数
+    onError() {
+      this.$message.error("抱歉，复制失败！");
+    },
 
     clipboard() {
       const btn = document.querySelector("#btn");

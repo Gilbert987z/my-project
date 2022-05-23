@@ -32,6 +32,7 @@
       image/*,application/pdf,application/vnd.openxmlformats-officedocument.wordprocessingml.document,application/x-msdownload,application/vnd.openxmlformats-officedocument.spreadsheetml.sheet
       "
     />
+
   </el-row>
 </template>
 <script>
@@ -42,6 +43,10 @@ export default {
     };
   },
   methods: {
+
+
+
+
     navigatorInfomation() {
       console.log("浏览器代号: " + navigator.appCodeName);
       console.log("浏览器名称: " + navigator.appName);

@@ -5,18 +5,26 @@
       :model="formSearch"
       ref="formSearch"
       class="demo-form-inline"
-      action="javascript:return true;"
+      action="#"
+    
+    
     >
+      <!--οnsubmit="return false;" @submit.prevent="formSubmit" -->
       <el-form-item prop="queryName">
         <el-input
           placeholder="请输入图书名称"
           clearable
           type="search"
           prefix-icon="el-icon-search"
+          @keyup="show"
+          @keypress="show"
           @input="handleSearchEvent"
           v-model="formSearch.queryName"
          
         >
+               <!--action="javascript:return true;"  @keyup.13="show"  @keydown="onSearchIcon2($event)"
+          @keypress="onSearchIcon1(e)"
+          -->
         </el-input>
       </el-form-item>
 
@@ -246,6 +254,9 @@
 </template>
 
 <script>
+
+
+
 export default {
   data() {
     return {
@@ -291,6 +302,31 @@ export default {
     };
   },
   methods: {
+    //点击搜索时触发
+    show(e){
+      console.log("点击了软件盘的搜索按钮121111113");
+      console.log(e);
+        this.$refs.input.blur();    //点击搜索后收起软键盘
+        this.$emit('func',this.searchText);	    //获取搜索文本，做一些请求操作
+    },
+    // formSubmit(){
+    //   return false;
+    // },
+    // onSearchIcon(e){
+    //   console.log("点击了软件盘的搜索按钮121111113");
+    //   if(e.keyCode == 13){
+    //     console.log("点击了软件盘的搜索按钮11111");
+    //     this.getTableList();
+    //   }
+    // },
+    // onSearchIcon2(e){
+    //   console.log("点击了软件盘的搜索按钮123");
+    //   if(e.keyCode == 13){
+    //     console.log("点击了软件盘的搜索按钮");
+    //     this.getTableList();
+    //   }
+    // },
+
     //获取列表
     getTableList() {
       var params = {
