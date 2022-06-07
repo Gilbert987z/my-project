@@ -190,6 +190,14 @@ const router = new Router({
           },
           component: () => import("../views/admin/book/BookPublisher.vue"),
         },
+        {
+          path: "/book/bookBorrowLog",
+          name: "BookBorrowLog",
+          meta: {
+            title: "图书借阅日志",
+          },
+          component: () => import("../views/admin/book/BookBorrowLog.vue"),
+        },
       ],
     },
     // {

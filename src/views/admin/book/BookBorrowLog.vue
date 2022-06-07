@@ -8,7 +8,7 @@
     >
       <el-form-item prop="queryName">
         <el-input
-          placeholder="请输入图书类型名称"
+          placeholder="请输入图书出版商名称"
           clearable
           prefix-icon="el-icon-search"
           @input="bookHandleSearchEvent"
@@ -24,7 +24,7 @@
 
     <div>
       <span style="font-weight:bold;font-size:20px;line-height:40px"
-        >图书类型列表</span
+        >图书借阅列表</span
       >
       <el-row style="float:right">
         <!-- <el-popconfirm title="这是确定批量删除吗？" @confirm="delHandle(null)"> -->
@@ -57,7 +57,7 @@
 
       <el-table-column prop="id" label="id" width="180"> </el-table-column>
 
-      <el-table-column prop="bookType" label="名称"> </el-table-column>
+      <el-table-column prop="publisher" label="名称"> </el-table-column>
       <el-table-column prop="remark" label="备注"> </el-table-column>
       <el-table-column prop="createdAt" label="创建时间"> </el-table-column>
       <el-table-column prop="status" label="状态">
@@ -230,7 +230,7 @@ export default {
       console.log(params);
       // return false;
       this.$axios
-        .get("/book/type/list", {
+        .get("/book/publisher/list", {
           params: params,
         })
         .then((response) => {

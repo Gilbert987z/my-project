@@ -55,6 +55,7 @@ function setToken(token, refreshToken) {
 ////axios响应拦截
 request.interceptors.response.use(
   (response) => {
+    console.log(response.config.baseURL)
     // 如果返回的状态码为200，说明接口请求成功，可以正常拿到数据
     // 否则的话抛出错误
     if (response.status === 200) {

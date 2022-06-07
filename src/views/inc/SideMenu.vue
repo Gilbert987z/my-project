@@ -52,6 +52,9 @@
         <router-link :to="{ name: 'BookPublisher' }">
           <el-menu-item index="2-3">图书出版商</el-menu-item>
         </router-link>
+        <router-link :to="{ name: 'BookBorrowLog' }">
+          <el-menu-item index="2-4">图书借阅日志</el-menu-item>
+        </router-link>
       </el-menu-item-group>
     </el-submenu>
     <el-menu-item index="3" disabled>

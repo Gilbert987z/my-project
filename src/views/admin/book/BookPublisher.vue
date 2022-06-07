@@ -57,7 +57,7 @@
 
       <el-table-column prop="id" label="id" width="180"> </el-table-column>
 
-      <el-table-column prop="name" label="名称"> </el-table-column>
+      <el-table-column prop="publisher" label="名称"> </el-table-column>
       <el-table-column prop="remark" label="备注"> </el-table-column>
       <el-table-column prop="createdAt" label="创建时间"> </el-table-column>
       <el-table-column prop="status" label="状态">
