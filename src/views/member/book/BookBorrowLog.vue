@@ -26,8 +26,8 @@
       <span style="font-weight:bold;font-size:20px;line-height:40px"
         >图书借阅列表</span
       >
-      <el-row style="float:right">
-        <!-- <el-popconfirm title="这是确定批量删除吗？" @confirm="delHandle(null)"> -->
+      <!-- <el-row style="float:right">
+        
         <el-button
           style="margin-right:10px"
           type="danger"
@@ -36,7 +36,7 @@
           @click="delHandle(null)"
           >批量删除</el-button
         >
-        <!-- </el-popconfirm>      slot="reference"-->
+        
 
         <el-button
           type="primary"
@@ -44,7 +44,7 @@
           @click="addHandle()"
           >新增</el-button
         >
-      </el-row>
+      </el-row> -->
     </div>
 
     <el-table
@@ -57,7 +57,8 @@
 
       <el-table-column prop="id" label="id" width="180"> </el-table-column>
 
-      <el-table-column prop="publisher" label="名称"> </el-table-column>
+      <el-table-column prop="bookname" label="图书"> </el-table-column>
+      <el-table-column prop="username" label="用户"> </el-table-column>
       <el-table-column prop="remark" label="备注"> </el-table-column>
       <el-table-column prop="createdAt" label="创建时间"> </el-table-column>
       <el-table-column prop="status" label="状态">

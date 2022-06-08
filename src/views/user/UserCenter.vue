@@ -62,7 +62,7 @@
 		},
 		methods: {
 			getUserInfo() {
-				this.$axios.get("/sys/userInfo").then(res => {
+				this.$axios.get("/user/info").then(res => {
 
 					this.userInfo = res.data.data;
 				})
@@ -77,6 +77,7 @@
 							_this.$alert(res.data.msg, '提示', {
 								confirmButtonText: '确定',
 								callback: action => {
+									console.log(action)
 									this.$refs[formName].resetFields();
 								}
 							});

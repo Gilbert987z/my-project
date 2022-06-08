@@ -70,7 +70,7 @@
       <el-row style="float:right">
         <!-- <el-popconfirm title="这是确定批量删除吗？" @confirm="delHandle(null)"> -->
 
-        <el-button
+        <!-- <el-button
           style="margin-right:10px"
           type="success"
           icon="el-icon-export"
@@ -85,7 +85,7 @@
           :disabled="delBtlStatus"
           @click="delHandle(null)"
           >批量删除</el-button
-        >
+        > -->
         <!-- </el-popconfirm>      slot="reference"-->
 
         <!-- <el-button
@@ -151,16 +151,13 @@
       <el-table-column label="操作">
         <template slot-scope="scope">
           <el-button type="text" @click="roleHandle(scope.row.id)"
-            >分配角色</el-button
+            >详情</el-button
           >
           <el-divider direction="vertical"></el-divider>
           <el-button type="text" @click="editHandle(scope.row.id)"
-            >修改密码</el-button
+            >借阅</el-button
           >
-          <el-divider direction="vertical"></el-divider>
-          <el-button type="text" @click="editHandle(scope.row.id)"
-            >编辑</el-button
-          >
+    
 
           <el-divider direction="vertical"></el-divider>
           <el-button type="text" @click="delHandle(scope.row.id)"
@@ -197,15 +194,10 @@
         label-width="100px"
         class="demo-editForm"
       >
-        <el-form-item label="名称" prop="name" label-width="100px">
+        <el-form-item label="借阅天数" prop="name" label-width="100px">
           <el-input v-model="editForm.name" autocomplete="off"></el-input>
         </el-form-item>
-        <el-form-item label="状态" prop="statu" label-width="100px">
-          <el-radio-group v-model="editForm.status">
-            <el-radio :label="1">正常</el-radio>
-            <el-radio :label="0">禁用</el-radio>
-          </el-radio-group>
-        </el-form-item>
+
         <el-form-item label="备注" prop="remark" label-width="100px">
           <el-input
             type="textarea"
@@ -338,7 +330,7 @@ export default {
       console.log(params);
       // return false;
       this.$axios
-        .get("/book/list", {
+        .get("/member/book/list", {
           params: params,
         })
         .then((response) => {
@@ -355,46 +347,7 @@ export default {
           console.log(error);
         });
     },
-    //导出excel
-    exportData() {
-      var params = {
-        action: "export",
-      };
-      console.log(params);
-      // return false;
-      // this.$axios
-      //   .get("/book/export", {
-      //     params: params,
-      //   })
-      this.$axios({
-        method: "get",
-        url: "/book/export",
-        params: params,
-        // data: formData, // 参数
-        responseType: "blob", // 表明返回服务器返回的数据类型
-      })
-        .then((res) => {
-          // 处理返回的文件流
-          let blob = new Blob([res.data], { type: res.data.type });
-          const fileName = decodeURI(
-            res.headers["content-disposition"].split("=")[1],
-            "UTF-8"
-          ); //截取content-disposition的filename；按=分割，取最后一个
-          let downloadElement = document.createElement("a");
-          let href = window.URL.createObjectURL(blob); //创建下载的链接
-          downloadElement.href = href;
-          downloadElement.download = fileName; //下载后文件名
-          document.body.appendChild(downloadElement);
-          downloadElement.click(); //点击下载
-          document.body.removeChild(downloadElement); //下载完成移除元素
-          window.URL.revokeObjectURL(href); //释放blob
-          this.$message.success("[图书信息]已成功导出!");
-        })
-        .catch(function(error) {
-          // 请求失败处理
-          console.log(error);
-        });
-    },
+   
     //重置表单数据
     resetSearch(formName) {
       this.$refs[formName].resetFields();
@@ -495,8 +448,8 @@ export default {
     },
     //修改按钮操作
     editHandle(id) {
-      this.dialogData.dialogTitle = "编辑";
-      this.dialogData.dialogSubmit = "编辑";
+      this.dialogData.dialogTitle = "借阅图书";
+      this.dialogData.dialogSubmit = "借阅图书";
       //请求详情
       this.$axios.get("/sys/role/info", { params: { id: id } }).then((res) => {
         this.editForm = res.data.data;

@@ -336,7 +336,7 @@ export default {
       console.log(params);
       // return false;
       this.$axios
-        .get("/book/list", {
+        .get("/admin/book/list", {
           params: params,
         })
         .then((response) => {
@@ -366,7 +366,7 @@ export default {
       //   })
       this.$axios({
         method: "get",
-        url: "/book/export",
+        url: "/admin/book/export",
         params: params,
         // data: formData, // 参数
         responseType: "blob", // 表明返回服务器返回的数据类型

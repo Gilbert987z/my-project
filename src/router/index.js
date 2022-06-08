@@ -39,7 +39,7 @@ const router = new Router({
         title: "登录页",
       },
       // component: login
-      component: () => import("../views/Login.vue"),
+      component: () => import("../views/user/Login.vue"),
     },
 
     {
@@ -111,6 +111,22 @@ const router = new Router({
             title: "首页",
           },
           component: () => import("../views/Index.vue"), //main的页面
+        },
+        {
+          path: "/user/userCenter",
+          name: "UserCenter",
+          meta: {
+            title: "个人中心",
+          },
+          component: () => import("../views/user/UserCenter.vue"), 
+        },
+        {
+          path: "/user/userPassword",
+          name: "UserPassword",
+          meta: {
+            title: "修改密码",
+          },
+          component: () => import("../views/user/UserPassword.vue"), 
         },
         {
             path: "/test", //列表页

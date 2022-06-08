@@ -16,7 +16,7 @@ document.getElementById("example").innerHTML=txt;
 
 
     <div class="login-container">
-      <el-image class="login-pic" :src="require('../assets/login.png')">
+      <el-image class="login-pic" :src="require('../../assets/login.png')">
       </el-image>
       <!-- <el-form
       class="login-form"
