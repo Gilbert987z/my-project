@@ -88,12 +88,12 @@
         >
         <!-- </el-popconfirm>      slot="reference"-->
 
-        <el-button
+        <!-- <el-button
           type="primary"
           icon="el-icon-circle-plus"
           @click="addHandle()"
           >新增</el-button
-        >
+        > -->
       </el-row>
     </div>
 
@@ -129,7 +129,7 @@
       </el-table-column>
       <el-table-column prop="remark" label="备注"></el-table-column>
 
-      <el-table-column prop="status" label="图书状态">
+      <el-table-column prop="status" label="状态">
         <template slot-scope="scope">
           <el-tag
             size="small"
@@ -151,10 +151,12 @@
       <el-table-column label="操作">
         <template slot-scope="scope">
           <el-button type="text" @click="roleHandle(scope.row.id)"
-            >上下架</el-button
+            >分配角色</el-button
           >
           <el-divider direction="vertical"></el-divider>
- 
+          <el-button type="text" @click="editHandle(scope.row.id)"
+            >修改密码</el-button
+          >
           <el-divider direction="vertical"></el-divider>
           <el-button type="text" @click="editHandle(scope.row.id)"
             >编辑</el-button
@@ -456,18 +458,86 @@ export default {
           this.$refs.roleTree.setCheckedKeys(roleIds);
         });
     },
- 
+    //分配角色按钮操作
+    submitRoleHandle(formName) {
+      console.log(formName);
+      var roleIds = this.$refs.roleTree.getCheckedKeys(); //获取选中的roleId
+
+      console.log(roleIds);
+
+      this.$axios
+        .post("/sys/user/role/update", {
+          userId: this.roleForm.id,
+          roleIds: roleIds,
+        })
+        .then((res) => {
+          console.log(res);
+          if (res.data.code == 20000) {
+            this.$message({
+              showClose: true,
+              message: "恭喜你，操作成功",
+              type: "success",
+              onClose: () => {
+                this.getUserList();
+              },
+            });
+
+            this.roleDialogFormVisible = false; //关闭弹窗
+          }
+        });
+    },
     //新增按钮操作
     addHandle() {
-     this.$router.push({ path: '/admin/book/save' }); //跳转到图书添加页面
+      (this.editForm.status = 1), //默认是正常
+        (this.dialogData.dialogTitle = "新增");
+      this.dialogData.dialogSubmit = "创建";
+      this.dialogVisible = true; //打开对话框
     },
     //修改按钮操作
     editHandle(id) {
-      console.log(id)
-      this.$router.push({ path: '/admin/book/save' }); //跳转到图书添加页面
+      this.dialogData.dialogTitle = "编辑";
+      this.dialogData.dialogSubmit = "编辑";
+      //请求详情
+      this.$axios.get("/sys/role/info", { params: { id: id } }).then((res) => {
+        this.editForm = res.data.data;
+
+        this.dialogVisible = true; //打开对话框
+      });
     },
 
- 
+    //新增修改角色
+    submitForm(formName) {
+      this.$refs[formName].validate((valid) => {
+        if (valid) {
+          this.$axios
+            .post(
+              "/sys/role/" + (this.editForm.id ? "update" : "save"), //根据有没有id判断
+              this.editForm
+            )
+            .then((res) => {
+              console.log(res);
+              this.getTableList(); //刷新列表
+
+              if (res.data.code == 20000) {
+                this.$message({
+                  showClose: true,
+                  message: "操作成功",
+                  type: "success",
+                  onClose: () => {
+                    //此处写提示关闭后需要执行的函数
+                  },
+                });
+
+                this.dialogVisible = false; //成功了，才会关闭对话框
+                this.resetForm(formName);
+              }
+            });
+        } else {
+          console.log("error submit!!");
+          return false;
+        }
+      });
+    },
 
     //勾选改变
     handleSelectionChange(val) {
@@ -490,13 +560,13 @@ export default {
         });
       }
 
-      this.$confirm("确定删除选中的图书吗?", "删除", {
+      this.$confirm("确定删除选中的用户吗?", "删除", {
         confirmButtonText: "确定",
         cancelButtonText: "取消",
         type: "error",
       }).then(() => {
         this.$axios
-          .post("/admin/book/delete", ids)
+          .post("/sys/user/delete", ids)
           .then(() => {
             this.getTableList(); //请求刷新
             this.$message.success("已成功删除!");
@@ -514,7 +584,9 @@ export default {
   created() {
     this.getTableList();
 
- 
+    this.$axios.get("/sys/permission/list").then((res) => {
+      this.permTreeData = res.data.data;
+    });
   },
   mounted() {},
 };

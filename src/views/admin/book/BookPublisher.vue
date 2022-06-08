@@ -401,9 +401,7 @@ export default {
   created() {
     this.getTableList();
 
-    this.$axios.get('/sys/permission/list').then(res => {
-				this.permTreeData = res.data.data
-			})
+ 
   },
   mounted() {},
 };

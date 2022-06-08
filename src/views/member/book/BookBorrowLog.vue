@@ -5,58 +5,17 @@
       :model="formSearch"
       ref="formSearch"
       class="demo-form-inline"
-      action="#"
-    
-    
     >
-      <!--οnsubmit="return false;" @submit.prevent="formSubmit" -->
       <el-form-item prop="queryName">
         <el-input
-          placeholder="请输入图书名称"
+          placeholder="请输入图书出版商名称"
           clearable
-          type="search"
           prefix-icon="el-icon-search"
-          @keyup="show"
-          @keypress="show"
-          @input="handleSearchEvent"
+          @input="bookHandleSearchEvent"
           v-model="formSearch.queryName"
-         
         >
-               <!--action="javascript:return true;"  @keyup.13="show"  @keydown="onSearchIcon2($event)"
-          @keypress="onSearchIcon1(e)"
-          -->
         </el-input>
       </el-form-item>
-
-      <!-- <el-select
-        v-model="bookTypeValue"
-        @change="bookTypeChange"
-        clearable
-        placeholder="请选择图书类型"
-      >
-        <el-option
-          v-for="item in bookTypeList"
-          :key="item.id"
-          :label="item.bookType"
-          :value="item.id"
-        >
-        </el-option>
-      </el-select>
-      <el-select
-        v-model="publisherValue"
-        @change="publisherChange"
-        clearable
-        placeholder="请选择出版社"
-      >
-        <el-option
-          v-for="item in publisherList"
-          :key="item.id"
-          :label="item.publisher"
-          :value="item.id"
-        >
-        </el-option>
-      </el-select> -->
-
       <el-form-item>
         <el-button type="primary" @click="getTableList">搜索</el-button>
         <el-button @click="resetSearch('formSearch')">重置</el-button>
@@ -65,19 +24,10 @@
 
     <div>
       <span style="font-weight:bold;font-size:20px;line-height:40px"
-        >图书列表</span
+        >图书借阅列表</span
       >
       <el-row style="float:right">
         <!-- <el-popconfirm title="这是确定批量删除吗？" @confirm="delHandle(null)"> -->
-
-        <el-button
-          style="margin-right:10px"
-          type="success"
-          icon="el-icon-export"
-          @click="exportData()"
-          >导出</el-button
-        >
-
         <el-button
           style="margin-right:10px"
           type="danger"
@@ -107,59 +57,37 @@
 
       <el-table-column prop="id" label="id" width="180"> </el-table-column>
 
-      <el-table-column label="书名" width="180">
-        <template slot-scope="scope">
-          <img
-            alt
-            :src="scope.row.image"
-            width="40"
-            height="40"
-            class="head_pic"
-          />
-          {{ scope.row.name }}/￥{{ scope.row.price }}
-        </template>
-      </el-table-column>
-      <el-table-column prop="author" label="作者"> </el-table-column>
-      <el-table-column prop="bookType" label="图书类型"> </el-table-column>
-      <el-table-column prop="publisher" label="出版社"> </el-table-column>
-      <el-table-column prop="publisher" label="库存/总数">
-        <template slot-scope="scope">
-          {{ scope.row.inventory }} / {{ scope.row.total }}
-        </template>
-      </el-table-column>
-      <el-table-column prop="remark" label="备注"></el-table-column>
-
-      <el-table-column prop="status" label="图书状态">
+      <el-table-column prop="publisher" label="名称"> </el-table-column>
+      <el-table-column prop="remark" label="备注"> </el-table-column>
+      <el-table-column prop="createdAt" label="创建时间"> </el-table-column>
+      <el-table-column prop="status" label="状态">
         <template slot-scope="scope">
           <el-tag
             size="small"
             v-if="scope.row.status === 1"
             type="success"
             effect="dark"
-            >上架</el-tag
+            >正常</el-tag
           >
           <el-tag
             size="small"
             v-else-if="scope.row.status === 0"
             type="danger"
             effect="dark"
-            >下架</el-tag
+            >禁用</el-tag
           >
         </template>
       </el-table-column>
-      <el-table-column prop="createdAt" label="时间"></el-table-column>
+
       <el-table-column label="操作">
         <template slot-scope="scope">
-          <el-button type="text" @click="roleHandle(scope.row.id)"
-            >上下架</el-button
+          <el-button type="text" @click="permHandle(scope.row.id)"
+            >分配权限</el-button
           >
-          <el-divider direction="vertical"></el-divider>
- 
           <el-divider direction="vertical"></el-divider>
           <el-button type="text" @click="editHandle(scope.row.id)"
             >编辑</el-button
           >
-
           <el-divider direction="vertical"></el-divider>
           <el-button type="text" @click="delHandle(scope.row.id)"
             >删除</el-button
@@ -222,39 +150,31 @@
       </el-form>
     </el-dialog>
 
-    <!-- 分配权限对话框 -->
-    <!-- <el-dialog
-      title="分配角色"
-      :visible.sync="roleDialogFormVisible"
-      width="600px"
-    >
-      <el-form :model="roleForm">
+    <el-dialog title="分配权限" :visible.sync="permDialogVisible" width="600px">
+      <el-form :model="permForm">
         <el-tree
-          :data="roleTreeData"
+          :data="permTreeData"
           show-checkbox
-          ref="roleTree"
-          :check-strictly="checkStrictly"
-          node-key="id"
+          ref="permTree"
           :default-expand-all="true"
+          node-key="id"
+          :check-strictly="true"
           :props="defaultProps"
         >
         </el-tree>
       </el-form>
 
-      <div slot="footer" class="dialog-footer">
-        <el-button @click="roleDialogFormVisible = false">取 消</el-button>
-        <el-button type="primary" @click="submitRoleHandle('roleForm')"
+      <span slot="footer" class="dialog-footer">
+        <el-button @click="permDialogVisible = false">取 消</el-button>
+        <el-button type="primary" @click="submitPermFormHandle('permForm')"
           >确 定</el-button
         >
-      </div>
-    </el-dialog> -->
+      </span>
+    </el-dialog>
   </div>
 </template>
 
 <script>
-
-
-
 export default {
   data() {
     return {
@@ -276,14 +196,14 @@ export default {
         name: [{ required: true, message: "请输入角色名称", trigger: "blur" }],
         status: [{ required: true, message: "请选择状态", trigger: "blur" }],
       },
-      //分配角色对话框
-      roleDialogFormVisible: false,
-      roleForm: {},
+      //分配权限对话框
+      permDialogVisible: false,
+      permForm: {},
       defaultProps: {
         children: "children",
         label: "name",
       },
-      roleTreeData: [],
+      permTreeData: [],
 
       //列表
       info: [], //列表数据
@@ -300,43 +220,17 @@ export default {
     };
   },
   methods: {
-    //点击搜索时触发
-    show(e){
-      console.log("点击了软件盘的搜索按钮121111113");
-      console.log(e);
-        this.$refs.input.blur();    //点击搜索后收起软键盘
-        this.$emit('func',this.searchText);	    //获取搜索文本，做一些请求操作
-    },
-    // formSubmit(){
-    //   return false;
-    // },
-    // onSearchIcon(e){
-    //   console.log("点击了软件盘的搜索按钮121111113");
-    //   if(e.keyCode == 13){
-    //     console.log("点击了软件盘的搜索按钮11111");
-    //     this.getTableList();
-    //   }
-    // },
-    // onSearchIcon2(e){
-    //   console.log("点击了软件盘的搜索按钮123");
-    //   if(e.keyCode == 13){
-    //     console.log("点击了软件盘的搜索按钮");
-    //     this.getTableList();
-    //   }
-    // },
-
     //获取列表
     getTableList() {
       var params = {
         page: this.page.current,
         size: this.page.size,
         name: this.formSearch.queryName,
-        action: "list",
       };
       console.log(params);
       // return false;
       this.$axios
-        .get("/book/list", {
+        .get("/member/book/borrowLog/list", {
           params: params,
         })
         .then((response) => {
@@ -347,46 +241,6 @@ export default {
 
           // this.$router.push({path: '/movie?page=' + this.page.current_page});
           //+'&size='+this.page.pageSize
-        })
-        .catch(function(error) {
-          // 请求失败处理
-          console.log(error);
-        });
-    },
-    //导出excel
-    exportData() {
-      var params = {
-        action: "export",
-      };
-      console.log(params);
-      // return false;
-      // this.$axios
-      //   .get("/book/export", {
-      //     params: params,
-      //   })
-      this.$axios({
-        method: "get",
-        url: "/book/export",
-        params: params,
-        // data: formData, // 参数
-        responseType: "blob", // 表明返回服务器返回的数据类型
-      })
-        .then((res) => {
-          // 处理返回的文件流
-          let blob = new Blob([res.data], { type: res.data.type });
-          const fileName = decodeURI(
-            res.headers["content-disposition"].split("=")[1],
-            "UTF-8"
-          ); //截取content-disposition的filename；按=分割，取最后一个
-          let downloadElement = document.createElement("a");
-          let href = window.URL.createObjectURL(blob); //创建下载的链接
-          downloadElement.href = href;
-          downloadElement.download = fileName; //下载后文件名
-          document.body.appendChild(downloadElement);
-          downloadElement.click(); //点击下载
-          document.body.removeChild(downloadElement); //下载完成移除元素
-          window.URL.revokeObjectURL(href); //释放blob
-          this.$message.success("[图书信息]已成功导出!");
         })
         .catch(function(error) {
           // 请求失败处理
@@ -415,9 +269,10 @@ export default {
       this.getTableList(); //重新获取列表数据
     },
 
-    //按名称查询
-    handleSearchEvent(val) {
+    //按角色名称查询
+    bookHandleSearchEvent(val) {
       this.inputName = val;
+      console.log("inputName" + val);
       this.getTableList();
     },
     //重置表单数据
@@ -430,45 +285,77 @@ export default {
     handleClose() {
       this.resetForm("editForm"); //重置表单数据
     },
-    //分配角色按钮操作
-    roleHandle(id) {
-      this.roleDialogFormVisible = true;
+    //分配权限按钮操作
+    permHandle(id) {
+      this.permDialogVisible = true; //打开对话框
 
-      console.log(id);
-
-      //获取角色列表
-      this.$axios.get("/sys/role/list").then((res) => {
-        this.roleTreeData = res.data.data.records;
+      this.$axios.get("/sys/role/info", { params: { id: id } }).then((res) => {
+        this.$refs.permTree.setCheckedKeys(res.data.data.menuIds);
+        this.permForm = res.data.data;
       });
-
-      //获取用户拥有的角色
-      this.$axios
-        .get("/sys/user/detail", { params: { id: id } })
-        .then((res) => {
-          this.roleForm = res.data.data;
-
-          let roleIds = [];
-          res.data.data.sysRoles.forEach((row) => {
-            roleIds.push(row.id);
-          });
-
-          //拥有的角色默认选中
-          this.$refs.roleTree.setCheckedKeys(roleIds);
-        });
     },
- 
     //新增按钮操作
     addHandle() {
-     this.$router.push({ path: '/admin/book/save' }); //跳转到图书添加页面
+      (this.editForm.status = 1), //默认是正常
+        (this.dialogData.dialogTitle = "新增");
+      this.dialogData.dialogSubmit = "创建";
+      this.dialogVisible = true; //打开对话框
     },
     //修改按钮操作
     editHandle(id) {
-      console.log(id)
-      this.$router.push({ path: '/admin/book/save' }); //跳转到图书添加页面
+      this.dialogData.dialogTitle = "编辑";
+      this.dialogData.dialogSubmit = "编辑";
+      //请求详情
+      this.$axios.get("/sys/role/info", { params: { id: id } }).then((res) => {
+        this.editForm = res.data.data;
+
+        this.dialogVisible = true; //打开对话框
+      });
     },
 
- 
+    //新增修改角色
+    submitForm(formName) {
+      this.$refs[formName].validate((valid) => {
+        if (valid) {
+          this.$axios
+            .post(
+              "/sys/role/" + (this.editForm.id ? "update" : "save"), //根据有没有id判断
+              this.editForm
+            )
+            .then((res) => {
+              console.log(res);
+              this.getTableList(); //刷新列表
 
+              if (res.data.code == 20000) {
+                this.$message({
+                  showClose: true,
+                  message: "操作成功",
+                  type: "success",
+                  onClose: () => {
+                    //此处写提示关闭后需要执行的函数
+                  },
+                });
+
+                this.dialogVisible = false; //成功了，才会关闭对话框
+                this.resetForm(formName);
+              }
+            });
+        } else {
+          console.log("error submit!!");
+          return false;
+        }
+      });
+    },
+
+    // toggleSelection(rows) {
+    //   if (rows) {
+    //     rows.forEach((row) => {
+    //       this.$refs.multipleTable.toggleRowSelection(row);
+    //     });
+    //   } else {
+    //     this.$refs.multipleTable.clearSelection();
+    //   }
+    // },
     //勾选改变
     handleSelectionChange(val) {
       console.log("勾选");
@@ -490,13 +377,13 @@ export default {
         });
       }
 
-      this.$confirm("确定删除选中的图书吗?", "删除", {
+      this.$confirm("确定删除选中的角色吗?", "删除", {
         confirmButtonText: "确定",
         cancelButtonText: "取消",
         type: "error",
       }).then(() => {
         this.$axios
-          .post("/admin/book/delete", ids)
+          .post("/sys/role/delete", ids)
           .then(() => {
             this.getTableList(); //请求刷新
             this.$message.success("已成功删除!");
@@ -514,7 +401,9 @@ export default {
   created() {
     this.getTableList();
 
- 
+    this.$axios.get('/sys/permission/list').then(res => {
+				this.permTreeData = res.data.data
+			})
   },
   mounted() {},
 };

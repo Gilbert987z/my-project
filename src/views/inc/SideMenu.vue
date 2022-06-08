@@ -57,12 +57,27 @@
         </router-link>
       </el-menu-item-group>
     </el-submenu>
-    <el-menu-item index="3" disabled>
+       <el-submenu index="3">
+      <template slot="title">
+        <i class="el-icon-collection"></i>
+        <span>图书借阅</span>
+      </template>
+      <el-menu-item-group>
+        <router-link :to="{ name: 'MemberBook' }">
+          <el-menu-item index="3-1">图书列表</el-menu-item>
+        </router-link>
+ 
+        <router-link :to="{ name: 'MemberBookBorrowLog' }">
+          <el-menu-item index="3-2">图书借阅历史</el-menu-item>
+        </router-link>
+      </el-menu-item-group>
+    </el-submenu>
+    <el-menu-item index="4" disabled>
       <i class="el-icon-document"></i>
       <span slot="title">导航三</span>
     </el-menu-item>
     <router-link to="/test">
-      <el-menu-item index="4">
+      <el-menu-item index="5">
         <i class="el-icon-location"></i>
         <span slot="title">测试</span>
       </el-menu-item>

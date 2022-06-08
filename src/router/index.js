@@ -123,16 +123,16 @@ const router = new Router({
       ],
     },
     {
-      path: "/sys",
+      path: "/admin/sys",
       name: "Sys",
       meta: {
         title: "系统管理",
       },
-      redirect: "/sys/user", //跳转到首页
+      redirect: "/admin/sys/user", //跳转到首页
       component: () => import("../views/Home.vue"), //header的页面
       children: [
         {
-          path: "/sys/user",
+          path: "/admin/sys/user",
           name: "User",
           meta: {
             title: "用户管理",
@@ -140,7 +140,7 @@ const router = new Router({
           component: () => import("../views/admin/sys/User.vue"),
         },
         {
-          path: "/sys/role",
+          path: "/admin/sys/role",
           name: "Role",
           meta: {
             title: "角色管理",
@@ -148,7 +148,7 @@ const router = new Router({
           component: () => import("../views/admin/sys/Role.vue"),
         },
         {
-          path: "/sys/permission",
+          path: "/admin/sys/permission",
           name: "Permission",
           meta: {
             title: "权限管理",
@@ -158,24 +158,44 @@ const router = new Router({
       ],
     },
     {
-      path: "/book",
+      path: "/admin/book",
       name: "Book",
       meta: {
         title: "图书管理",
       },
-      redirect: "/book/list", //跳转到图书列表
+      redirect: "/admin/book/list", //  /admin/book路径重定向到跳转到图书列表
       component: () => import("../views/Home.vue"), //header的页面
       children: [
         {
-          path: "/book/list",
+          path: "/admin/book/list",
           name: "Book",
           meta: {
             title: "图书列表",
           },
           component: () => import("../views/admin/book/Book.vue"),
+          // component: () => import("../views/admin/book/BookSave.vue"),
+          children:[
+            
+          ]
+        },
+        { //这里有问题，之后再解决吧  
+          path: "/admin/book/save",
+          name: "BookSave",
+          meta: {
+            title: "图书新增",
+          },
+          component: () => import("../views/admin/book/BookSave.vue"),
+        },
+        { //这里有问题，之后再解决吧 
+          path: "/admin/book/save",
+          name: "BookSave",
+          meta: {
+            title: "图书编辑",
+          },
+          component: () => import("../views/admin/book/BookSave.vue"),
         },
         {
-          path: "/book/bookType",
+          path: "/admin/book/bookType",
           name: "BookType",
           meta: {
             title: "图书类型",
@@ -183,7 +203,7 @@ const router = new Router({
           component: () => import("../views/admin/book/BookType.vue"),
         },
         {
-          path: "/book/bookPublisher",
+          path: "/admin/book/bookPublisher",
           name: "BookPublisher",
           meta: {
             title: "图书出版商",
@@ -191,12 +211,40 @@ const router = new Router({
           component: () => import("../views/admin/book/BookPublisher.vue"),
         },
         {
-          path: "/book/bookBorrowLog",
+          path: "/admin/book/bookBorrowLog",
           name: "BookBorrowLog",
           meta: {
             title: "图书借阅日志",
           },
           component: () => import("../views/admin/book/BookBorrowLog.vue"),
+        },
+      ],
+    },
+
+    {
+      path: "/member/book",
+      name: "MemberBook",
+      meta: {
+        title: "图书借阅",
+      },
+      redirect: "/member/book/list", //跳转到图书列表
+      component: () => import("../views/Home.vue"), //header的页面
+      children: [
+        {
+          path: "/member/book/list",
+          name: "MemberBook",
+          meta: {
+            title: "图书列表",
+          },
+          component: () => import("../views/member/book/Book.vue"),
+        },
+        {
+          path: "/member/book/bookBorrowLog",
+          name: "MemberBookBorrowLog",
+          meta: {
+            title: "图书借阅日志",
+          },
+          component: () => import("../views/member/book/BookBorrowLog.vue"),
         },
       ],
     },
@@ -302,10 +350,10 @@ const router = new Router({
       name: "naviMenu",
       component: naviMenu,
     },
-    {
-      path: "*", // 此处需特别注意置于最底部
-      redirect: "/404", //跳转到404页面
-    },
+    // {
+    //   path: "*", // 此处需特别注意置于最底部
+    //   redirect: "/404", //跳转到404页面
+    // },
   ],
 });
 

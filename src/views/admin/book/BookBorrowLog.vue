@@ -57,7 +57,8 @@
 
       <el-table-column prop="id" label="id" width="180"> </el-table-column>
 
-      <el-table-column prop="publisher" label="名称"> </el-table-column>
+      <el-table-column prop="bookname" label="图书"> </el-table-column>
+      <el-table-column prop="username" label="用户"> </el-table-column>
       <el-table-column prop="remark" label="备注"> </el-table-column>
       <el-table-column prop="createdAt" label="创建时间"> </el-table-column>
       <el-table-column prop="status" label="状态">
@@ -230,7 +231,7 @@ export default {
       console.log(params);
       // return false;
       this.$axios
-        .get("/book/publisher/list", {
+        .get("/admin/book/borrowLog/list", {
           params: params,
         })
         .then((response) => {
@@ -401,9 +402,7 @@ export default {
   created() {
     this.getTableList();
 
-    this.$axios.get('/sys/permission/list').then(res => {
-				this.permTreeData = res.data.data
-			})
+ 
   },
   mounted() {},
 };
