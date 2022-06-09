@@ -154,7 +154,7 @@
             >详情</el-button
           >
           <el-divider direction="vertical"></el-divider>
-          <el-button type="text" @click="editHandle(scope.row.id)"
+          <el-button type="text" @click="borrowHandle(scope.row.id)"
             >借阅</el-button
           >
     
@@ -188,30 +188,30 @@
       :before-close="handleClose"
     >
       <el-form
-        :model="editForm"
-        :rules="editFormRules"
-        ref="editForm"
+        :model="borrowForm"
+        :rules="borrowFormRules"
+        ref="borrowForm"
         label-width="100px"
-        class="demo-editForm"
+        class="demo-borrowForm"
       >
-        <el-form-item label="借阅天数" prop="name" label-width="100px">
-          <el-input v-model="editForm.name" autocomplete="off"></el-input>
+        <el-form-item label="借阅天数" prop="borrowDays" label-width="100px">
+          <el-input-number v-model="borrowForm.borrowDays" ></el-input-number>
         </el-form-item>
 
         <el-form-item label="备注" prop="remark" label-width="100px">
           <el-input
             type="textarea"
-            v-model="editForm.remark"
+            v-model="borrowForm.remark"
             autocomplete="off"
           ></el-input>
         </el-form-item>
 
         <el-form-item>
-          <el-button type="primary" @click="submitForm('editForm')">{{
+          <el-button type="primary" @click="submitForm('borrowForm')">{{
             dialogData.dialogSubmit
           }}</el-button>
           <el-button @click="dialogVisible = false">取消</el-button>
-          <!-- <el-button @click="resetForm('editForm')">重置</el-button> -->
+          <!-- <el-button @click="resetForm('borrowForm')">重置</el-button> -->
         </el-form-item>
       </el-form>
     </el-dialog>
@@ -265,10 +265,17 @@ export default {
         dialogSubmit: null,
       },
       dialogVisible: false, //新增对话框 默认关闭
-      editForm: {},
-      editFormRules: {
-        name: [{ required: true, message: "请输入角色名称", trigger: "blur" }],
-        status: [{ required: true, message: "请选择状态", trigger: "blur" }],
+      borrowForm: {
+        bookId:null,
+        borrowDays:null,
+        remark:null
+      },
+      borrowFormRules: {
+        borrow_num: [{ required: true, message: "请输入借阅天数", trigger: "blur" },
+         { type: 'number', message: '借阅天数必须为数字值'},
+        //  { max: 10, message: '借阅天数最多10天'},
+         ],
+
       },
       //分配角色对话框
       roleDialogFormVisible: false,
@@ -379,11 +386,11 @@ export default {
     resetForm(formName) {
       this.$refs[formName].resetFields();
       this.dialogVisible = false; //关闭对话框
-      this.editForm = {};
+      this.borrowForm = {};
     },
     //关闭对话框
     handleClose() {
-      this.resetForm("editForm"); //重置表单数据
+      this.resetForm("borrowForm"); //重置表单数据
     },
     //分配角色按钮操作
     roleHandle(id) {
@@ -441,21 +448,23 @@ export default {
     },
     //新增按钮操作
     addHandle() {
-      (this.editForm.status = 1), //默认是正常
+      (this.borrowForm.status = 1), //默认是正常
         (this.dialogData.dialogTitle = "新增");
       this.dialogData.dialogSubmit = "创建";
       this.dialogVisible = true; //打开对话框
     },
-    //修改按钮操作
-    editHandle(id) {
+    //借阅按钮操作
+    borrowHandle(bookId) {
       this.dialogData.dialogTitle = "借阅图书";
       this.dialogData.dialogSubmit = "借阅图书";
-      //请求详情
-      this.$axios.get("/sys/role/info", { params: { id: id } }).then((res) => {
-        this.editForm = res.data.data;
-
+      // //请求详情
+      // this.$axios.get("/sys/role/info", { params: { id: id } }).then((res) => {
+        // this.borrowForm = res.data.data;
+      console.log(bookId)
+      this.borrowForm.bookId = bookId;
+      
         this.dialogVisible = true; //打开对话框
-      });
+      // });
     },
 
     //新增修改角色
@@ -464,8 +473,8 @@ export default {
         if (valid) {
           this.$axios
             .post(
-              "/sys/role/" + (this.editForm.id ? "update" : "save"), //根据有没有id判断
-              this.editForm
+              "/member/book/borrow" , //根据有没有id判断
+              this.borrowForm
             )
             .then((res) => {
               console.log(res);

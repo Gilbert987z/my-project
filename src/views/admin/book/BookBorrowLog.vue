@@ -8,14 +8,52 @@
     >
       <el-form-item prop="queryName">
         <el-input
-          placeholder="请输入图书出版商名称"
+          placeholder="请输入图书名称"
           clearable
           prefix-icon="el-icon-search"
           @input="bookHandleSearchEvent"
           v-model="formSearch.queryName"
         >
         </el-input>
+        
       </el-form-item>
+
+        <el-form-item>
+        <el-input
+          placeholder="请输入图书编号"
+          clearable
+          prefix-icon="el-icon-search"
+          @input="bookHandleSearchEvent"
+          v-model="formSearch.queryName"
+        >
+        </el-input>
+        
+      </el-form-item>
+      
+        <el-form-item>
+        <el-input
+          placeholder="请输入借书人"
+          clearable
+          prefix-icon="el-icon-search"
+          @input="bookHandleSearchEvent"
+          v-model="formSearch.queryName"
+        >
+        </el-input>
+        
+      </el-form-item>
+
+              <el-form-item>
+        <el-input
+          placeholder="借书状态"
+          clearable
+          prefix-icon="el-icon-search"
+          @input="bookHandleSearchEvent"
+          v-model="formSearch.queryName"
+        >
+        </el-input>
+        
+      </el-form-item>
+      
       <el-form-item>
         <el-button type="primary" @click="getTableList">搜索</el-button>
         <el-button @click="resetSearch('formSearch')">重置</el-button>
@@ -55,7 +93,7 @@
     >
       <el-table-column type="selection" width="55"> </el-table-column>
 
-      <el-table-column prop="id" label="id" width="180"> </el-table-column>
+      <el-table-column prop="id" label="借书编号" width="180"> </el-table-column>
 
       <el-table-column prop="bookname" label="图书"> </el-table-column>
       <el-table-column prop="username" label="用户"> </el-table-column>

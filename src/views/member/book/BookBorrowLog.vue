@@ -55,12 +55,12 @@
     >
       <el-table-column type="selection" width="55"> </el-table-column>
 
-      <el-table-column prop="id" label="id" width="180"> </el-table-column>
+      <el-table-column prop="id" label="借书编号" width="180"> </el-table-column>
 
       <el-table-column prop="bookname" label="图书"> </el-table-column>
-      <el-table-column prop="username" label="用户"> </el-table-column>
+  
       <el-table-column prop="remark" label="备注"> </el-table-column>
-      <el-table-column prop="createdAt" label="创建时间"> </el-table-column>
+      <el-table-column prop="createdAt" label="借阅时间"> </el-table-column>
       <el-table-column prop="status" label="状态">
         <template slot-scope="scope">
           <el-tag
@@ -401,10 +401,7 @@ export default {
   },
   created() {
     this.getTableList();
-
-    this.$axios.get('/sys/permission/list').then(res => {
-				this.permTreeData = res.data.data
-			})
+ 
   },
   mounted() {},
 };

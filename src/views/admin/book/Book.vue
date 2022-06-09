@@ -6,8 +6,6 @@
       ref="formSearch"
       class="demo-form-inline"
       action="#"
-    
-    
     >
       <!--οnsubmit="return false;" @submit.prevent="formSubmit" -->
       <el-form-item prop="queryName">
@@ -20,43 +18,44 @@
           @keypress="show"
           @input="handleSearchEvent"
           v-model="formSearch.queryName"
-         
         >
-               <!--action="javascript:return true;"  @keyup.13="show"  @keydown="onSearchIcon2($event)"
+          <!--action="javascript:return true;"  @keyup.13="show"  @keydown="onSearchIcon2($event)"
           @keypress="onSearchIcon1(e)"
           -->
         </el-input>
       </el-form-item>
-
-      <!-- <el-select
-        v-model="bookTypeValue"
-        @change="bookTypeChange"
-        clearable
-        placeholder="请选择图书类型"
-      >
-        <el-option
-          v-for="item in bookTypeList"
-          :key="item.id"
-          :label="item.bookType"
-          :value="item.id"
+      <el-form-item>
+        <el-select
+          v-model="bookTypeValue"
+          @change="bookTypeChange"
+          clearable
+          placeholder="请选择图书类型"
         >
-        </el-option>
-      </el-select>
-      <el-select
-        v-model="publisherValue"
-        @change="publisherChange"
-        clearable
-        placeholder="请选择出版社"
-      >
-        <el-option
-          v-for="item in publisherList"
-          :key="item.id"
-          :label="item.publisher"
-          :value="item.id"
+          <el-option
+            v-for="item in bookTypeList"
+            :key="item.id"
+            :label="item.bookType"
+            :value="item.id"
+          >
+          </el-option>
+        </el-select>
+      </el-form-item>
+      <el-form-item>
+        <el-select
+          v-model="publisherValue"
+          @change="publisherChange"
+          clearable
+          placeholder="请选择出版社"
         >
-        </el-option>
-      </el-select> -->
-
+          <el-option
+            v-for="item in publisherList"
+            :key="item.id"
+            :label="item.publisher"
+            :value="item.id"
+          >
+          </el-option>
+        </el-select>
+      </el-form-item>
       <el-form-item>
         <el-button type="primary" @click="getTableList">搜索</el-button>
         <el-button @click="resetSearch('formSearch')">重置</el-button>
@@ -154,7 +153,7 @@
             >上下架</el-button
           >
           <el-divider direction="vertical"></el-divider>
- 
+
           <el-divider direction="vertical"></el-divider>
           <el-button type="text" @click="editHandle(scope.row.id)"
             >编辑</el-button
@@ -252,9 +251,6 @@
 </template>
 
 <script>
-
-
-
 export default {
   data() {
     return {
@@ -301,11 +297,11 @@ export default {
   },
   methods: {
     //点击搜索时触发
-    show(e){
+    show(e) {
       console.log("点击了软件盘的搜索按钮121111113");
       console.log(e);
-        this.$refs.input.blur();    //点击搜索后收起软键盘
-        this.$emit('func',this.searchText);	    //获取搜索文本，做一些请求操作
+      this.$refs.input.blur(); //点击搜索后收起软键盘
+      this.$emit("func", this.searchText); //获取搜索文本，做一些请求操作
     },
     // formSubmit(){
     //   return false;
@@ -456,18 +452,16 @@ export default {
           this.$refs.roleTree.setCheckedKeys(roleIds);
         });
     },
- 
+
     //新增按钮操作
     addHandle() {
-     this.$router.push({ path: '/admin/book/save' }); //跳转到图书添加页面
+      this.$router.push({ path: "/admin/book/save" }); //跳转到图书添加页面
     },
     //修改按钮操作
     editHandle(id) {
-      console.log(id)
-      this.$router.push({ path: '/admin/book/save' }); //跳转到图书添加页面
+      console.log(id);
+      this.$router.push({ path: "/admin/book/save" }); //跳转到图书添加页面
     },
-
- 
 
     //勾选改变
     handleSelectionChange(val) {
@@ -513,8 +507,6 @@ export default {
   },
   created() {
     this.getTableList();
-
- 
   },
   mounted() {},
 };
