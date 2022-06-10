@@ -104,7 +104,7 @@
     >
       <el-table-column type="selection" width="55"> </el-table-column>
 
-      <el-table-column prop="id" label="id" width="180"> </el-table-column>
+      <el-table-column prop="id" label="图书编号" width="180"> </el-table-column>
 
       <el-table-column label="书名" width="180">
         <template slot-scope="scope">

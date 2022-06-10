@@ -55,7 +55,7 @@
     >
       <el-table-column type="selection" width="55"> </el-table-column>
 
-      <el-table-column prop="id" label="id" width="180"> </el-table-column>
+      <el-table-column prop="id" label="user_id" width="180"> </el-table-column>
 
       <el-table-column label="名称">
         <template slot-scope="scope">
