@@ -135,24 +135,24 @@
             v-if="scope.row.status === 1"
             type="success"
             effect="dark"
-            >上架</el-tag
+            >{{bookStatus.on}}</el-tag
           >
           <el-tag
             size="small"
             v-else-if="scope.row.status === 0"
             type="danger"
             effect="dark"
-            >下架</el-tag
+            >{{bookStatus.off}}</el-tag
           >
         </template>
       </el-table-column>
       <el-table-column prop="createdAt" label="时间"></el-table-column>
       <el-table-column label="操作">
         <template slot-scope="scope">
-          <el-button type="text" @click="roleHandle(scope.row.id)"
-            >上下架</el-button
-          >
-          <el-divider direction="vertical"></el-divider>
+          <el-button v-if="scope.row.status === 1" type="text" @click="switchBookHandle(scope.row.id,scope.row.status)"
+            >{{bookStatus.off}}</el-button>
+          <el-button v-else-if="scope.row.status === 0" type="text" @click="switchBookHandle(scope.row.id,scope.row.status)"
+            >{{bookStatus.on}}</el-button>
 
           <el-divider direction="vertical"></el-divider>
           <el-button type="text" @click="editHandle(scope.row.id)"
@@ -221,32 +221,24 @@
       </el-form>
     </el-dialog>
 
-    <!-- 分配权限对话框 -->
-    <!-- <el-dialog
-      title="分配角色"
+    <!-- 上下架对话框 -->
+    <el-dialog
+      :title="switchBookDialogData.dialogTitle"
       :visible.sync="roleDialogFormVisible"
       width="600px"
     >
       <el-form :model="roleForm">
-        <el-tree
-          :data="roleTreeData"
-          show-checkbox
-          ref="roleTree"
-          :check-strictly="checkStrictly"
-          node-key="id"
-          :default-expand-all="true"
-          :props="defaultProps"
-        >
-        </el-tree>
+        
+  
       </el-form>
 
       <div slot="footer" class="dialog-footer">
         <el-button @click="roleDialogFormVisible = false">取 消</el-button>
-        <el-button type="primary" @click="submitRoleHandle('roleForm')"
+        <el-button type="primary" @click="submitSwitchBookHandle('switchBookForm')"
           >确 定</el-button
         >
       </div>
-    </el-dialog> -->
+    </el-dialog>
   </div>
 </template>
 
@@ -272,8 +264,20 @@ export default {
         name: [{ required: true, message: "请输入角色名称", trigger: "blur" }],
         status: [{ required: true, message: "请选择状态", trigger: "blur" }],
       },
-      //分配角色对话框
+      //上下架对话框
+      bookStatus:{
+        on:'上架',
+        off:'下架'
+      },
+      switchBookForm:{
+        id:null,
+        status:null
+      },
       roleDialogFormVisible: false,
+      switchBookDialogData:{
+        dialogTitle: null,
+        dialogSubmit: null,
+      },
       roleForm: {},
       defaultProps: {
         children: "children",
@@ -426,31 +430,52 @@ export default {
     handleClose() {
       this.resetForm("editForm"); //重置表单数据
     },
-    //分配角色按钮操作
-    roleHandle(id) {
+    //上下架按钮弹窗操作
+    switchBookHandle(id,status) {
+      this.switchBookForm.id = id;
+      if(status==0){//
+        this.switchBookDialogData.dialogTitle=this.bookStatus.on
+        this.switchBookForm.status = 1;
+      }else if (status==1){
+        this.switchBookDialogData.dialogTitle=this.bookStatus.off
+        this.switchBookForm.status = 0;
+      }
       this.roleDialogFormVisible = true;
+ 
+    
+    },
+   //提交借阅按钮
+    submitSwitchBookHandle(formName) {
+      // this.$refs[formName].validate((valid) => {
+        // if (valid) {
+          this.$axios
+            .post(
+              "/admin/book/switch" , 
+              this.switchBookForm
+            )
+            .then((res) => {
+              console.log(res);
+              this.getTableList(); //刷新列表
 
-      console.log(id);
+              if (res.data.code == 20000) {
+                this.$message({
+                  showClose: true,
+                  message: "操作成功",
+                  type: "success",
+                  onClose: () => {
+                    //此处写提示关闭后需要执行的函数
+                  },
+                });
 
-      //获取角色列表
-      this.$axios.get("/sys/role/list").then((res) => {
-        this.roleTreeData = res.data.data.records;
-      });
-
-      //获取用户拥有的角色
-      this.$axios
-        .get("/sys/user/detail", { params: { id: id } })
-        .then((res) => {
-          this.roleForm = res.data.data;
-
-          let roleIds = [];
-          res.data.data.sysRoles.forEach((row) => {
-            roleIds.push(row.id);
-          });
-
-          //拥有的角色默认选中
-          this.$refs.roleTree.setCheckedKeys(roleIds);
-        });
+                this.roleDialogFormVisible = false; //成功了，才会关闭对话框
+                this.resetForm(formName);
+              }
+            });
+        // } else {
+        //   console.log("error submit!!");
+        //   return false;
+        // }
+      // });
     },
 
     //新增按钮操作

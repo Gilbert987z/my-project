@@ -467,7 +467,7 @@ export default {
       // });
     },
 
-    //新增修改角色
+    //提交借阅按钮
     submitForm(formName) {
       this.$refs[formName].validate((valid) => {
         if (valid) {
