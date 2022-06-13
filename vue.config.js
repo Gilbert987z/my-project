@@ -38,16 +38,18 @@ module.exports = {
     //     config.resolve.alias.set('@', resolve('src'));
     // }
 
-  // configureWebpack: {
-  //   resolve: {
-  //     alias: {
-  //       assets: "@/assets",
-  //       common: "@/common",
-  //       components: "@/components",
-  //       network: "@/network",
-  //       views: "@/views"
-  //     }
-  //   }
-  // }
+    //配置路径别名
+  configureWebpack: {
+    resolve: {
+      alias: {
+        assets: "@/assets",
+        common: "@/common",
+        utils: "@/utils",
+        components: "@/components",
+        network: "@/network",
+        views: "@/views"
+      }
+    }
+  }
 
 };

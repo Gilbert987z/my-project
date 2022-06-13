@@ -47,8 +47,11 @@
   </div>
 </template>
 
+
 <script>
-  import axios from "axios";
+  // import axios from "axios";
+  import indexRequest from 'utils/indexRequest' //vue.config.js 中配置了路径别名
+
   export default {
     data() {
       return {
@@ -75,7 +78,7 @@
       onSubmit() {
         console.log('submit!');
         if(this.book.id==null){
-          axios({
+          this.$axios({
             method:"post",
             url:"/admin/book/create", //创建数据的接口
             headers:{
@@ -131,7 +134,7 @@
             console.log(error);
         });
       }else{
-        axios({
+        this.$axios({
             method:"post",
             url:"/admin/book/update", //修改数据的接口
             headers:{
@@ -166,7 +169,7 @@
         this.title = '修改';
         this.btnSubmit = '修改';
         // console.log(this.book.id)
-        axios.get('/admin/book/detail', //请求详情数据
+        this.$axios.get('/admin/book/detail', //请求详情数据
         {
           headers:{
             'token':this.token
@@ -195,37 +198,24 @@
       }
     },
     getBookTypeList() { //图书类型列表
-      axios
-          .get('/admin/booktype',
-              {
-                // params: params,
-                headers: {
-                  "token": this.token
-                }
-              }
-          )
+      this.$axios
+          .get('/index/book/type/list')
           .then(response => {
             console.log(response)
-            this.bookTypeList = response.data.data.list
+            this.bookTypeList = response.data.data.records
             // this.page = response.data.data
-            console.log(this.bookTypeList);
+            console.log('bookTypeList',this.bookTypeList);
+            console.log('bookTypeList',response.data);
           }).catch(function (error) { // 请求失败处理
         console.log(error);
       });
     },
     getPublisherList() {
-      axios
-          .get('/admin/publisher',
-              {
-                // params: params,
-                headers: {
-                  "token": this.token
-                }
-              }
-          )
+      this.$axios
+          .get('index/book/publisher/list',)
           .then(response => {
             console.log(response)
-            this.publisherList = response.data.data.list
+            this.publisherList = response.data.data.records
             // this.page = response.data.data
             console.log(this.publisherList);
           }).catch(function (error) { // 请求失败处理
@@ -241,9 +231,12 @@
       }
     },
     created(){
-      this.getBookTypeList(); //下拉框列表
-      this.getPublisherList(); //下拉框列表
-      this.createOrUpdate();  //判断是否是新增或者修改
+      // this.getBookTypeList(); //下拉框列表
+      // this.getPublisherList(); //下拉框列表
+      // this.createOrUpdate();  //判断是否是新增或者修改
+      console.log('indexRequest.getBookTypeList()');
+      console.log('indexRequest.getBookTypeList()',indexRequest.getBookTypeList());
+      
     }
   }
 </script>
