@@ -231,17 +231,9 @@
       }
     },
     created(){
-      // this.getBookTypeList(); //下拉框列表
-      // this.getPublisherList(); //下拉框列表
-      // this.createOrUpdate();  //判断是否是新增或者修改
-      // console.log('indexRequest.getBookTypeList()');
-      // console.log('indexRequest.getBookTypeList()',indexRequest.getBookTypeList());
-      // indexRequest.istest()
-      console.log("测试公共方法")
-      // indexRequest.getBookTypeList1()
-      // indexRequest.getBookTypeList()
-      this.$publicFunction.getBookTypeList1()
-      
+      this.getBookTypeList(); //下拉框列表
+      this.getPublisherList(); //下拉框列表
+      this.createOrUpdate();  //判断是否是新增或者修改      
     }
   }
 </script>
