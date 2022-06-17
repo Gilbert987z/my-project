@@ -95,8 +95,33 @@
 
       <el-table-column prop="id" label="借书编号" width="180"> </el-table-column>
 
-      <el-table-column prop="bookname" label="图书"> </el-table-column>
-      <el-table-column prop="username" label="用户"> </el-table-column>
+      <el-table-column label="图书"> 
+         <template slot-scope="scope">
+          <img
+            alt
+            :src="scope.row.book.image"
+            width="40"
+            height="40"
+            class="head_pic"
+          />
+          <p>{{ scope.row.book.name }}/￥{{ scope.row.book.price }}</p>
+          <p>用户ID：{{ scope.row.book.id }}</p>
+          
+        </template>
+      </el-table-column>
+      <el-table-column  label="用户"> 
+        <template slot-scope="scope">
+          <img
+            alt
+            :src="scope.row.user.avatar"
+            width="40"
+            height="40"
+            class="head_pic"
+          />
+          <p>{{ scope.row.user.username }}</p>
+          <p>图书编号：{{ scope.row.book.id }}</p>
+        </template>
+      </el-table-column>
       <el-table-column prop="remark" label="备注"> </el-table-column>
       <el-table-column prop="createdAt" label="创建时间"> </el-table-column>
       <el-table-column prop="status" label="状态">
