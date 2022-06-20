@@ -6,7 +6,7 @@
       ref="formSearch"
       class="demo-form-inline"
     >
-      <el-form-item prop="queryName">
+      <el-form-item>
         <el-input
           placeholder="请输入图书名称"
           clearable
@@ -24,7 +24,7 @@
           clearable
           prefix-icon="el-icon-search"
           @input="bookHandleSearchEvent"
-          v-model="formSearch.queryName"
+          v-model="formSearch.bookId"
         >
         </el-input>
         
@@ -36,7 +36,7 @@
           clearable
           prefix-icon="el-icon-search"
           @input="bookHandleSearchEvent"
-          v-model="formSearch.queryName"
+          v-model="formSearch.username"
         >
         </el-input>
         
@@ -48,7 +48,7 @@
           clearable
           prefix-icon="el-icon-search"
           @input="bookHandleSearchEvent"
-          v-model="formSearch.queryName"
+          v-model="formSearch.status"
         >
         </el-input>
         

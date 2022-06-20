@@ -109,7 +109,7 @@
     >
     </el-pagination>
 
-    <!--角色的对话框-->
+    <!--图书类型新增的对话框-->
     <el-dialog
       :title="dialogData.dialogTitle"
       :visible.sync="dialogVisible"
@@ -123,7 +123,7 @@
         label-width="100px"
         class="demo-editForm"
       >
-        <el-form-item label="名称" prop="name" label-width="100px">
+        <el-form-item label="图书类型名称" prop="name" label-width="100px">
           <el-input v-model="editForm.name" autocomplete="off"></el-input>
         </el-form-item>
         <el-form-item label="状态" prop="statu" label-width="100px">
@@ -193,7 +193,7 @@ export default {
       dialogVisible: false, //新增对话框 默认关闭
       editForm: {},
       editFormRules: {
-        name: [{ required: true, message: "请输入角色名称", trigger: "blur" }],
+        name: [{ required: true, message: "请输入图书类型名称", trigger: "blur" }],
         status: [{ required: true, message: "请选择状态", trigger: "blur" }],
       },
       //分配权限对话框
@@ -313,13 +313,13 @@ export default {
       });
     },
 
-    //新增修改角色
+    //新增图书类型
     submitForm(formName) {
       this.$refs[formName].validate((valid) => {
         if (valid) {
           this.$axios
             .post(
-              "/sys/role/" + (this.editForm.id ? "update" : "save"), //根据有没有id判断
+              "/admin//role/" + (this.editForm.id ? "update" : "save"), //根据有没有id判断
               this.editForm
             )
             .then((res) => {

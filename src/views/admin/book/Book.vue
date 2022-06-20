@@ -8,7 +8,7 @@
       action="#"
     >
       <!--οnsubmit="return false;" @submit.prevent="formSubmit" -->
-      <el-form-item prop="queryName">
+      <el-form-item>
         <el-input
           placeholder="请输入图书名称"
           clearable
@@ -26,8 +26,8 @@
       </el-form-item>
       <el-form-item>
         <el-select
-          v-model="bookTypeValue"
-          @change="bookTypeChange"
+          v-model="formSearch.bookTypeId"
+          @change="handleSearchEvent"
           clearable
           placeholder="请选择图书类型"
         >
@@ -42,8 +42,8 @@
       </el-form-item>
       <el-form-item>
         <el-select
-          v-model="publisherValue"
-          @change="publisherChange"
+          v-model="formSearch.publisherId"
+          @change="handleSearchEvent"
           clearable
           placeholder="请选择出版社"
         >
@@ -296,6 +296,8 @@ export default {
       },
       formSearch: {
         queryName: "", //查询名称
+        bookTypeId:null,
+        publisherId:null
       },
     };
   },
@@ -331,6 +333,8 @@ export default {
         page: this.page.current,
         size: this.page.size,
         name: this.formSearch.queryName,
+        bookTypeId: this.formSearch.bookTypeId,
+        publisherId: this.formSearch.publisherId,
         action: "list",
       };
       console.log(params);
@@ -415,9 +419,9 @@ export default {
       this.getTableList(); //重新获取列表数据
     },
 
-    //按名称查询
-    handleSearchEvent(val) {
-      this.inputName = val;
+    //输入框修改时触发
+    handleSearchEvent() {
+      // this.inputName = val;
       this.getTableList();
     },
     //重置表单数据
@@ -529,9 +533,36 @@ export default {
           });
       });
     },
+        getBookTypeList() { //图书类型列表
+      this.$axios
+          .get('/index/book/type/list')
+          .then(response => {
+            console.log(response)
+            this.bookTypeList = response.data.data.records
+            // this.page = response.data.data
+            console.log('bookTypeList',this.bookTypeList);
+            console.log('bookTypeList',response.data);
+          }).catch(function (error) { // 请求失败处理
+        console.log(error);
+      });
+    },
+    getPublisherList() {
+      this.$axios
+          .get('index/book/publisher/list',)
+          .then(response => {
+            console.log(response)
+            this.publisherList = response.data.data.records
+            // this.page = response.data.data
+            console.log(this.publisherList);
+          }).catch(function (error) { // 请求失败处理
+        console.log(error);
+      });
+    },
   },
   created() {
     this.getTableList();
+    this.getBookTypeList();
+    this.getPublisherList();
   },
   mounted() {},
 };
