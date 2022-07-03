@@ -123,10 +123,10 @@
         label-width="100px"
         class="demo-editForm"
       >
-        <el-form-item label="图书类型名称" prop="name" label-width="100px">
-          <el-input v-model="editForm.name" autocomplete="off"></el-input>
+        <el-form-item label="图书类型" prop="bookType" label-width="100px">
+          <el-input v-model="editForm.bookType" autocomplete="off"></el-input>
         </el-form-item>
-        <el-form-item label="状态" prop="statu" label-width="100px">
+        <el-form-item label="状态" prop="status" label-width="100px">
           <el-radio-group v-model="editForm.status">
             <el-radio :label="1">正常</el-radio>
             <el-radio :label="0">禁用</el-radio>
@@ -191,9 +191,11 @@ export default {
         dialogSubmit: null,
       },
       dialogVisible: false, //新增对话框 默认关闭
-      editForm: {},
+      editForm: {
+        status:1,
+      },
       editFormRules: {
-        name: [{ required: true, message: "请输入图书类型名称", trigger: "blur" }],
+        bookType: [{ required: true, message: "请输入图书类型名称", trigger: "blur" }],
         status: [{ required: true, message: "请选择状态", trigger: "blur" }],
       },
       //分配权限对话框
@@ -230,7 +232,7 @@ export default {
       console.log(params);
       // return false;
       this.$axios
-        .get("/book/type/list", {
+        .get("/admin/bookType/list", {
           params: params,
         })
         .then((response) => {
@@ -319,7 +321,7 @@ export default {
         if (valid) {
           this.$axios
             .post(
-              "/admin//role/" + (this.editForm.id ? "update" : "save"), //根据有没有id判断
+              "/admin/bookType/" + (this.editForm.id ? "update" : "save"), //根据有没有id判断
               this.editForm
             )
             .then((res) => {
@@ -377,13 +379,13 @@ export default {
         });
       }
 
-      this.$confirm("确定删除选中的角色吗?", "删除", {
+      this.$confirm("确定删除选中的图书类型吗?", "删除", {
         confirmButtonText: "确定",
         cancelButtonText: "取消",
         type: "error",
       }).then(() => {
         this.$axios
-          .post("/sys/role/delete", ids)
+          .post("/admin/bookType/delete", ids)
           .then(() => {
             this.getTableList(); //请求刷新
             this.$message.success("已成功删除!");

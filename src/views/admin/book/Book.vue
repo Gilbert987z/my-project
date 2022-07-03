@@ -535,7 +535,7 @@ export default {
     },
         getBookTypeList() { //图书类型列表
       this.$axios
-          .get('/index/book/type/list')
+          .get('/index/bookType/list')
           .then(response => {
             console.log(response)
             this.bookTypeList = response.data.data.records

@@ -126,7 +126,7 @@
         <el-form-item label="名称" prop="name" label-width="100px">
           <el-input v-model="editForm.name" autocomplete="off"></el-input>
         </el-form-item>
-        <el-form-item label="状态" prop="statu" label-width="100px">
+        <el-form-item label="状态" prop="status" label-width="100px">
           <el-radio-group v-model="editForm.status">
             <el-radio :label="1">正常</el-radio>
             <el-radio :label="0">禁用</el-radio>

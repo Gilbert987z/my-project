@@ -76,6 +76,13 @@ request.interceptors.response.use(
         //   duration: 1500,
         //   type: "error",
         // });
+      }else if (response.data.code == 422){
+        console.log("422后端定义的校验报错");
+
+        Notification.error({
+          title: "校验失败",
+          message: response.data.data.fieldErrors,
+        });
       }
       return Promise.resolve(response);
     } else {
