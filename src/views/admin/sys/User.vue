@@ -55,7 +55,7 @@
     >
       <el-table-column type="selection" width="55"> </el-table-column>
 
-      <el-table-column prop="id" label="user_id" width="180"> </el-table-column>
+      <el-table-column prop="id" label="编号" width="180"> </el-table-column>
 
       <el-table-column label="名称">
         <template slot-scope="scope">
@@ -69,15 +69,27 @@
           <span>{{ scope.row.username }}</span>
         </template>
       </el-table-column>
-      <el-table-column label="角色名称">
+
+      <el-table-column  prop="isAdmin" label="是否是管理员">
         <template slot-scope="scope">
+         <p v-if="scope.row.isAdmin=== 1">超级管理员</p>
+         <p v-else-if="scope.row.isAdmin=== 2">普通管理员</p>
+         <p v-else-if="scope.row.isAdmin=== 3">用户</p>
+         </template>
+      </el-table-column>
+
+      <el-table-column label="拥有的角色权限">
+        <template slot-scope="scope">
+          <p v-if="scope.row.isAdmin=== 1">拥有所有角色权限</p>
           <el-tag
+          v-else-if="scope.row.isAdmin=== 2"
             size="small"
             type="info"
             v-for="item in scope.row.sysRoles"
             :key="item.name"
             >{{ item.name }}</el-tag
           >
+          <p v-else-if="scope.row.isAdmin=== 3">-</p>
         </template>
       </el-table-column>
       <el-table-column prop="mobile" label="手机号"> </el-table-column>
@@ -116,10 +128,16 @@
           <el-button type="text" @click="editHandle(scope.row.id)"
             >编辑</el-button
           >
-
+          <el-divider direction="vertical"></el-divider>
+          <el-button v-if="scope.row.status=== 1" type="text" @click="delHandle(scope.row.id)"
+            >封禁</el-button
+          >
+          <el-button v-if="scope.row.status=== -1" type="text" @click="delHandle(scope.row.id)"
+            >解禁</el-button
+          >
           <el-divider direction="vertical"></el-divider>
           <el-button type="text" @click="delHandle(scope.row.id)"
-            >删除</el-button
+            >注销用户</el-button
           >
         </template>
       </el-table-column>
@@ -264,7 +282,7 @@ export default {
       console.log(params);
       // return false;
       this.$axios
-        .get("/sys/user/list", {
+        .get("/admin/sys/user/list", {
           params: params,
         })
         .then((response) => {
@@ -325,13 +343,13 @@ export default {
       console.log(id);
 
       //获取角色列表
-      this.$axios.get("/sys/role/list").then((res) => {
+      this.$axios.get("/admin/sys/role/list").then((res) => {
         this.roleTreeData = res.data.data.records;
       });
 
       //获取用户拥有的角色
       this.$axios
-        .get("/sys/user/detail", { params: { id: id } })
+        .get("/admin/sys/user/detail", { params: { id: id } })
         .then((res) => {
           this.roleForm = res.data.data;
 
@@ -352,7 +370,7 @@ export default {
       console.log(roleIds);
 
       this.$axios
-        .post("/sys/user/role/update", {
+        .post("/admin/sys/user/role/update", {
           userId: this.roleForm.id,
           roleIds: roleIds,
         })
@@ -385,7 +403,7 @@ export default {
       this.dialogData.dialogTitle = "编辑";
       this.dialogData.dialogSubmit = "编辑";
       //请求详情
-      this.$axios.get("/sys/role/info", { params: { id: id } }).then((res) => {
+      this.$axios.get("/admin/sys/role/info", { params: { id: id } }).then((res) => {
         this.editForm = res.data.data;
 
         this.dialogVisible = true; //打开对话框
@@ -398,7 +416,7 @@ export default {
         if (valid) {
           this.$axios
             .post(
-              "/sys/role/" + (this.editForm.id ? "update" : "save"), //根据有没有id判断
+              "/admin/sys/role/" + (this.editForm.id ? "update" : "save"), //根据有没有id判断
               this.editForm
             )
             .then((res) => {
@@ -453,7 +471,7 @@ export default {
         type: "error",
       }).then(() => {
         this.$axios
-          .post("/sys/user/delete", ids)
+          .post("/admin/sys/user/delete", ids)
           .then(() => {
             this.getTableList(); //请求刷新
             this.$message.success("已成功删除!");
@@ -471,7 +489,7 @@ export default {
   created() {
     this.getTableList();
 
-    this.$axios.get("/sys/permission/list").then((res) => {
+    this.$axios.get("/admin/sys/permission/list").then((res) => {
       this.permTreeData = res.data.data;
     });
   },
