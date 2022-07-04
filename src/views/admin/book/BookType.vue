@@ -144,7 +144,7 @@
           <el-button type="primary" @click="submitForm('editForm')">{{
             dialogData.dialogSubmit
           }}</el-button>
-          <el-button @click="dialogVisible = false">取消</el-button>
+          <el-button @click="handleClose">取消</el-button>
           <!-- <el-button @click="resetForm('editForm')">重置</el-button> -->
         </el-form-item>
       </el-form>
@@ -192,7 +192,7 @@ export default {
       },
       dialogVisible: false, //新增对话框 默认关闭
       editForm: {
-        status:1,
+        status:1, //默认是正常状态
       },
       editFormRules: {
         bookType: [{ required: true, message: "请输入图书类型名称", trigger: "blur" }],
@@ -227,7 +227,7 @@ export default {
       var params = {
         page: this.page.current,
         size: this.page.size,
-        name: this.formSearch.queryName,
+        bookType: this.formSearch.queryName,
       };
       console.log(params);
       // return false;
@@ -298,8 +298,11 @@ export default {
     },
     //新增按钮操作
     addHandle() {
-      (this.editForm.status = 1), //默认是正常
-        (this.dialogData.dialogTitle = "新增");
+      // 保存成功后，清空form表单数据
+      // this.$refs['editForm'].resetFields();
+      // this.$refs.editForm.resetFields();
+      this.editForm.status = 1;
+      this.dialogData.dialogTitle = "新增";
       this.dialogData.dialogSubmit = "创建";
       this.dialogVisible = true; //打开对话框
     },
@@ -308,7 +311,7 @@ export default {
       this.dialogData.dialogTitle = "编辑";
       this.dialogData.dialogSubmit = "编辑";
       //请求详情
-      this.$axios.get("/sys/role/info", { params: { id: id } }).then((res) => {
+      this.$axios.get("/admin/bookType/detail", { params: { id: id } }).then((res) => {
         this.editForm = res.data.data;
 
         this.dialogVisible = true; //打开对话框

@@ -20,23 +20,23 @@
               <el-dropdown-item>
                 <router-link :to="{ name: 'UserCenter' }">个人中心</router-link>
               </el-dropdown-item>
-
+              <el-dropdown-item>
+                <router-link :to="{ name: 'UserCenter' }">用户界面</router-link>
+              </el-dropdown-item>
               <!-- <el-popconfirm title="是否登出?" @confirm="logout"> -->
               <!-- <template #reference> -->
-              <el-dropdown-item @click.native="logout()">退出</el-dropdown-item>
+              <el-dropdown-item @click.native="logout()">退出登录</el-dropdown-item>
               <!-- </template> -->
               <!-- </el-popconfirm> -->
             </el-dropdown-menu>
           </el-dropdown>
 
-          <el-link
+          <!-- <el-link
             href="https://github.com/Gilbert987z/my-project"
             target="_blank"
-            >github</el-link
-          >
-          <el-link href="https://space.bilibili.com/13491144" target="_blank"
-            >B站</el-link
-          >
+            >切换到用户界面</el-link
+          > -->
+     
         </div>
       </el-header>
       <el-main>
