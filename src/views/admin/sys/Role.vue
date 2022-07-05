@@ -230,7 +230,7 @@ export default {
       console.log(params);
       // return false;
       this.$axios
-        .get("/sys/role/list", {
+        .get("/admin/sys/role/list", {
           params: params,
         })
         .then((response) => {
@@ -289,7 +289,7 @@ export default {
     permHandle(id) {
       this.permDialogVisible = true; //打开对话框
 
-      this.$axios.get("/sys/role/info", { params: { id: id } }).then((res) => {
+      this.$axios.get("/admin/sys/role/info", { params: { id: id } }).then((res) => {
         this.$refs.permTree.setCheckedKeys(res.data.data.menuIds);
         this.permForm = res.data.data;
       });
@@ -306,7 +306,7 @@ export default {
       this.dialogData.dialogTitle = "编辑";
       this.dialogData.dialogSubmit = "编辑";
       //请求详情
-      this.$axios.get("/sys/role/info", { params: { id: id } }).then((res) => {
+      this.$axios.get("/admin/sys/role/info", { params: { id: id } }).then((res) => {
         this.editForm = res.data.data;
 
         this.dialogVisible = true; //打开对话框
@@ -319,7 +319,7 @@ export default {
         if (valid) {
           this.$axios
             .post(
-              "/sys/role/" + (this.editForm.id ? "update" : "save"), //根据有没有id判断
+              "/admin/sys/role/" + (this.editForm.id ? "update" : "save"), //根据有没有id判断
               this.editForm
             )
             .then((res) => {
@@ -383,7 +383,7 @@ export default {
         type: "error",
       }).then(() => {
         this.$axios
-          .post("/sys/role/delete", ids)
+          .post("/admin/sys/role/delete", ids)
           .then(() => {
             this.getTableList(); //请求刷新
             this.$message.success("已成功删除!");
@@ -401,7 +401,7 @@ export default {
   created() {
     this.getTableList();
 
-    this.$axios.get('/sys/permission/list').then(res => {
+    this.$axios.get('/admin/sys/permission/list').then(res => {
 				this.permTreeData = res.data.data
 			})
   },

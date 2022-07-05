@@ -89,45 +89,88 @@ const router = new Router({
     },
 
     
-    // {
-    //   path: "/",
-    //   name: "Home",
-    //   redirect: "/index", //跳转到首页
-    //   // component: () => import("../views/Home.vue"), //header的页面
-    // },
     {
-      path: "/",  // path 设置为 “/” ，默认显示该页面
-      name: "Home",
+      path: "/",
+      // name: "Home",
+      redirect: "/login", //跳转到登录
+      // component: () => import("../views/Home.vue"), //header的页面
+    },
+    {
+      path: "/member",  // path 设置为 “/” ，默认显示该页面
+      name: "MemnberHome",
       meta: {
-        title: "图书管理系统",
+        title: "图书",
       },
-      redirect: "/index", //跳转到首页
-      component: () => import("../views/Home.vue"), //header的页面
+      redirect: "/member/index", //跳转到首页
+      component: () => import("../views/member/Home.vue"), //header的页面
       children: [
         {
-          path: "/index",
-          name: "Index",
+          path: "/member/index",
+          name: "MemberIndex",
           meta: {
             title: "首页",
           },
-          component: () => import("../views/Index.vue"), //main的页面
+          component: () => import("../views/member/Index.vue"), //main的页面
         },
+        // {
+        //   path: "/member/user/userCenter",
+        //   name: "MemberUserCenter",
+        //   meta: {
+        //     title: "个人中心",
+        //   },
+        //   component: () => import("../views/member/user/UserCenter.vue"), 
+        // },
+        // {
+        //   path: "/member/user/userPassword",
+        //   name: "MemberUserPassword",
+        //   meta: {
+        //     title: "修改密码",
+        //   },
+        //   component: () => import("../views/member/user/UserPassword.vue"), 
+        // },
         {
-          path: "/user/userCenter",
-          name: "UserCenter",
-          meta: {
-            title: "个人中心",
+            path: "/test", //列表页
+            name: "test",
+            meta: {
+              title: "测试",
+            },
+            component: () => import("../views/test.vue"),
           },
-          component: () => import("../views/user/UserCenter.vue"), 
-        },
+      ],
+    },
+    {
+      path: "/admin",  // path 设置为 “/” ，默认显示该页面
+      name: "AdminHome",
+      meta: {
+        title: "图书管理系统",
+      },
+      redirect: "/admin/index", //跳转到首页
+      component: () => import("../views/admin/Home.vue"), //header的页面
+      children: [
         {
-          path: "/user/userPassword",
-          name: "UserPassword",
+          path: "/admin/index",
+          name: "AdminIndex",
           meta: {
-            title: "修改密码",
+            title: "首页",
           },
-          component: () => import("../views/user/UserPassword.vue"), 
+          component: () => import("../views/admin/Index.vue"), //main的页面
         },
+        // {
+        //   path: "/admin/user/userCenter",
+        //   name: "AdminUserCenter",
+        //   meta: {
+        //     title: "个人中心",
+        //   },
+        //   component: () => import("../views/admin/user/UserCenter.vue"), 
+        // },
+        // {
+        //   path: "/admin/user/userPassword",
+        //   name: "AdminUserPassword",
+        //   meta: {
+        //     title: "修改密码",
+        //   },
+        //   component: () => import("../views/admin/user/UserPassword.vue"), 
+        // },
         {
             path: "/test", //列表页
             name: "test",
@@ -145,7 +188,7 @@ const router = new Router({
         title: "系统管理",
       },
       redirect: "/admin/sys/user", //跳转到首页
-      component: () => import("../views/Home.vue"), //header的页面
+      component: () => import("../views/admin/Home.vue"), //header的页面
       children: [
         {
           path: "/admin/sys/user",
@@ -180,7 +223,7 @@ const router = new Router({
         title: "图书管理",
       },
       redirect: "/admin/book/list", //  /admin/book路径重定向到跳转到图书列表
-      component: () => import("../views/Home.vue"), //header的页面
+      component: () => import("../views/admin/Home.vue"), //header的页面
       children: [
         {
           path: "/admin/book/list",
@@ -244,7 +287,7 @@ const router = new Router({
         title: "图书借阅",
       },
       redirect: "/member/book/list", //跳转到图书列表
-      component: () => import("../views/Home.vue"), //header的页面
+      component: () => import("../views/member/Home.vue"), //header的页面
       children: [
         {
           path: "/member/book/list",
@@ -387,7 +430,7 @@ router.beforeEach((to, from, next) => {
     next();
     // console.log(11)
   } else {
-    let token = localStorage.getItem("token");
+    let token = localStorage.getItem("token");//要改成从vuex中取吗？
     // console.log(22)
     if (!token) {
       //如果没有token，直接跳转到登录页

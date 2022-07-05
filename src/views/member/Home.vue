@@ -10,7 +10,7 @@
     </el-aside>
     <el-container>
       <el-header>
-        <strong>图书管理系统</strong>
+        <strong>用户图书借阅</strong>
 
         <div class="header-avatar">
           <el-avatar size="medium" :src="userInfo.avatar"></el-avatar>
@@ -114,7 +114,7 @@ export default {
               localStorage.clear();
               sessionStorage.clear();
 
-              this.$store.commit("resetState"); //调用vuex中的清空数据的mutations方法
+              // this.$store.commit("resetState"); //调用vuex中的清空数据的mutations方法
 
               this.$router.push({name:"Login"}); //跳转到登录页
             });

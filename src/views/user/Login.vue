@@ -223,9 +223,26 @@ export default {
 
               if (token) {
                 //token有值
+
+                // this.$store.commit('SET_TOKEN', token); //调用vuex中的设置token的mutations方法
                 localStorage.setItem("token", token); //将token存入本地
                 localStorage.setItem("refreshToken", refreshToken); //将token存入本地
-                this.$router.push({name:"Index"}); //跳转到首页
+
+              
+                
+                this.$axios.get("/user/info").then((res) => {
+                  let isAdmin = res.data.data.isAdmin;
+                  // console.log(this.userInfo);
+                  if(isAdmin==1||isAdmin==2){
+             
+                    this.$router.push({name:"AdminIndex"}); //跳转到管理员首页
+                  }else if (isAdmin==3){
+                     this.$router.push({name:"MemberIndex"}); //跳转到用户首页
+                  }
+                  
+
+                });
+                
               }
             })
             .catch(function(error) {
