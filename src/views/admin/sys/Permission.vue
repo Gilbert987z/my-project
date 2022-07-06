@@ -124,6 +124,9 @@
         <el-form-item label="名称" prop="name" label-width="100px">
           <el-input v-model="editForm.name" autocomplete="off"></el-input>
         </el-form-item>
+         <el-form-item label="路径" prop="path" label-width="100px">
+          <el-input v-model="editForm.path" autocomplete="off"></el-input>
+        </el-form-item>
         <el-form-item label="状态" prop="status" label-width="100px">
           <el-radio-group v-model="editForm.status">
             <el-radio :label="1">正常</el-radio>
@@ -142,7 +145,7 @@
           <el-button type="primary" @click="submitForm('editForm')">{{
             dialogData.dialogSubmit
           }}</el-button>
-          <el-button @click="dialogVisible = false">取消</el-button>
+          <el-button @click="handleClose">取消</el-button>
           <!-- <el-button @click="resetForm('editForm')">重置</el-button> -->
         </el-form-item>
       </el-form>
@@ -167,9 +170,13 @@ export default {
         dialogSubmit: null,
       },
       dialogVisible: false, //新增对话框 默认关闭
-      editForm: {},
+      editForm: {
+         status:1, //默认是正常状态
+
+      },
       editFormRules: {
-        name: [{ required: true, message: "请输入角色名称", trigger: "blur" }],
+        name: [{ required: true, message: "请输入权限名称", trigger: "blur" }],
+        path: [{ required: true, message: "请输入权限接口路径", trigger: "blur" }],
         status: [{ required: true, message: "请选择状态", trigger: "blur" }],
       },
 
@@ -266,20 +273,20 @@ export default {
       this.dialogData.dialogTitle = "编辑";
       this.dialogData.dialogSubmit = "编辑";
       //请求详情
-      this.$axios.get("/admin/sys/role/info", { params: { id: id } }).then((res) => {
+      this.$axios.get("/admin/sys/permission/info", { params: { id: id } }).then((res) => {
         this.editForm = res.data.data;
 
         this.dialogVisible = true; //打开对话框
       });
     },
 
-    //新增修改角色
+    //新增修改
     submitForm(formName) {
       this.$refs[formName].validate((valid) => {
         if (valid) {
           this.$axios
             .post(
-              "/admin/sys/role/" + (this.editForm.id ? "update" : "save"), //根据有没有id判断
+              "/admin/sys/permission/" + (this.editForm.id ? "update" : "save"), //根据有没有id判断
               this.editForm
             )
             .then((res) => {
@@ -337,13 +344,13 @@ export default {
         });
       }
 
-      this.$confirm("确定删除选中的角色吗?", "删除", {
+      this.$confirm("确定删除选中的权限吗?", "删除", {
         confirmButtonText: "确定",
         cancelButtonText: "取消",
         type: "error",
       }).then(() => {
         this.$axios
-          .post("/admin/sys/role/delete", ids)
+          .post("/admin/sys/permission/delete", ids)
           .then(() => {
             this.getTableList(); //请求刷新
             this.$message.success("已成功删除!");

@@ -28,14 +28,14 @@
       >
       <el-row style="float:right">
         <!-- <el-popconfirm title="这是确定批量删除吗？" @confirm="delHandle(null)"> -->
-        <el-button
+        <!-- <el-button
           style="margin-right:10px"
           type="danger"
           icon="el-icon-remove"
           :disabled="delBtlStatus"
           @click="delHandle(null)"
           >批量删除</el-button
-        >
+        > -->
         <!-- </el-popconfirm>      slot="reference"-->
 
         <el-button
@@ -51,11 +51,13 @@
       :data="info"
       border
       style="width: 100%;margin-top:20px"
-      @selection-change="handleSelectionChange"
+      
     >
-      <el-table-column type="selection" width="55"> </el-table-column>
+    <!-- @selection-change="handleSelectionChange" -->
+      <!-- <el-table-column type="selection" width="55"> </el-table-column> -->
+      <!-- <el-table-column type="index" width="55"> </el-table-column> -->
 
-      <el-table-column prop="id" label="编号" width="180"> </el-table-column>
+      <el-table-column prop="id" label="编号" width="55"> </el-table-column>
 
       <el-table-column label="名称">
         <template slot-scope="scope">
@@ -117,7 +119,7 @@
 
       <el-table-column label="操作">
         <template slot-scope="scope">
-          <el-button type="text" @click="roleHandle(scope.row.id)"
+          <el-button v-if="scope.row.isAdmin=== 2" type="text" @click="roleHandle(scope.row.id)"
             >分配角色</el-button
           >
           <el-divider direction="vertical"></el-divider>
@@ -129,16 +131,19 @@
             >编辑</el-button
           >
           <el-divider direction="vertical"></el-divider>
-          <el-button v-if="scope.row.status=== 1" type="text" @click="delHandle(scope.row.id)"
+          <el-button v-if="scope.row.status=== 1 && scope.row.isAdmin!= 1" type="text" @click="delHandle(scope.row.id)"
             >封禁</el-button
           >
-          <el-button v-if="scope.row.status=== -1" type="text" @click="delHandle(scope.row.id)"
+          <el-button v-if="scope.row.status=== -1 && scope.row.isAdmin!= 1" type="text" @click="delHandle(scope.row.id)"
             >解禁</el-button
           >
           <el-divider direction="vertical"></el-divider>
-          <el-button type="text" @click="delHandle(scope.row.id)"
+          <el-button v-if="scope.row.isAdmin!= 1" type="text" @click="delHandle(scope.row.id)"
             >注销用户</el-button
           >
+          <!-- <el-button disabled type="text" @click="delHandle(scope.row.id)"
+            >注销用户</el-button
+          > -->
         </template>
       </el-table-column>
     </el-table>
@@ -191,7 +196,7 @@
           <el-button type="primary" @click="submitForm('editForm')">{{
             dialogData.dialogSubmit
           }}</el-button>
-          <el-button @click="dialogVisible = false">取消</el-button>
+          <el-button @click="handleClose">取消</el-button>
           <!-- <el-button @click="resetForm('editForm')">重置</el-button> -->
         </el-form-item>
       </el-form>
@@ -377,6 +382,9 @@ export default {
         .then((res) => {
           console.log(res);
           if(res.data.code==20000){
+
+          this.getTableList(); //刷新列表
+
           this.$message({
             showClose: true,
             message: "恭喜你，操作成功",
@@ -444,14 +452,14 @@ export default {
       });
     },
 
-    //勾选改变
-    handleSelectionChange(val) {
-      console.log("勾选");
-      console.log(val);
-      this.multipleSelection = val;
+    // //勾选改变
+    // handleSelectionChange(val) {
+    //   console.log("勾选");
+    //   console.log(val);
+    //   this.multipleSelection = val;
 
-      this.delBtlStatus = val.length == 0; //没有勾选，就是true,禁用
-    },
+    //   this.delBtlStatus = val.length == 0; //没有勾选，就是true,禁用
+    // },
 
     //单个删除
     delHandle(id) {

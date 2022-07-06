@@ -144,7 +144,7 @@
           <el-button type="primary" @click="submitForm('editForm')">{{
             dialogData.dialogSubmit
           }}</el-button>
-          <el-button @click="dialogVisible = false">取消</el-button>
+          <el-button @click="handleClose">取消</el-button>
           <!-- <el-button @click="resetForm('editForm')">重置</el-button> -->
         </el-form-item>
       </el-form>
@@ -191,7 +191,9 @@ export default {
         dialogSubmit: null,
       },
       dialogVisible: false, //新增对话框 默认关闭
-      editForm: {},
+      editForm: {
+        status:1, //默认是正常状态
+      },
       editFormRules: {
         name: [{ required: true, message: "请输入角色名称", trigger: "blur" }],
         status: [{ required: true, message: "请选择状态", trigger: "blur" }],
@@ -296,8 +298,8 @@ export default {
     },
     //新增按钮操作
     addHandle() {
-      (this.editForm.status = 1), //默认是正常
-        (this.dialogData.dialogTitle = "新增");
+      this.editForm.status = 1, //默认是正常
+      this.dialogData.dialogTitle = "新增";
       this.dialogData.dialogSubmit = "创建";
       this.dialogVisible = true; //打开对话框
     },
