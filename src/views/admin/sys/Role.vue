@@ -58,6 +58,7 @@
       <el-table-column prop="id" label="id" width="180"> </el-table-column>
 
       <el-table-column prop="name" label="名称"> </el-table-column>
+      <el-table-column prop="code" label="唯一编码"> </el-table-column>
       <el-table-column prop="remark" label="备注"> </el-table-column>
       <el-table-column prop="createdAt" label="创建时间"> </el-table-column>
       <el-table-column prop="status" label="状态">
@@ -126,6 +127,9 @@
         <el-form-item label="名称" prop="name" label-width="100px">
           <el-input v-model="editForm.name" autocomplete="off"></el-input>
         </el-form-item>
+        <el-form-item label="唯一编码" prop="code" label-width="100px">
+          <el-input v-model="editForm.code" autocomplete="off"></el-input>
+        </el-form-item>
         <el-form-item label="状态" prop="status" label-width="100px">
           <el-radio-group v-model="editForm.status">
             <el-radio :label="1">正常</el-radio>
@@ -158,7 +162,7 @@
           ref="permTree"
           :default-expand-all="true"
           node-key="id"
-          :check-strictly="true"
+          :check-strictly="false"
           :props="defaultProps"
         >
         </el-tree>
@@ -196,6 +200,7 @@ export default {
       },
       editFormRules: {
         name: [{ required: true, message: "请输入角色名称", trigger: "blur" }],
+        code: [{ required: true, message: "请输入唯一编码", trigger: "blur" }],
         status: [{ required: true, message: "请选择状态", trigger: "blur" }],
       },
       //分配权限对话框
@@ -292,8 +297,10 @@ export default {
       this.permDialogVisible = true; //打开对话框
 
       this.$axios.get("/admin/sys/role/info", { params: { id: id } }).then((res) => {
-        this.$refs.permTree.setCheckedKeys(res.data.data.menuIds);
+        console.log(res)
+        this.$refs.permTree.setCheckedKeys(res.data.data.permissionIds);
         this.permForm = res.data.data;
+        // console.log(this.permForm)
       });
     },
     //新增按钮操作
@@ -348,7 +355,31 @@ export default {
         }
       });
     },
+    submitPermFormHandle(formName) {
+      var menuIds = this.$refs.permTree.getCheckedKeys()
 
+      console.log(menuIds)
+      console.log(this.permForm.id)
+
+      this.$axios.post('/admin/sys/role/permission/edit' , 
+        {
+          "id":this.permForm.id,
+          "permissionIds":menuIds
+        }
+      ).then(res => {
+        console.log(res)
+        this.$message({
+          showClose: true,
+          message: '恭喜你，操作成功',
+          type: 'success',
+          onClose:() => {
+            this.getTableList()
+          }
+        });
+        this.permDialogVisible = false
+        this.resetForm(formName)
+      })
+    },
     // toggleSelection(rows) {
     //   if (rows) {
     //     rows.forEach((row) => {
