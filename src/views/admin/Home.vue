@@ -25,7 +25,7 @@
                 <router-link :to="{ name: 'UserCenter' }">个人中心</router-link>
               </el-dropdown-item>
               <el-dropdown-item>
-                <router-link :to="{ name: 'UserCenter' }">用户界面</router-link>
+                <router-link :to="{ name: 'MemberHome' }">用户界面</router-link>
               </el-dropdown-item>
               <!-- <el-popconfirm title="是否登出?" @confirm="logout"> -->
               <!-- <template #reference> -->

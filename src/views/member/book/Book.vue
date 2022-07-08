@@ -9,7 +9,6 @@
     
     
     >
-      <!--οnsubmit="return false;" @submit.prevent="formSubmit" -->
       <el-form-item prop="queryName">
         <el-input
           placeholder="请输入图书名称"
@@ -20,42 +19,10 @@
           @keypress="show"
           @input="handleSearchEvent"
           v-model="formSearch.queryName"
-         
         >
-               <!--action="javascript:return true;"  @keyup.13="show"  @keydown="onSearchIcon2($event)"
-          @keypress="onSearchIcon1(e)"
-          -->
+          
         </el-input>
       </el-form-item>
-
-      <!-- <el-select
-        v-model="bookTypeValue"
-        @change="bookTypeChange"
-        clearable
-        placeholder="请选择图书类型"
-      >
-        <el-option
-          v-for="item in bookTypeList"
-          :key="item.id"
-          :label="item.bookType"
-          :value="item.id"
-        >
-        </el-option>
-      </el-select>
-      <el-select
-        v-model="publisherValue"
-        @change="publisherChange"
-        clearable
-        placeholder="请选择出版社"
-      >
-        <el-option
-          v-for="item in publisherList"
-          :key="item.id"
-          :label="item.publisher"
-          :value="item.id"
-        >
-        </el-option>
-      </el-select> -->
 
       <el-form-item>
         <el-button type="primary" @click="getTableList">搜索</el-button>
@@ -68,32 +35,7 @@
         >图书列表</span
       >
       <el-row style="float:right">
-        <!-- <el-popconfirm title="这是确定批量删除吗？" @confirm="delHandle(null)"> -->
-
-        <!-- <el-button
-          style="margin-right:10px"
-          type="success"
-          icon="el-icon-export"
-          @click="exportData()"
-          >导出</el-button
-        >
-
-        <el-button
-          style="margin-right:10px"
-          type="danger"
-          icon="el-icon-remove"
-          :disabled="delBtlStatus"
-          @click="delHandle(null)"
-          >批量删除</el-button
-        > -->
-        <!-- </el-popconfirm>      slot="reference"-->
-
-        <!-- <el-button
-          type="primary"
-          icon="el-icon-circle-plus"
-          @click="addHandle()"
-          >新增</el-button
-        > -->
+ 
       </el-row>
     </div>
 
@@ -101,9 +43,7 @@
       :data="info"
       border
       style="width: 100%;margin-top:20px"
-      @selection-change="handleSelectionChange"
     >
-      <el-table-column type="selection" width="55"> </el-table-column>
 
       <el-table-column prop="id" label="图书编号" width="180"> </el-table-column>
 
@@ -153,16 +93,20 @@
           <el-button type="text" @click="roleHandle(scope.row.id)"
             >详情</el-button
           >
-          <el-divider direction="vertical"></el-divider>
-          <el-button type="text" @click="borrowHandle(scope.row.id)"
-            >借阅</el-button
-          >
-    
+          <span v-if="scope.row.status === 0">
+            <el-divider direction="vertical"></el-divider>
+            <el-button disabled type="text" @click="borrowHandle(scope.row.id)"
+              >借阅</el-button
+            >
+          </span>
 
-          <el-divider direction="vertical"></el-divider>
-          <el-button type="text" @click="delHandle(scope.row.id)"
-            >删除</el-button
-          >
+                <span v-else-if="scope.row.status === 1">
+            <el-divider direction="vertical"></el-divider>
+            <el-button type="text" @click="borrowHandle(scope.row.id)"
+              >借阅</el-button
+            >
+          </span>
+ 
         </template>
       </el-table-column>
     </el-table>
@@ -216,32 +160,7 @@
       </el-form>
     </el-dialog>
 
-    <!-- 分配权限对话框 -->
-    <!-- <el-dialog
-      title="分配角色"
-      :visible.sync="roleDialogFormVisible"
-      width="600px"
-    >
-      <el-form :model="roleForm">
-        <el-tree
-          :data="roleTreeData"
-          show-checkbox
-          ref="roleTree"
-          :check-strictly="checkStrictly"
-          node-key="id"
-          :default-expand-all="true"
-          :props="defaultProps"
-        >
-        </el-tree>
-      </el-form>
-
-      <div slot="footer" class="dialog-footer">
-        <el-button @click="roleDialogFormVisible = false">取 消</el-button>
-        <el-button type="primary" @click="submitRoleHandle('roleForm')"
-          >确 定</el-button
-        >
-      </div>
-    </el-dialog> -->
+ 
   </div>
 </template>
 
@@ -308,23 +227,7 @@ export default {
         this.$refs.input.blur();    //点击搜索后收起软键盘
         this.$emit('func',this.searchText);	    //获取搜索文本，做一些请求操作
     },
-    // formSubmit(){
-    //   return false;
-    // },
-    // onSearchIcon(e){
-    //   console.log("点击了软件盘的搜索按钮121111113");
-    //   if(e.keyCode == 13){
-    //     console.log("点击了软件盘的搜索按钮11111");
-    //     this.getTableList();
-    //   }
-    // },
-    // onSearchIcon2(e){
-    //   console.log("点击了软件盘的搜索按钮123");
-    //   if(e.keyCode == 13){
-    //     console.log("点击了软件盘的搜索按钮");
-    //     this.getTableList();
-    //   }
-    // },
+
 
     //获取列表
     getTableList() {
@@ -501,54 +404,11 @@ export default {
       });
     },
 
-    //勾选改变
-    handleSelectionChange(val) {
-      console.log("勾选");
-      console.log(val);
-      this.multipleSelection = val;
-
-      this.delBtlStatus = val.length == 0; //没有勾选，就是true,禁用
-    },
-
-    //单个删除
-    delHandle(id) {
-      var ids = [];
-
-      if (id) {
-        ids.push(id);
-      } else {
-        this.multipleSelection.forEach((row) => {
-          ids.push(row.id);
-        });
-      }
-
-      this.$confirm("确定删除选中的用户吗?", "删除", {
-        confirmButtonText: "确定",
-        cancelButtonText: "取消",
-        type: "error",
-      }).then(() => {
-        this.$axios
-          .post("/sys/user/delete", ids)
-          .then(() => {
-            this.getTableList(); //请求刷新
-            this.$message.success("已成功删除!");
-          })
-          .catch(() => {
-            //取消操作
-            this.$message({
-              type: "info",
-              message: "已取消删除",
-            });
-          });
-      });
-    },
+ 
   },
   created() {
     this.getTableList();
-
-    this.$axios.get("/sys/permission/list").then((res) => {
-      this.permTreeData = res.data.data;
-    });
+ 
   },
   mounted() {},
 };

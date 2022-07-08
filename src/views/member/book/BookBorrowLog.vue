@@ -26,35 +26,16 @@
       <span style="font-weight:bold;font-size:20px;line-height:40px"
         >图书借阅列表</span
       >
-      <!-- <el-row style="float:right">
-        
-        <el-button
-          style="margin-right:10px"
-          type="danger"
-          icon="el-icon-remove"
-          :disabled="delBtlStatus"
-          @click="delHandle(null)"
-          >批量删除</el-button
-        >
-        
-
-        <el-button
-          type="primary"
-          icon="el-icon-circle-plus"
-          @click="addHandle()"
-          >新增</el-button
-        >
-      </el-row> -->
+ 
     </div>
 
     <el-table
       :data="info"
       border
       style="width: 100%;margin-top:20px"
-      @selection-change="handleSelectionChange"
+  
     >
-      <el-table-column type="selection" width="55"> </el-table-column>
-
+    
       <el-table-column prop="id" label="借书编号" width="180"> </el-table-column>
 
       <el-table-column label="图书">
@@ -102,10 +83,7 @@
           <el-button type="text" @click="editHandle(scope.row.id)"
             >编辑</el-button
           >
-          <el-divider direction="vertical"></el-divider>
-          <el-button type="text" @click="delHandle(scope.row.id)"
-            >删除</el-button
-          >
+ 
         </template>
       </el-table-column>
     </el-table>
@@ -361,56 +339,8 @@ export default {
       });
     },
 
-    // toggleSelection(rows) {
-    //   if (rows) {
-    //     rows.forEach((row) => {
-    //       this.$refs.multipleTable.toggleRowSelection(row);
-    //     });
-    //   } else {
-    //     this.$refs.multipleTable.clearSelection();
-    //   }
-    // },
-    //勾选改变
-    handleSelectionChange(val) {
-      console.log("勾选");
-      console.log(val);
-      this.multipleSelection = val;
+ 
 
-      this.delBtlStatus = val.length == 0; //没有勾选，就是true,禁用
-    },
-
-    //单个删除
-    delHandle(id) {
-      var ids = [];
-
-      if (id) {
-        ids.push(id);
-      } else {
-        this.multipleSelection.forEach((row) => {
-          ids.push(row.id);
-        });
-      }
-
-      this.$confirm("确定删除选中的角色吗?", "删除", {
-        confirmButtonText: "确定",
-        cancelButtonText: "取消",
-        type: "error",
-      }).then(() => {
-        this.$axios
-          .post("/sys/role/delete", ids)
-          .then(() => {
-            this.getTableList(); //请求刷新
-            this.$message.success("已成功删除!");
-          })
-          .catch(() => {
-            //取消操作
-            this.$message({
-              type: "info",
-              message: "已取消删除",
-            });
-          });
-      });
-    },
   },
   created() {
     this.getTableList();

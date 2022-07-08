@@ -97,7 +97,7 @@ const router = new Router({
     },
     {
       path: "/member",  // path 设置为 “/” ，默认显示该页面
-      name: "MemnberHome",
+      name: "MemberHome",
       meta: {
         title: "图书",
       },
@@ -237,7 +237,7 @@ const router = new Router({
             
           ]
         },
-        { //这里有问题，之后再解决吧  
+        { //这里有问题，之后再解决吧  关于title的问题  
           path: "/admin/book/save",
           name: "BookSave",
           meta: {

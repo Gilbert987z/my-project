@@ -47,13 +47,8 @@
       </el-row>
     </div>
 
-    <el-table
-      :data="info"
-      border
-      style="width: 100%;margin-top:20px"
-      
-    >
-    <!-- @selection-change="handleSelectionChange" -->
+    <el-table :data="info" border style="width: 100%;margin-top:20px">
+      <!-- @selection-change="handleSelectionChange" -->
       <!-- <el-table-column type="selection" width="55"> </el-table-column> -->
       <!-- <el-table-column type="index" width="55"> </el-table-column> -->
 
@@ -72,26 +67,26 @@
         </template>
       </el-table-column>
 
-      <el-table-column  prop="isAdmin" label="是否是管理员">
+      <el-table-column prop="isAdmin" label="是否是管理员">
         <template slot-scope="scope">
-         <p v-if="scope.row.isAdmin=== 1">超级管理员</p>
-         <p v-else-if="scope.row.isAdmin=== 2">普通管理员</p>
-         <p v-else-if="scope.row.isAdmin=== 3">用户</p>
-         </template>
+          <p v-if="scope.row.isAdmin === 1">超级管理员</p>
+          <p v-else-if="scope.row.isAdmin === 2">普通管理员</p>
+          <p v-else-if="scope.row.isAdmin === 3">用户</p>
+        </template>
       </el-table-column>
 
       <el-table-column label="拥有的角色权限">
         <template slot-scope="scope">
-          <p v-if="scope.row.isAdmin=== 1">拥有所有角色权限</p>
+          <p v-if="scope.row.isAdmin === 1">拥有所有角色权限</p>
           <el-tag
-          v-else-if="scope.row.isAdmin=== 2"
+            v-else-if="scope.row.isAdmin === 2"
             size="small"
             type="info"
             v-for="item in scope.row.sysRoles"
             :key="item.name"
             >{{ item.name }}</el-tag
           >
-          <p v-else-if="scope.row.isAdmin=== 3">-</p>
+          <p v-else-if="scope.row.isAdmin === 3">-</p>
         </template>
       </el-table-column>
       <el-table-column prop="mobile" label="手机号"> </el-table-column>
@@ -119,31 +114,44 @@
 
       <el-table-column label="操作">
         <template slot-scope="scope">
-          <el-button v-if="scope.row.isAdmin=== 2" type="text" @click="roleHandle(scope.row.id)"
-            >分配角色</el-button
-          >
-          <el-divider direction="vertical"></el-divider>
-          <el-button type="text" @click="editHandle(scope.row.id)"
-            >修改密码</el-button
-          >
-          <el-divider direction="vertical"></el-divider>
-          <el-button type="text" @click="editHandle(scope.row.id)"
-            >编辑</el-button
-          >
-          <el-divider direction="vertical"></el-divider>
-          <el-button v-if="scope.row.status=== 1 && scope.row.isAdmin!= 1" type="text" @click="delHandle(scope.row.id)"
-            >封禁</el-button
-          >
-          <el-button v-if="scope.row.status=== -1 && scope.row.isAdmin!= 1" type="text" @click="delHandle(scope.row.id)"
-            >解禁</el-button
-          >
-          <el-divider direction="vertical"></el-divider>
-          <el-button v-if="scope.row.isAdmin!= 1" type="text" @click="delHandle(scope.row.id)"
-            >注销用户</el-button
-          >
-          <!-- <el-button disabled type="text" @click="delHandle(scope.row.id)"
-            >注销用户</el-button
-          > -->
+          <div v-if="scope.row.isAdmin  != 1">
+            <el-button
+              v-if="scope.row.isAdmin === 2"
+              type="text"
+              @click="roleHandle(scope.row.id)"
+              >分配角色</el-button
+            >
+            <!-- <el-divider direction="vertical"></el-divider>
+            <el-button type="text" @click="editHandle(scope.row.id)"
+              >修改密码</el-button
+            > -->
+            <el-divider direction="vertical"></el-divider>
+            <el-button type="text" @click="editHandle(scope.row.id)"
+              >编辑</el-button
+            >
+            <!-- <el-divider direction="vertical"></el-divider>
+            <el-button
+              v-if="scope.row.status === 1"
+              type="text"
+              @click="delHandle(scope.row.id)"
+              >封禁</el-button
+            >
+            <el-button
+              v-if="scope.row.status === -1"
+              type="text"
+              @click="delHandle(scope.row.id)"
+              >解禁</el-button
+            > -->
+            <el-divider direction="vertical"></el-divider>
+            <el-button
+              type="text"
+              @click="delHandle(scope.row.id)"
+              >注销</el-button
+            >
+            <!-- <el-button disabled type="text" @click="delHandle(scope.row.id)"
+              >注销用户</el-button
+            > -->
+            </div>
         </template>
       </el-table-column>
     </el-table>
@@ -161,7 +169,7 @@
     >
     </el-pagination>
 
-    <!--角色的对话框-->
+    <!--用户的对话框-->
     <el-dialog
       :title="dialogData.dialogTitle"
       :visible.sync="dialogVisible"
@@ -175,8 +183,37 @@
         label-width="100px"
         class="demo-editForm"
       >
-        <el-form-item label="名称" prop="name" label-width="100px">
-          <el-input v-model="editForm.name" autocomplete="off"></el-input>
+        <el-form-item label="名称" prop="username" label-width="100px">
+          <el-input v-model="editForm.username" autocomplete="off"></el-input>
+        </el-form-item>
+        <el-form-item label="手机号" prop="mobile" label-width="100px">
+          <el-input
+            type="tel"
+            v-model="editForm.mobile"
+            autocomplete="off"
+          ></el-input>
+        </el-form-item>
+        <el-form-item v-if="dialogData.dialogTitle === '新增'" label="密码" prop="password" label-width="100px">
+          <el-input
+            type="password"
+            v-model="editForm.password"
+            autocomplete="off"
+          ></el-input>
+        </el-form-item>
+        <el-form-item label="用户身份" prop="isAdmin" label-width="100px">
+          <el-select
+            v-model="editForm.isAdmin"
+            clearable
+            placeholder="请选择用户身份"
+          >
+            <el-option
+              v-for="item in options_isadmin"
+              :key="item.value"
+              :label="item.label"
+              :value="item.value"
+            >
+            </el-option>
+          </el-select>
         </el-form-item>
         <el-form-item label="状态" prop="status" label-width="100px">
           <el-radio-group v-model="editForm.status">
@@ -248,9 +285,26 @@ export default {
         dialogSubmit: null,
       },
       dialogVisible: false, //新增对话框 默认关闭
-      editForm: {},
+      editForm: {
+        status: 1,
+      },
+      options_isadmin: [
+        {
+          value: 2,
+          label: "普通管理员",
+        },
+        {
+          value: 3,
+          label: "普通用户",
+        },
+      ],
       editFormRules: {
         name: [{ required: true, message: "请输入用户名称", trigger: "blur" }],
+        mobile: [{ required: true, message: "请输入手机号", trigger: "blur" }],
+        password: [{ required: true, message: "请输入密码", trigger: "blur" }],
+        isAdmin: [
+          { required: true, message: "请输入用户身份", trigger: "blur" },
+        ],
         status: [{ required: true, message: "请选择状态", trigger: "blur" }],
       },
       //分配角色对话框
@@ -381,22 +435,20 @@ export default {
         })
         .then((res) => {
           console.log(res);
-          if(res.data.code==20000){
+          if (res.data.code == 20000) {
+            this.getTableList(); //刷新列表
 
-          this.getTableList(); //刷新列表
+            this.$message({
+              showClose: true,
+              message: "恭喜你，操作成功",
+              type: "success",
+              onClose: () => {
+                this.getUserList();
+              },
+            });
 
-          this.$message({
-            showClose: true,
-            message: "恭喜你，操作成功",
-            type: "success",
-            onClose: () => {
-              this.getUserList();
-            },
-          });
-
-          this.roleDialogFormVisible = false; //关闭弹窗
+            this.roleDialogFormVisible = false; //关闭弹窗
           }
-
         });
     },
     //新增按钮操作
@@ -411,20 +463,22 @@ export default {
       this.dialogData.dialogTitle = "编辑";
       this.dialogData.dialogSubmit = "编辑";
       //请求详情
-      this.$axios.get("/admin/sys/role/info", { params: { id: id } }).then((res) => {
-        this.editForm = res.data.data;
+      this.$axios
+        .get("/admin/sys/user/detail", { params: { id: id } })
+        .then((res) => {
+          this.editForm = res.data.data;
 
-        this.dialogVisible = true; //打开对话框
-      });
+          this.dialogVisible = true; //打开对话框
+        });
     },
 
-    //新增修改角色
+    //新增用户
     submitForm(formName) {
       this.$refs[formName].validate((valid) => {
         if (valid) {
           this.$axios
             .post(
-              "/admin/sys/role/" + (this.editForm.id ? "update" : "save"), //根据有没有id判断
+              "/admin/sys/user/" + (this.editForm.id ? "update" : "save"), //根据有没有id判断
               this.editForm
             )
             .then((res) => {
