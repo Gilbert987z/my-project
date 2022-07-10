@@ -95,6 +95,14 @@ const router = new Router({
       redirect: "/login", //跳转到登录
       // component: () => import("../views/Home.vue"), //header的页面
     },
+    // {
+    //     path: "/user/userCenter",
+    //     name: "UserCenter",
+    //     meta: {
+    //       title: "个人中心",
+    //     },
+    //     component: () => import("../views/user/UserCenter.vue"), 
+    //   },
     {
       path: "/member",  // path 设置为 “/” ，默认显示该页面
       name: "MemberHome",
@@ -112,22 +120,22 @@ const router = new Router({
           },
           component: () => import("../views/member/Index.vue"), //main的页面
         },
-        // {
-        //   path: "/member/user/userCenter",
-        //   name: "MemberUserCenter",
-        //   meta: {
-        //     title: "个人中心",
-        //   },
-        //   component: () => import("../views/member/user/UserCenter.vue"), 
-        // },
-        // {
-        //   path: "/member/user/userPassword",
-        //   name: "MemberUserPassword",
-        //   meta: {
-        //     title: "修改密码",
-        //   },
-        //   component: () => import("../views/member/user/UserPassword.vue"), 
-        // },
+        {
+          path: "/user/userCenter",
+          name: "UserCenter",
+          meta: {
+            title: "个人中心",
+          },
+          component: () => import("../views/user/UserCenter.vue"), 
+        },
+        {
+          path: "/user/userPassword",
+          name: "UserPassword",
+          meta: {
+            title: "修改密码",
+          },
+          component: () => import("../views/user/UserPassword.vue"), 
+        },
         {
             path: "/test", //列表页
             name: "test",
@@ -155,22 +163,22 @@ const router = new Router({
           },
           component: () => import("../views/admin/Index.vue"), //main的页面
         },
-        // {
-        //   path: "/admin/user/userCenter",
-        //   name: "AdminUserCenter",
-        //   meta: {
-        //     title: "个人中心",
-        //   },
-        //   component: () => import("../views/admin/user/UserCenter.vue"), 
-        // },
-        // {
-        //   path: "/admin/user/userPassword",
-        //   name: "AdminUserPassword",
-        //   meta: {
-        //     title: "修改密码",
-        //   },
-        //   component: () => import("../views/admin/user/UserPassword.vue"), 
-        // },
+        {
+          path: "/user/userCenter",
+          name: "UserCenter",
+          meta: {
+            title: "个人中心",
+          },
+          component: () => import("../views/user/UserCenter.vue"), 
+        },
+        {
+          path: "/user/userPassword",
+          name: "UserPassword",
+          meta: {
+            title: "修改密码",
+          },
+          component: () => import("../views/user/UserPassword.vue"), 
+        },
         {
             path: "/test", //列表页
             name: "test",
