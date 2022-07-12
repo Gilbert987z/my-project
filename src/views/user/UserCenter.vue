@@ -3,12 +3,31 @@
     <el-row>
       <el-col :span="4">
         <el-avatar :size="70" :src="userInfo.avatar"></el-avatar>
-        <el-button
+        <!-- <el-button
           class="el-icon-edit-outline"
           type="text"
           @click="editAvatarHandle()"
           >修改头像</el-button
+        > -->
+
+        <el-upload
+          class="upload-demo"
+          action="https://jsonplaceholder.typicode.com/posts/"
+          :on-preview="handlePreview"
+          :on-remove="handleRemove"
+          :before-remove="beforeRemove"
+          multiple
+          :limit="1"
+          :on-exceed="handleExceed"
+          :file-list="fileList"
         >
+       
+          <!-- <el-avatar :size="70" :src="userInfo.avatar"></el-avatar> -->
+          <el-button class="el-icon-edit-outline" type="text">修改头像</el-button>
+           
+        </el-upload>
+
+
       </el-col>
 
       <el-col :span="20">
@@ -249,7 +268,6 @@ export default {
         this.userInfo = res.data.data;
         this.mobileForm.mobile = res.data.data.mobile; // 设置默认值
         this.usernameForm.username = res.data.data.username;
-     
       });
     },
     //修改密码按钮操作
@@ -305,7 +323,6 @@ export default {
                   },
                 });
                 this.getUserInfo(); //重新请求用户详情接口
-
               }
             });
         } else {

@@ -26,20 +26,14 @@
       <span style="font-weight:bold;font-size:20px;line-height:40px"
         >图书借阅列表</span
       >
- 
     </div>
 
-    <el-table
-      :data="info"
-      border
-      style="width: 100%;margin-top:20px"
-  
-    >
-    
-      <el-table-column prop="id" label="借书编号" width="180"> </el-table-column>
+    <el-table :data="info" border style="width: 100%;margin-top:20px">
+      <el-table-column prop="id" label="借书编号" width="180">
+      </el-table-column>
 
       <el-table-column label="图书">
-            <template slot-scope="scope">
+        <template slot-scope="scope">
           <img
             alt
             :src="scope.row.book.image"
@@ -49,27 +43,45 @@
           />
           <p>{{ scope.row.book.name }}/￥{{ scope.row.book.price }}</p>
           <p>用户ID：{{ scope.row.book.id }}</p>
-          
         </template>
       </el-table-column>
-  
+
+      <el-table-column prop="borrowDays" label="借阅天数"> </el-table-column>
       <el-table-column prop="remark" label="备注"> </el-table-column>
-      <el-table-column prop="createdAt" label="借阅时间"> </el-table-column>
+      <el-table-column label="时间">
+        <template slot-scope="scope">
+          <p>借阅时间：{{ scope.row.createdAt }}</p>
+        </template>
+      </el-table-column>
       <el-table-column prop="status" label="状态">
         <template slot-scope="scope">
           <el-tag
             size="small"
             v-if="scope.row.status === 1"
-            type="success"
+            type="primary"
             effect="dark"
-            >正常</el-tag
+            >借阅中</el-tag
           >
           <el-tag
             size="small"
-            v-else-if="scope.row.status === 0"
+            v-else-if="scope.row.status === 2"
+            type="success"
+            effect="dark"
+            >已归还</el-tag
+          >
+          <el-tag
+            size="small"
+            v-else-if="scope.row.status === 3"
             type="danger"
             effect="dark"
-            >禁用</el-tag
+            >遗失</el-tag
+          >
+          <el-tag
+            size="small"
+            v-else-if="scope.row.status === 4"
+            type="warning"
+            effect="dark"
+            >超时未归还</el-tag
           >
         </template>
       </el-table-column>
@@ -83,7 +95,6 @@
           <el-button type="text" @click="editHandle(scope.row.id)"
             >编辑</el-button
           >
- 
         </template>
       </el-table-column>
     </el-table>
@@ -338,13 +349,9 @@ export default {
         }
       });
     },
-
- 
-
   },
   created() {
     this.getTableList();
- 
   },
   mounted() {},
 };

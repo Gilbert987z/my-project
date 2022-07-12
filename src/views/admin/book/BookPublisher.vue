@@ -81,10 +81,10 @@
 
       <el-table-column label="操作">
         <template slot-scope="scope">
-          <el-button type="text" @click="permHandle(scope.row.id)"
+          <!-- <el-button type="text" @click="permHandle(scope.row.id)"
             >分配权限</el-button
           >
-          <el-divider direction="vertical"></el-divider>
+          <el-divider direction="vertical"></el-divider> -->
           <el-button type="text" @click="editHandle(scope.row.id)"
             >编辑</el-button
           >
@@ -150,7 +150,7 @@
       </el-form>
     </el-dialog>
 
-    <el-dialog title="分配权限" :visible.sync="permDialogVisible" width="600px">
+    <!-- <el-dialog title="分配权限" :visible.sync="permDialogVisible" width="600px">
       <el-form :model="permForm">
         <el-tree
           :data="permTreeData"
@@ -170,7 +170,7 @@
           >确 定</el-button
         >
       </span>
-    </el-dialog>
+    </el-dialog> -->
   </div>
 </template>
 
@@ -196,14 +196,14 @@ export default {
         name: [{ required: true, message: "请输入角色名称", trigger: "blur" }],
         status: [{ required: true, message: "请选择状态", trigger: "blur" }],
       },
-      //分配权限对话框
-      permDialogVisible: false,
-      permForm: {},
-      defaultProps: {
-        children: "children",
-        label: "name",
-      },
-      permTreeData: [],
+      // //分配权限对话框
+      // permDialogVisible: false,
+      // permForm: {},
+      // defaultProps: {
+      //   children: "children",
+      //   label: "name",
+      // },
+      // permTreeData: [],
 
       //列表
       info: [], //列表数据
@@ -285,15 +285,15 @@ export default {
     handleClose() {
       this.resetForm("editForm"); //重置表单数据
     },
-    //分配权限按钮操作
-    permHandle(id) {
-      this.permDialogVisible = true; //打开对话框
+    // //分配权限按钮操作
+    // permHandle(id) {
+    //   this.permDialogVisible = true; //打开对话框
 
-      this.$axios.get("/sys/role/info", { params: { id: id } }).then((res) => {
-        this.$refs.permTree.setCheckedKeys(res.data.data.menuIds);
-        this.permForm = res.data.data;
-      });
-    },
+    //   this.$axios.get("/sys/role/info", { params: { id: id } }).then((res) => {
+    //     this.$refs.permTree.setCheckedKeys(res.data.data.menuIds);
+    //     this.permForm = res.data.data;
+    //   });
+    // },
     //新增按钮操作
     addHandle() {
       (this.editForm.status = 1), //默认是正常
