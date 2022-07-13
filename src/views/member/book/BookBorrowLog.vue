@@ -6,7 +6,7 @@
       ref="formSearch"
       class="demo-form-inline"
     >
-      <el-form-item>
+      <el-form-item prop="bookName">
         <el-input
           placeholder="请输入图书名称"
           clearable
@@ -17,7 +17,7 @@
         </el-input>
       </el-form-item>
 
-      <el-form-item>
+      <el-form-item prop="bookId">
         <el-input
           placeholder="请输入图书编号"
           clearable
@@ -29,7 +29,7 @@
         </el-input>
       </el-form-item>
 
-      <el-form-item>
+      <el-form-item prop="status">
         <el-select
           v-model="formSearch.status"
           @change="bookHandleSearchEvent"

@@ -84,7 +84,7 @@
           <!-- <el-button type="text" @click="permHandle(scope.row.id)"
             >分配权限</el-button
           > -->
-          <el-divider direction="vertical"></el-divider>
+          <!-- <el-divider direction="vertical"></el-divider> -->
           <el-button type="text" @click="editHandle(scope.row.id)"
             >编辑</el-button
           >

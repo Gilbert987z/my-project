@@ -6,7 +6,7 @@
       ref="formSearch"
       class="demo-form-inline"
     >
-      <el-form-item>
+      <el-form-item  prop="bookName">
         <el-input
           placeholder="请输入图书名称"
           clearable
@@ -17,7 +17,7 @@
         </el-input>
       </el-form-item>
 
-      <el-form-item>
+      <el-form-item  prop="bookId">
         <el-input
           placeholder="请输入图书编号"
           clearable
@@ -29,7 +29,7 @@
         </el-input>
       </el-form-item>
 
-      <el-form-item>
+      <el-form-item  prop="username">
         <el-input
           placeholder="请输入借书人"
           clearable
@@ -40,16 +40,7 @@
         </el-input>
       </el-form-item>
 
-      <el-form-item>
-        <!-- <el-input
-          placeholder="借书状态"
-          clearable
-          prefix-icon="el-icon-search"
-          @input="bookHandleSearchEvent"
-          v-model="formSearch.status"
-        >
-        </el-input> -->
-
+      <el-form-item prop="status">
         <el-select
           v-model="formSearch.status"
           @change="bookHandleSearchEvent"

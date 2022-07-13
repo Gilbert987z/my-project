@@ -92,7 +92,7 @@
           </span>
 
           <span v-else-if="scope.row.status === 1">
-            <el-divider direction="vertical"></el-divider>
+            <!-- <el-divider direction="vertical"></el-divider> -->
             <el-button type="text" @click="borrowHandle(scope.row.id)"
               >借阅</el-button
             >

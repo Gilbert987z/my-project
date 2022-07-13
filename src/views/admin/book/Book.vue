@@ -534,7 +534,7 @@ export default {
     },
     getPublisherList() {
       this.$axios
-        .get("index/book/publisher/list")
+        .get("index/bookPublisher/list")
         .then((response) => {
           console.log(response);
           this.publisherList = response.data.data.records;
