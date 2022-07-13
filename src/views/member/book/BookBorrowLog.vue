@@ -6,15 +6,41 @@
       ref="formSearch"
       class="demo-form-inline"
     >
-      <el-form-item prop="queryName">
+      <el-form-item>
         <el-input
-          placeholder="请输入图书出版商名称"
+          placeholder="请输入图书名称"
           clearable
           prefix-icon="el-icon-search"
           @input="bookHandleSearchEvent"
-          v-model="formSearch.queryName"
+          v-model="formSearch.bookName"
         >
         </el-input>
+      </el-form-item>
+
+      <el-form-item>
+        <el-input
+          placeholder="请输入图书编号"
+          clearable
+          type="number"
+          prefix-icon="el-icon-search"
+          @input="bookHandleSearchEvent"
+          v-model="formSearch.bookId"
+        >
+        </el-input>
+      </el-form-item>
+
+      <el-form-item>
+        <el-select
+          v-model="formSearch.status"
+          @change="bookHandleSearchEvent"
+          clearable
+          placeholder="借书状态"
+        >
+          <el-option label="借阅中" value="1"> </el-option>
+          <el-option label="已归还" value="2"> </el-option>
+          <el-option label="遗失" value="3"> </el-option>
+          <el-option label="超时未归还" value="4"> </el-option>
+        </el-select>
       </el-form-item>
       <el-form-item>
         <el-button type="primary" @click="getTableList">搜索</el-button>
@@ -51,6 +77,15 @@
       <el-table-column label="时间">
         <template slot-scope="scope">
           <p>借阅时间：{{ scope.row.createdAt }}</p>
+          <p v-if="scope.row.status === 2">
+            归还时间：{{ scope.row.operateTime }}
+          </p>
+          <p v-if="scope.row.status === 3">
+            遗失时间：{{ scope.row.operateTime }}
+          </p>
+          <p v-if="scope.row.status === 4">
+            超时时间：{{ scope.row.passTime }}
+          </p>
         </template>
       </el-table-column>
       <el-table-column prop="status" label="状态">
@@ -88,13 +123,17 @@
 
       <el-table-column label="操作">
         <template slot-scope="scope">
-          <el-button type="text" @click="permHandle(scope.row.id)"
-            >分配权限</el-button
-          >
-          <el-divider direction="vertical"></el-divider>
-          <el-button type="text" @click="editHandle(scope.row.id)"
-            >编辑</el-button
-          >
+          <div v-if="scope.row.status === 1 || scope.row.status === 4">
+            <el-button type="text" @click="bookReturn(scope.row.id)"
+              >归还</el-button
+            >
+            <el-divider direction="vertical"></el-divider>
+            <el-button
+              type="text"
+              @click="bookLost(scope.row.id, scope.row.remark)"
+              >遗失</el-button
+            >
+          </div>
         </template>
       </el-table-column>
     </el-table>
@@ -112,9 +151,9 @@
     >
     </el-pagination>
 
-    <!--角色的对话框-->
+    <!--对话框-->
     <el-dialog
-      :title="dialogData.dialogTitle"
+      title="遗失"
       :visible.sync="dialogVisible"
       width="600px"
       :before-close="handleClose"
@@ -126,15 +165,6 @@
         label-width="100px"
         class="demo-editForm"
       >
-        <el-form-item label="名称" prop="name" label-width="100px">
-          <el-input v-model="editForm.name" autocomplete="off"></el-input>
-        </el-form-item>
-        <el-form-item label="状态" prop="statu" label-width="100px">
-          <el-radio-group v-model="editForm.status">
-            <el-radio :label="1">正常</el-radio>
-            <el-radio :label="0">禁用</el-radio>
-          </el-radio-group>
-        </el-form-item>
         <el-form-item label="备注" prop="remark" label-width="100px">
           <el-input
             type="textarea"
@@ -144,35 +174,12 @@
         </el-form-item>
 
         <el-form-item>
-          <el-button type="primary" @click="submitForm('editForm')">{{
-            dialogData.dialogSubmit
-          }}</el-button>
+          <el-button type="primary" @click="submitForm('editForm')"
+            >确定</el-button
+          >
           <el-button @click="dialogVisible = false">取消</el-button>
-          <!-- <el-button @click="resetForm('editForm')">重置</el-button> -->
         </el-form-item>
       </el-form>
-    </el-dialog>
-
-    <el-dialog title="分配权限" :visible.sync="permDialogVisible" width="600px">
-      <el-form :model="permForm">
-        <el-tree
-          :data="permTreeData"
-          show-checkbox
-          ref="permTree"
-          :default-expand-all="true"
-          node-key="id"
-          :check-strictly="true"
-          :props="defaultProps"
-        >
-        </el-tree>
-      </el-form>
-
-      <span slot="footer" class="dialog-footer">
-        <el-button @click="permDialogVisible = false">取 消</el-button>
-        <el-button type="primary" @click="submitPermFormHandle('permForm')"
-          >确 定</el-button
-        >
-      </span>
     </el-dialog>
   </div>
 </template>
@@ -181,32 +188,14 @@
 export default {
   data() {
     return {
-      formInline: {
-        user: "",
-        region: "",
-      },
-
-      multipleSelection: [], //多选的勾选列表
-      delBtlStatus: true, //批量删除按钮的禁用
-      //角色对话框
-      dialogData: {
-        dialogTitle: null,
-        dialogSubmit: null,
-      },
+      //对话框
       dialogVisible: false, //新增对话框 默认关闭
       editForm: {},
       editFormRules: {
-        name: [{ required: true, message: "请输入角色名称", trigger: "blur" }],
-        status: [{ required: true, message: "请选择状态", trigger: "blur" }],
+        remark: [
+          { required: true, message: "请输入遗失理由", trigger: "blur" },
+        ],
       },
-      //分配权限对话框
-      permDialogVisible: false,
-      permForm: {},
-      defaultProps: {
-        children: "children",
-        label: "name",
-      },
-      permTreeData: [],
 
       //列表
       info: [], //列表数据
@@ -218,7 +207,9 @@ export default {
         total: null,
       },
       formSearch: {
-        queryName: "", //查询名称
+        bookName: null,
+        bookId: null,
+        status: null,
       },
     };
   },
@@ -228,9 +219,10 @@ export default {
       var params = {
         page: this.page.current,
         size: this.page.size,
-        name: this.formSearch.queryName,
+        bookName: this.formSearch.bookName,
+        bookId: this.formSearch.bookId,
+        status: this.formSearch.status,
       };
-      console.log(params);
       // return false;
       this.$axios
         .get("/member/book/borrowLog/list", {
@@ -272,7 +264,7 @@ export default {
       this.getTableList(); //重新获取列表数据
     },
 
-    //按角色名称查询
+    //查询
     bookHandleSearchEvent(val) {
       this.inputName = val;
       console.log("inputName" + val);
@@ -288,65 +280,66 @@ export default {
     handleClose() {
       this.resetForm("editForm"); //重置表单数据
     },
-    //分配权限按钮操作
-    permHandle(id) {
-      this.permDialogVisible = true; //打开对话框
 
-      this.$axios.get("/sys/role/info", { params: { id: id } }).then((res) => {
-        this.$refs.permTree.setCheckedKeys(res.data.data.menuIds);
-        this.permForm = res.data.data;
-      });
-    },
-    //新增按钮操作
-    addHandle() {
-      (this.editForm.status = 1), //默认是正常
-        (this.dialogData.dialogTitle = "新增");
-      this.dialogData.dialogSubmit = "创建";
+    //遗失按钮操作
+    bookLost(id, remark) {
+      this.editForm.id = id;
+      console.log(remark);
+      // this.editForm.remark = remark;
       this.dialogVisible = true; //打开对话框
     },
-    //修改按钮操作
-    editHandle(id) {
-      this.dialogData.dialogTitle = "编辑";
-      this.dialogData.dialogSubmit = "编辑";
-      //请求详情
-      this.$axios.get("/sys/role/info", { params: { id: id } }).then((res) => {
-        this.editForm = res.data.data;
 
-        this.dialogVisible = true; //打开对话框
-      });
-    },
-
-    //新增修改角色
+    //遗失填写备注
     submitForm(formName) {
       this.$refs[formName].validate((valid) => {
         if (valid) {
-          this.$axios
-            .post(
-              "/sys/role/" + (this.editForm.id ? "update" : "save"), //根据有没有id判断
-              this.editForm
-            )
-            .then((res) => {
-              console.log(res);
-              this.getTableList(); //刷新列表
+          this.$axios.post("/member/book/lost", this.editForm).then((res) => {
+            console.log(res);
+            this.getTableList(); //刷新列表
 
-              if (res.data.code == 20000) {
-                this.$message({
-                  showClose: true,
-                  message: "操作成功",
-                  type: "success",
-                  onClose: () => {
-                    //此处写提示关闭后需要执行的函数
-                  },
-                });
+            if (res.data.code == 20000) {
+              this.$message({
+                showClose: true,
+                message: "操作成功",
+                type: "success",
+                onClose: () => {
+                  //此处写提示关闭后需要执行的函数
+                },
+              });
 
-                this.dialogVisible = false; //成功了，才会关闭对话框
-                this.resetForm(formName);
-              }
-            });
+              this.dialogVisible = false; //成功了，才会关闭对话框
+              this.resetForm(formName);
+            }
+          });
         } else {
           console.log("error submit!!");
           return false;
         }
+      });
+    },
+
+    //归还
+    bookReturn(id) {
+      this.$confirm("确定归还选中的图书吗?", "归还", {
+        confirmButtonText: "确定",
+        cancelButtonText: "取消",
+        type: "info",
+      }).then(() => {
+        this.$axios
+          .post("/member/book/return", { id: id })
+          .then((res) => {
+            this.getTableList(); //请求刷新
+            if (res.data.code === 20000) {
+              this.$message.success("归还成功!");
+            }
+          })
+          .catch(() => {
+            //取消操作
+            this.$message({
+              type: "info",
+              message: "已取消归还",
+            });
+          });
       });
     },
   },

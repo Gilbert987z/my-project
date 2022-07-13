@@ -10,7 +10,7 @@
           >修改头像</el-button
         > -->
 
-        <el-upload
+        <!-- <el-upload
           class="upload-demo"
           action="https://jsonplaceholder.typicode.com/posts/"
           :on-preview="handlePreview"
@@ -20,14 +20,20 @@
           :limit="1"
           :on-exceed="handleExceed"
           :file-list="fileList"
+        > -->
+             <el-upload
+          class="upload-demo"
+          action="https://jsonplaceholder.typicode.com/posts/"
+    
+          multiple
+          :limit="1"
+      
         >
-       
           <!-- <el-avatar :size="70" :src="userInfo.avatar"></el-avatar> -->
-          <el-button class="el-icon-edit-outline" type="text">修改头像</el-button>
-           
+          <el-button class="el-icon-edit-outline" type="text"
+            >修改头像</el-button
+          >
         </el-upload>
-
-
       </el-col>
 
       <el-col :span="20">
@@ -87,7 +93,6 @@
       title="修改密码"
       :visible.sync="dialogPasswordVisible"
       width="600px"
-      :before-close="handleClose"
     >
       <el-form
         :model="passForm"
@@ -131,7 +136,6 @@
       title="修改用户名"
       :visible.sync="dialogUsernameVisible"
       width="600px"
-      :before-close="handleClose"
     >
       <el-form
         :model="usernameForm"
@@ -162,13 +166,12 @@
       title="修改手机号"
       :visible.sync="dialogMobileVisible"
       width="600px"
-      :before-close="handleClose"
     >
       <el-form
         :model="mobileForm"
         status-icon
         :rules="mobileRules"
-        ref="umobileForm"
+        ref="mobileForm"
         label-width="100px"
       >
         <el-form-item label="手机号" prop="mobile">
@@ -180,7 +183,7 @@
         </el-form-item>
 
         <el-form-item>
-          <el-button type="primary" @click="submitmobileForm('mobileForm')"
+          <el-button type="primary" @click="submitMobileForm('mobileForm')"
             >提交</el-button
           >
           <el-button @click="resetForm('mobileForm')">重置</el-button>
@@ -297,8 +300,6 @@ export default {
                   },
                 });
               }
-
-              //   console.log(res);
             });
         } else {
           console.log("error submit!!");
@@ -332,6 +333,7 @@ export default {
       });
     },
     submitMobileForm(formName) {
+ 
       this.$refs[formName].validate((valid) => {
         if (valid) {
           const _this = this;
@@ -347,6 +349,7 @@ export default {
                     this.dialogMobileVisible = false;
                   },
                 });
+                this.getUserInfo(); //重新请求用户详情接口
               }
             });
         } else {
@@ -356,6 +359,8 @@ export default {
       });
     },
     resetForm(formName) {
+      //重置
+      console.log("swddeddddd");
       this.$refs[formName].resetFields();
     },
   },

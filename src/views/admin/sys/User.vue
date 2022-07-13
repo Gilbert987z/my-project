@@ -272,11 +272,6 @@
 export default {
   data() {
     return {
-      formInline: {
-        user: "",
-        region: "",
-      },
-
       multipleSelection: [], //多选的勾选列表
       delBtlStatus: true, //批量删除按钮的禁用
       //角色对话框
@@ -425,8 +420,6 @@ export default {
     submitRoleHandle(formName) {
       console.log(formName);
       var roleIds = this.$refs.roleTree.getCheckedKeys(); //获取选中的roleId
-
-      console.log(roleIds);
 
       this.$axios
         .post("/admin/sys/user/role/update", {

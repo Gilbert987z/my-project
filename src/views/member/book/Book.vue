@@ -6,8 +6,6 @@
       ref="formSearch"
       class="demo-form-inline"
       action="#"
-    
-    
     >
       <el-form-item prop="queryName">
         <el-input
@@ -20,7 +18,6 @@
           @input="handleSearchEvent"
           v-model="formSearch.queryName"
         >
-          
         </el-input>
       </el-form-item>
 
@@ -34,18 +31,12 @@
       <span style="font-weight:bold;font-size:20px;line-height:40px"
         >图书列表</span
       >
-      <el-row style="float:right">
- 
-      </el-row>
+      <el-row style="float:right"> </el-row>
     </div>
 
-    <el-table
-      :data="info"
-      border
-      style="width: 100%;margin-top:20px"
-    >
-
-      <el-table-column prop="id" label="图书编号" width="180"> </el-table-column>
+    <el-table :data="info" border style="width: 100%;margin-top:20px">
+      <el-table-column prop="id" label="图书编号" width="180">
+      </el-table-column>
 
       <el-table-column label="书名" width="180">
         <template slot-scope="scope">
@@ -90,23 +81,22 @@
       <el-table-column prop="createdAt" label="时间"></el-table-column>
       <el-table-column label="操作">
         <template slot-scope="scope">
-          <el-button type="text" @click="roleHandle(scope.row.id)"
+          <!-- <el-button type="text" @click="roleHandle(scope.row.id)"
             >详情</el-button
-          >
+          > -->
           <span v-if="scope.row.status === 0">
-            <el-divider direction="vertical"></el-divider>
+            <!-- <el-divider direction="vertical"></el-divider> -->
             <el-button disabled type="text" @click="borrowHandle(scope.row.id)"
               >借阅</el-button
             >
           </span>
 
-                <span v-else-if="scope.row.status === 1">
+          <span v-else-if="scope.row.status === 1">
             <el-divider direction="vertical"></el-divider>
             <el-button type="text" @click="borrowHandle(scope.row.id)"
               >借阅</el-button
             >
           </span>
- 
         </template>
       </el-table-column>
     </el-table>
@@ -139,7 +129,7 @@
         class="demo-borrowForm"
       >
         <el-form-item label="借阅天数" prop="borrowDays" label-width="100px">
-          <el-input-number v-model="borrowForm.borrowDays" ></el-input-number>
+          <el-input-number v-model="borrowForm.borrowDays"></el-input-number>
         </el-form-item>
 
         <el-form-item label="备注" prop="remark" label-width="100px">
@@ -159,22 +149,14 @@
         </el-form-item>
       </el-form>
     </el-dialog>
-
- 
   </div>
 </template>
 
 <script>
-
-
-
 export default {
   data() {
     return {
-      formInline: {
-        user: "",
-        region: "",
-      },
+     
 
       multipleSelection: [], //多选的勾选列表
       delBtlStatus: true, //批量删除按钮的禁用
@@ -185,25 +167,18 @@ export default {
       },
       dialogVisible: false, //新增对话框 默认关闭
       borrowForm: {
-        bookId:null,
-        borrowDays:null,
-        remark:null
+        bookId: null,
+        borrowDays: null,
+        remark: null,
       },
       borrowFormRules: {
-        borrow_num: [{ required: true, message: "请输入借阅天数", trigger: "blur" },
-         { type: 'number', message: '借阅天数必须为数字值'},
-        //  { max: 10, message: '借阅天数最多10天'},
-         ],
-
+        borrow_num: [
+          { required: true, message: "请输入借阅天数", trigger: "blur" },
+          { type: "number", message: "借阅天数必须为数字值" },
+          //  { max: 10, message: '借阅天数最多10天'},
+        ],
       },
-      //分配角色对话框
-      roleDialogFormVisible: false,
-      roleForm: {},
-      defaultProps: {
-        children: "children",
-        label: "name",
-      },
-      roleTreeData: [],
+    
 
       //列表
       info: [], //列表数据
@@ -221,13 +196,12 @@ export default {
   },
   methods: {
     //点击搜索时触发
-    show(e){
+    show(e) {
       console.log("点击了软件盘的搜索按钮121111113");
       console.log(e);
-        this.$refs.input.blur();    //点击搜索后收起软键盘
-        this.$emit('func',this.searchText);	    //获取搜索文本，做一些请求操作
+      this.$refs.input.blur(); //点击搜索后收起软键盘
+      this.$emit("func", this.searchText); //获取搜索文本，做一些请求操作
     },
-
 
     //获取列表
     getTableList() {
@@ -257,7 +231,7 @@ export default {
           console.log(error);
         });
     },
-   
+
     //重置表单数据
     resetSearch(formName) {
       this.$refs[formName].resetFields();
@@ -295,64 +269,64 @@ export default {
     handleClose() {
       this.resetForm("borrowForm"); //重置表单数据
     },
-    //分配角色按钮操作
-    roleHandle(id) {
-      this.roleDialogFormVisible = true;
+    // //分配角色按钮操作
+    // roleHandle(id) {
+    //   this.roleDialogFormVisible = true;
 
-      console.log(id);
+    //   console.log(id);
 
-      //获取角色列表
-      this.$axios.get("/sys/role/list").then((res) => {
-        this.roleTreeData = res.data.data.records;
-      });
+    //   //获取角色列表
+    //   this.$axios.get("/sys/role/list").then((res) => {
+    //     this.roleTreeData = res.data.data.records;
+    //   });
 
-      //获取用户拥有的角色
-      this.$axios
-        .get("/sys/user/detail", { params: { id: id } })
-        .then((res) => {
-          this.roleForm = res.data.data;
+    //   //获取用户拥有的角色
+    //   this.$axios
+    //     .get("/sys/user/detail", { params: { id: id } })
+    //     .then((res) => {
+    //       this.roleForm = res.data.data;
 
-          let roleIds = [];
-          res.data.data.sysRoles.forEach((row) => {
-            roleIds.push(row.id);
-          });
+    //       let roleIds = [];
+    //       res.data.data.sysRoles.forEach((row) => {
+    //         roleIds.push(row.id);
+    //       });
 
-          //拥有的角色默认选中
-          this.$refs.roleTree.setCheckedKeys(roleIds);
-        });
-    },
-    //分配角色按钮操作
-    submitRoleHandle(formName) {
-      console.log(formName);
-      var roleIds = this.$refs.roleTree.getCheckedKeys(); //获取选中的roleId
+    //       //拥有的角色默认选中
+    //       this.$refs.roleTree.setCheckedKeys(roleIds);
+    //     });
+    // },
+    // //分配角色按钮操作
+    // submitRoleHandle(formName) {
+    //   console.log(formName);
+    //   var roleIds = this.$refs.roleTree.getCheckedKeys(); //获取选中的roleId
 
-      console.log(roleIds);
+    //   console.log(roleIds);
 
-      this.$axios
-        .post("/sys/user/role/update", {
-          userId: this.roleForm.id,
-          roleIds: roleIds,
-        })
-        .then((res) => {
-          console.log(res);
-          if (res.data.code == 20000) {
-            this.$message({
-              showClose: true,
-              message: "恭喜你，操作成功",
-              type: "success",
-              onClose: () => {
-                this.getUserList();
-              },
-            });
+    //   this.$axios
+    //     .post("/sys/user/role/update", {
+    //       userId: this.roleForm.id,
+    //       roleIds: roleIds,
+    //     })
+    //     .then((res) => {
+    //       console.log(res);
+    //       if (res.data.code == 20000) {
+    //         this.$message({
+    //           showClose: true,
+    //           message: "恭喜你，操作成功",
+    //           type: "success",
+    //           onClose: () => {
+    //             this.getUserList();
+    //           },
+    //         });
 
-            this.roleDialogFormVisible = false; //关闭弹窗
-          }
-        });
-    },
+    //         this.roleDialogFormVisible = false; //关闭弹窗
+    //       }
+    //     });
+    // },
     //新增按钮操作
     addHandle() {
-      (this.borrowForm.status = 1), //默认是正常
-        (this.dialogData.dialogTitle = "新增");
+      this.borrowForm.status = 1; //默认是正常
+      this.dialogData.dialogTitle = "新增";
       this.dialogData.dialogSubmit = "创建";
       this.dialogVisible = true; //打开对话框
     },
@@ -362,11 +336,11 @@ export default {
       this.dialogData.dialogSubmit = "借阅图书";
       // //请求详情
       // this.$axios.get("/sys/role/info", { params: { id: id } }).then((res) => {
-        // this.borrowForm = res.data.data;
-      console.log(bookId)
+      // this.borrowForm = res.data.data;
+      console.log(bookId);
       this.borrowForm.bookId = bookId;
-      
-        this.dialogVisible = true; //打开对话框
+
+      this.dialogVisible = true; //打开对话框
       // });
     },
 
@@ -376,7 +350,7 @@ export default {
         if (valid) {
           this.$axios
             .post(
-              "/member/book/borrow" , //根据有没有id判断
+              "/member/book/borrow", //根据有没有id判断
               this.borrowForm
             )
             .then((res) => {
@@ -403,12 +377,9 @@ export default {
         }
       });
     },
-
- 
   },
   created() {
     this.getTableList();
- 
   },
   mounted() {},
 };

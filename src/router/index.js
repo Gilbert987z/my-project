@@ -128,14 +128,7 @@ const router = new Router({
           },
           component: () => import("../views/user/UserCenter.vue"), 
         },
-        {
-          path: "/user/userPassword",
-          name: "UserPassword",
-          meta: {
-            title: "修改密码",
-          },
-          component: () => import("../views/user/UserPassword.vue"), 
-        },
+   
         {
             path: "/test", //列表页
             name: "test",
@@ -171,14 +164,7 @@ const router = new Router({
           },
           component: () => import("../views/user/UserCenter.vue"), 
         },
-        {
-          path: "/user/userPassword",
-          name: "UserPassword",
-          meta: {
-            title: "修改密码",
-          },
-          component: () => import("../views/user/UserPassword.vue"), 
-        },
+ 
         {
             path: "/test", //列表页
             name: "test",

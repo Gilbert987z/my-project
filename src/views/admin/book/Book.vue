@@ -8,7 +8,7 @@
       action="#"
     >
       <!--οnsubmit="return false;" @submit.prevent="formSubmit" -->
-      <el-form-item>
+      <el-form-item  prop="queryName">
         <el-input
           placeholder="请输入图书名称"
           clearable
@@ -24,7 +24,7 @@
           -->
         </el-input>
       </el-form-item>
-      <el-form-item>
+      <el-form-item prop="bookTypeId">
         <el-select
           v-model="formSearch.bookTypeId"
           @change="handleSearchEvent"
@@ -40,7 +40,7 @@
           </el-option>
         </el-select>
       </el-form-item>
-      <el-form-item>
+      <el-form-item prop="publisherId">
         <el-select
           v-model="formSearch.publisherId"
           @change="handleSearchEvent"
@@ -189,7 +189,7 @@
     >
     </el-pagination>
 
-    <!--角色的对话框-->
+    <!--对话框-->
     <el-dialog
       :title="dialogData.dialogTitle"
       :visible.sync="dialogVisible"
@@ -229,24 +229,6 @@
         </el-form-item>
       </el-form>
     </el-dialog>
-
-    <!-- 上下架对话框 -->
-    <el-dialog
-      :title="switchBookDialogData.dialogTitle"
-      :visible.sync="roleDialogFormVisible"
-      width="600px"
-    >
-      <el-form :model="roleForm"> </el-form>
-
-      <div slot="footer" class="dialog-footer">
-        <el-button @click="roleDialogFormVisible = false">取 消</el-button>
-        <el-button
-          type="primary"
-          @click="submitSwitchBookHandle('switchBookForm')"
-          >确 定</el-button
-        >
-      </div>
-    </el-dialog>
   </div>
 </template>
 
@@ -254,14 +236,9 @@
 export default {
   data() {
     return {
-      formInline: {
-        user: "",
-        region: "",
-      },
-
       multipleSelection: [], //多选的勾选列表
       delBtlStatus: true, //批量删除按钮的禁用
-      //角色对话框
+      //对话框
       dialogData: {
         dialogTitle: null,
         dialogSubmit: null,
@@ -281,17 +258,6 @@ export default {
         id: null,
         status: null,
       },
-      roleDialogFormVisible: false,
-      switchBookDialogData: {
-        dialogTitle: null,
-        dialogSubmit: null,
-      },
-      roleForm: {},
-      defaultProps: {
-        children: "children",
-        label: "name",
-      },
-      roleTreeData: [],
 
       //列表
       info: [], //列表数据
@@ -445,50 +411,61 @@ export default {
     //上下架按钮弹窗操作
     switchBookHandle(id, status) {
       this.switchBookForm.id = id;
+
       if (status == 0) {
-        //
-        this.switchBookDialogData.dialogTitle = this.bookStatus.on;
         this.switchBookForm.status = 1;
-      } else if (status == 1) {
-        this.switchBookDialogData.dialogTitle = this.bookStatus.off;
-        this.switchBookForm.status = 0;
-      }
-      this.roleDialogFormVisible = true;
-    },
-    //提交借阅按钮
-    submitSwitchBookHandle(formName) {
-      // this.$refs[formName].validate((valid) => {
-      // if (valid) {
-      this.$axios
-        .post("/admin/book/switch", this.switchBookForm)
-        .then((res) => {
-          console.log(res);
-          this.getTableList(); //刷新列表
 
-          if (res.data.code == 20000) {
-            this.$message({
-              showClose: true,
-              message: "操作成功",
-              type: "success",
-              onClose: () => {
-                //此处写提示关闭后需要执行的函数
-              },
+        this.$confirm("确定上架选中的图书吗?", "上架", {
+          confirmButtonText: "确定",
+          cancelButtonText: "取消",
+          type: "info",
+        }).then(() => {
+          this.$axios
+            .post("/admin/book/switch", this.switchBookForm)
+            .then((res) => {
+              this.getTableList(); //请求刷新
+              if (res.data.code === 20000) {
+                this.$message.success("上架成功!");
+              }
+            })
+            .catch(() => {
+              //取消操作
+              this.$message({
+                type: "info",
+                message: "已取消",
+              });
             });
-
-            this.roleDialogFormVisible = false; //成功了，才会关闭对话框
-            this.resetForm(formName);
-          }
         });
-      // } else {
-      //   console.log("error submit!!");
-      //   return false;
-      // }
-      // });
+      } else if (status == 1) {
+        this.switchBookForm.status = 0;
+
+        this.$confirm("确定下架选中的图书吗?", "下架", {
+          confirmButtonText: "确定",
+          cancelButtonText: "取消",
+          type: "info",
+        }).then(() => {
+          this.$axios
+            .post("/admin/book/switch", this.switchBookForm)
+            .then((res) => {
+              this.getTableList(); //请求刷新
+              if (res.data.code === 20000) {
+                this.$message.success("下架成功!");
+              }
+            })
+            .catch(() => {
+              //取消操作
+              this.$message({
+                type: "info",
+                message: "已取消",
+              });
+            });
+        });
+      }
     },
 
     //新增按钮操作
     addHandle() {
-      this.$router.push({ name: "BookSave"}); //跳转到图书添加页面
+      this.$router.push({ name: "BookSave" }); //跳转到图书添加页面
       // this.$router.push({ path: "/admin/book/save",params:{func:"insert"} }); //跳转到图书添加页面
     },
     //修改按钮操作

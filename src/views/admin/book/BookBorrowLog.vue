@@ -22,6 +22,7 @@
           placeholder="请输入图书编号"
           clearable
           prefix-icon="el-icon-search"
+          type="number"
           @input="bookHandleSearchEvent"
           v-model="formSearch.bookId"
         >

@@ -6,13 +6,13 @@
       ref="formSearch"
       class="demo-form-inline"
     >
-      <el-form-item prop="queryName">
+      <el-form-item prop="publisher">
         <el-input
           placeholder="请输入图书出版商名称"
           clearable
           prefix-icon="el-icon-search"
           @input="bookHandleSearchEvent"
-          v-model="formSearch.queryName"
+          v-model="formSearch.publisher"
         >
         </el-input>
       </el-form-item>
@@ -215,7 +215,7 @@ export default {
         total: null,
       },
       formSearch: {
-        queryName: "", //查询名称
+        publisher: "", //查询名称
       },
     };
   },
@@ -225,7 +225,7 @@ export default {
       var params = {
         page: this.page.current,
         size: this.page.size,
-        name: this.formSearch.queryName,
+        publisher: this.formSearch.publisher,
       };
       console.log(params);
       // return false;
