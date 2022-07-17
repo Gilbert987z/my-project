@@ -28,14 +28,14 @@
       >
       <el-row style="float:right">
         <!-- <el-popconfirm title="这是确定批量删除吗？" @confirm="delHandle(null)"> -->
-        <el-button
+        <!-- <el-button
           style="margin-right:10px"
           type="danger"
           icon="el-icon-remove"
           :disabled="delBtlStatus"
           @click="delHandle(null)"
           >批量删除</el-button
-        >
+        > -->
         <!-- </el-popconfirm>      slot="reference"-->
 
         <el-button
@@ -47,13 +47,8 @@
       </el-row>
     </div>
 
-    <el-table
-      :data="info"
-      border
-      style="width: 100%;margin-top:20px"
-      @selection-change="handleSelectionChange"
-    >
-      <el-table-column type="selection" width="55"> </el-table-column>
+    <el-table :data="info" border style="width: 100%;margin-top:20px">
+      <!-- <el-table-column type="selection" width="55"> </el-table-column> -->
 
       <el-table-column prop="id" label="id" width="180"> </el-table-column>
 
@@ -89,8 +84,17 @@
             >编辑</el-button
           >
           <el-divider direction="vertical"></el-divider>
-          <el-button type="text" @click="delHandle(scope.row.id)"
-            >删除</el-button
+          <el-button
+            v-if="scope.row.status === 1"
+            type="text"
+            @click="switchHandle(scope.row.id, scope.row.status)"
+            >{{ bookTypeStatus.off }}</el-button
+          >
+          <el-button
+            v-else-if="scope.row.status === 0"
+            type="text"
+            @click="switchHandle(scope.row.id, scope.row.status)"
+            >{{ bookTypeStatus.on }}</el-button
           >
         </template>
       </el-table-column>
@@ -178,13 +182,8 @@
 export default {
   data() {
     return {
-      formInline: {
-        user: "",
-        region: "",
-      },
-
-      multipleSelection: [], //多选的勾选列表
-      delBtlStatus: true, //批量删除按钮的禁用
+      // multipleSelection: [], //多选的勾选列表
+      // delBtlStatus: true, //批量删除按钮的禁用
       //角色对话框
       dialogData: {
         dialogTitle: null,
@@ -192,10 +191,12 @@ export default {
       },
       dialogVisible: false, //新增对话框 默认关闭
       editForm: {
-        status:1, //默认是正常状态
+        status: 1, //默认是正常状态
       },
       editFormRules: {
-        bookType: [{ required: true, message: "请输入图书类型名称", trigger: "blur" }],
+        bookType: [
+          { required: true, message: "请输入图书类型名称", trigger: "blur" },
+        ],
         status: [{ required: true, message: "请选择状态", trigger: "blur" }],
       },
       // //分配权限对话框
@@ -206,7 +207,15 @@ export default {
       //   label: "name",
       // },
       // permTreeData: [],
-
+      //上下架对话框
+      bookTypeStatus: {
+        on: "解禁",
+        off: "禁用",
+      },
+      switchForm: {
+        id: null,
+        status: null,
+      },
       //列表
       info: [], //列表数据
       page: {
@@ -311,11 +320,13 @@ export default {
       this.dialogData.dialogTitle = "编辑";
       this.dialogData.dialogSubmit = "编辑";
       //请求详情
-      this.$axios.get("/admin/bookType/detail", { params: { id: id } }).then((res) => {
-        this.editForm = res.data.data;
+      this.$axios
+        .get("/admin/bookType/detail", { params: { id: id } })
+        .then((res) => {
+          this.editForm = res.data.data;
 
-        this.dialogVisible = true; //打开对话框
-      });
+          this.dialogVisible = true; //打开对话框
+        });
     },
 
     //新增图书类型
@@ -361,52 +372,107 @@ export default {
     //     this.$refs.multipleTable.clearSelection();
     //   }
     // },
-    //勾选改变
-    handleSelectionChange(val) {
-      console.log("勾选");
-      console.log(val);
-      this.multipleSelection = val;
+    // //勾选改变
+    // handleSelectionChange(val) {
+    //   console.log("勾选");
+    //   console.log(val);
+    //   this.multipleSelection = val;
 
-      this.delBtlStatus = val.length == 0; //没有勾选，就是true,禁用
-    },
+    //   this.delBtlStatus = val.length == 0; //没有勾选，就是true,禁用
+    // },
+    //上下架按钮弹窗操作
+    switchHandle(id, status) {
+      this.switchForm.id = id;
 
-    //单个删除
-    delHandle(id) {
-      var ids = [];
+      if (status == 0) {
+        this.switchForm.status = 1;
 
-      if (id) {
-        ids.push(id);
-      } else {
-        this.multipleSelection.forEach((row) => {
-          ids.push(row.id);
+        this.$confirm("确定解禁选中的图书类型吗?", "解禁", {
+          confirmButtonText: "确定",
+          cancelButtonText: "取消",
+          type: "info",
+        }).then(() => {
+          this.$axios
+            .post("/admin/bookType/switch", this.switchForm)
+            .then((res) => {
+              this.getTableList(); //请求刷新
+              if (res.data.code === 20000) {
+                this.$message.success("解禁成功!");
+              }
+            })
+            .catch(() => {
+              //取消操作
+              this.$message({
+                type: "info",
+                message: "已取消",
+              });
+            });
+        });
+      } else if (status == 1) {
+        this.switchForm.status = 0;
+
+        this.$confirm(
+          "确定禁用选中的图书类型吗?此操作同时会下架关联的图书！",
+          "禁用",
+          {
+            confirmButtonText: "确定",
+            cancelButtonText: "取消",
+            type: "info",
+          }
+        ).then(() => {
+          this.$axios
+            .post("/admin/bookType/switch", this.switchForm)
+            .then((res) => {
+              this.getTableList(); //请求刷新
+              if (res.data.code === 20000) {
+                this.$message.success("封禁成功!");
+              }
+            })
+            .catch(() => {
+              //取消操作
+              this.$message({
+                type: "info",
+                message: "已取消",
+              });
+            });
         });
       }
-
-      this.$confirm("确定删除选中的图书类型吗?", "删除", {
-        confirmButtonText: "确定",
-        cancelButtonText: "取消",
-        type: "error",
-      }).then(() => {
-        this.$axios
-          .post("/admin/bookType/delete", ids)
-          .then(() => {
-            this.getTableList(); //请求刷新
-            this.$message.success("已成功删除!");
-          })
-          .catch(() => {
-            //取消操作
-            this.$message({
-              type: "info",
-              message: "已取消删除",
-            });
-          });
-      });
     },
+    // //单个删除
+    // delHandle(id) {
+    //   var ids = [];
+
+    //   if (id) {
+    //     ids.push(id);
+    //   } else {
+    //     this.multipleSelection.forEach((row) => {
+    //       ids.push(row.id);
+    //     });
+    //   }
+
+    //   this.$confirm("确定删除选中的图书类型吗?", "删除", {
+    //     confirmButtonText: "确定",
+    //     cancelButtonText: "取消",
+    //     type: "error",
+    //   }).then(() => {
+    //     this.$axios
+    //       .post("/admin/bookType/delete", ids)
+    //       .then(() => {
+    //         this.getTableList(); //请求刷新
+    //         this.$message.success("已成功删除!");
+    //       })
+    //       .catch(() => {
+    //         //取消操作
+    //         this.$message({
+    //           type: "info",
+    //           message: "已取消删除",
+    //         });
+    //       });
+    //   });
+    // },
   },
   created() {
     this.getTableList();
-
- 
   },
   mounted() {},
 };

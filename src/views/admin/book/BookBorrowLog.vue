@@ -6,7 +6,7 @@
       ref="formSearch"
       class="demo-form-inline"
     >
-      <el-form-item  prop="bookName">
+      <el-form-item prop="bookName">
         <el-input
           placeholder="请输入图书名称"
           clearable
@@ -17,7 +17,7 @@
         </el-input>
       </el-form-item>
 
-      <el-form-item  prop="bookId">
+      <el-form-item prop="bookId">
         <el-input
           placeholder="请输入图书编号"
           clearable
@@ -29,7 +29,7 @@
         </el-input>
       </el-form-item>
 
-      <el-form-item  prop="username">
+      <el-form-item prop="username">
         <el-input
           placeholder="请输入借书人"
           clearable
@@ -66,25 +66,18 @@
       >
       <el-row style="float:right">
         <!-- <el-popconfirm title="这是确定批量删除吗？" @confirm="delHandle(null)"> -->
-        <el-button
+        <!-- <el-button
           style="margin-right:10px"
           type="danger"
           icon="el-icon-remove"
           :disabled="delBtlStatus"
           @click="delHandle(null)"
           >批量删除</el-button
-        >
+        > -->
       </el-row>
     </div>
 
-    <el-table
-      :data="info"
-      border
-      style="width: 100%;margin-top:20px"
-      @selection-change="handleSelectionChange"
-    >
-      <el-table-column type="selection" width="55"> </el-table-column>
-
+    <el-table :data="info" border style="width: 100%;margin-top:20px">
       <el-table-column prop="id" label="借书编号" width="180">
       </el-table-column>
 
@@ -154,21 +147,14 @@
         </template>
       </el-table-column>
 
-      <el-table-column label="操作">
+      <!-- <el-table-column label="操作">
         <template slot-scope="scope">
-          <!-- <el-button type="text" @click="permHandle(scope.row.id)"
-            >分配权限</el-button
-          > -->
-          <!-- <el-divider direction="vertical"></el-divider> -->
-          <!-- <el-button type="text" @click="editHandle(scope.row.id)"
-            >编辑</el-button
-          >
-          <el-divider direction="vertical"></el-divider> -->
+        
           <el-button type="text" @click="delHandle(scope.row.id)"
             >删除</el-button
           >
         </template>
-      </el-table-column>
+      </el-table-column> -->
     </el-table>
 
     <!--<span class="demonstration">完整功能</span>-->
@@ -190,8 +176,8 @@
 export default {
   data() {
     return {
-      multipleSelection: [], //多选的勾选列表
-      delBtlStatus: true, //批量删除按钮的禁用
+      // multipleSelection: [], //多选的勾选列表
+      // delBtlStatus: true, //批量删除按钮的禁用
 
       //列表
       info: [], //列表数据
@@ -264,7 +250,7 @@ export default {
       this.getTableList(); //重新获取列表数据
     },
 
-    //按角色名称查询
+    //查询
     bookHandleSearchEvent(val) {
       this.inputName = val;
       console.log("inputName" + val);
@@ -286,47 +272,47 @@ export default {
     //     this.$refs.multipleTable.clearSelection();
     //   }
     // },
-    //勾选改变
-    handleSelectionChange(val) {
-      console.log("勾选");
-      console.log(val);
-      this.multipleSelection = val;
+    // //勾选改变
+    // handleSelectionChange(val) {
+    //   console.log("勾选");
+    //   console.log(val);
+    //   this.multipleSelection = val;
 
-      this.delBtlStatus = val.length == 0; //没有勾选，就是true,禁用
-    },
+    //   this.delBtlStatus = val.length == 0; //没有勾选，就是true,禁用
+    // },
 
-    //单个删除
-    delHandle(id) {
-      var ids = [];
+    // //单个删除
+    // delHandle(id) {
+    //   var ids = [];
 
-      if (id) {
-        ids.push(id);
-      } else {
-        this.multipleSelection.forEach((row) => {
-          ids.push(row.id);
-        });
-      }
+    //   if (id) {
+    //     ids.push(id);
+    //   } else {
+    //     this.multipleSelection.forEach((row) => {
+    //       ids.push(row.id);
+    //     });
+    //   }
 
-      this.$confirm("确定删除选中的图书借阅信息吗?", "删除", {
-        confirmButtonText: "确定",
-        cancelButtonText: "取消",
-        type: "error",
-      }).then(() => {
-        this.$axios
-          .post("/admin/book/borrowLog/delete", ids)
-          .then(() => {
-            this.getTableList(); //请求刷新
-            this.$message.success("已成功删除!");
-          })
-          .catch(() => {
-            //取消操作
-            this.$message({
-              type: "info",
-              message: "已取消删除",
-            });
-          });
-      });
-    },
+    //   this.$confirm("确定删除选中的图书借阅信息吗?", "删除", {
+    //     confirmButtonText: "确定",
+    //     cancelButtonText: "取消",
+    //     type: "error",
+    //   }).then(() => {
+    //     this.$axios
+    //       .post("/admin/book/borrowLog/delete", ids)
+    //       .then(() => {
+    //         this.getTableList(); //请求刷新
+    //         this.$message.success("已成功删除!");
+    //       })
+    //       .catch(() => {
+    //         //取消操作
+    //         this.$message({
+    //           type: "info",
+    //           message: "已取消删除",
+    //         });
+    //       });
+    //   });
+    // },
   },
   created() {
     this.getTableList();

@@ -241,7 +241,7 @@ export default {
         .get("/index/bookType/list")
         .then((response) => {
           console.log(response);
-          this.bookTypeList = response.data.data.records;
+          this.bookTypeList = response.data.data;
           // this.page = response.data.data
           console.log("bookTypeList", this.bookTypeList);
           console.log("bookTypeList", response.data);
@@ -256,7 +256,7 @@ export default {
         .get("index/bookPublisher/list")
         .then((response) => {
           console.log(response);
-          this.publisherList = response.data.data.records;
+          this.publisherList = response.data.data;
           // this.page = response.data.data
           console.log(this.publisherList);
         })
