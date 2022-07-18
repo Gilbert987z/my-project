@@ -4,7 +4,7 @@
             <p>头像添加</p>
             <el-upload
                 class="avatar-uploader"
-                action="这里填入后台的接口地址"
+                action="http://localhost:8088/file/upload"
                 :show-file-list="false"
                 :on-success="handleAvatarSuccess"
                 :on-remove="handleRemove"
@@ -33,7 +33,7 @@ export default {
     // 上传成功回调
     handleAvatarSuccess(res, file) {
         console.log(file)
-      this.imageUrl = res.data.url
+      this.imageUrl = 'http://localhost:8088'+res.data.url
     },
     // 上传前格式和图片大小限制
     beforeAvatarUpload(file) {
@@ -51,3 +51,52 @@ export default {
 }
 </script>
 
+
+<style scoped lang='less'>
+.avatar-uploader{
+  width: 120PX;
+  height: 120px;
+  border-radius: 50%;
+  cursor: pointer;
+  position: relative;
+  overflow: hidden;
+  background: url('../assets/logo.png') no-repeat;
+  background-size: 100% 100%;
+}
+.avatar-uploader-icon{
+  font-size: 0;
+  color: #fff;
+  width: 120px;
+  height: 120px;
+  line-height: 120px;
+  text-align: center;
+}
+.avatar-uploader-icon:hover{
+  font-size: 28px;
+  background-color: rgba(0, 0, 0, .3);
+}
+.avatar {
+  position: relative;
+  width: 120px;
+  height: 120px;
+  display: block;
+}
+.el-upload-action {
+  position: absolute;
+  top: 0;
+  left: 0;
+  display: block;
+  width: 100%;
+  height: 100%;
+  font-size: 0;
+  color: #fff;
+  text-align: center;
+  line-height: 120px;
+
+}
+.el-upload-action:hover {
+  font-size: 20px;
+  background-color: #000;
+  background-color: rgba(0, 0, 0, .3)
+}
+</style>
