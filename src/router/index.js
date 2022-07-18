@@ -79,6 +79,15 @@ const router = new Router({
       component: () => import("../views/testInput.vue"),
     },
     {
+      path: "/testUpload",
+      name: "testUpload",
+      meta: {
+        title: "测试页",
+      },
+      // component: login
+      component: () => import("../views/testUpload.vue"),
+    },
+    {
       path: "/csdntest2",
       name: "csdntest2",
       meta: {

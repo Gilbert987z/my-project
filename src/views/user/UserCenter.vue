@@ -2,7 +2,7 @@
   <div style="text-align: center;">
     <el-row>
       <el-col :span="4">
-        <el-avatar :size="70" :src="userInfo.avatar"></el-avatar>
+        <!-- <el-avatar :size="70" :src="userInfo.avatar"></el-avatar> -->
         <!-- <el-button
           class="el-icon-edit-outline"
           type="text"
@@ -21,18 +21,24 @@
           :on-exceed="handleExceed"
           :file-list="fileList"
         > -->
-             <el-upload
-          class="upload-demo"
-          action="https://jsonplaceholder.typicode.com/posts/"
-    
-          multiple
-          :limit="1"
-      
-        >
-          <!-- <el-avatar :size="70" :src="userInfo.avatar"></el-avatar> -->
+        <!-- <el-upload :show-file-list="false">
+          <el-avatar :size="70" :src="userInfo.avatar"></el-avatar>
           <el-button class="el-icon-edit-outline" type="text"
             >修改头像</el-button
           >
+        </el-upload> -->
+
+        <el-upload
+          class="avatar-uploader"
+          action="http://localhost:8080/Login/upload"
+          :show-file-list="false"
+          :on-success="handleAvatarSuccess"
+          :data="{ userId: user.eid, status: userStatus }"
+          :before-upload="beforeAvatarUpload"
+          style="display: inline-block;width: 300px"
+        >
+          <img v-if="imageUrl" :src="imageUrl" class="avatar" />
+          <i v-else class="el-icon-plus avatar-uploader-icon"></i>
         </el-upload>
       </el-col>
 
@@ -333,7 +339,6 @@ export default {
       });
     },
     submitMobileForm(formName) {
- 
       this.$refs[formName].validate((valid) => {
         if (valid) {
           const _this = this;
@@ -360,8 +365,26 @@ export default {
     },
     resetForm(formName) {
       //重置
-      console.log("swddeddddd");
       this.$refs[formName].resetFields();
+    },
+    handleAvatarSuccess(res, file) {
+      this.imageUrl = URL.createObjectURL(file.raw);
+      console.log(URL.createObjectURL(file.raw));
+      console.log(this.imageUrl);
+      console.log(res);
+    },
+    beforeAvatarUpload(file) {
+      const isJPG = file.type === "image/jpeg";
+      const isLt2M = file.size / 1024 / 1024 < 2;
+
+      if (!isJPG) {
+        this.$message.error("上传头像图片只能是 JPG 格式!");
+      }
+      if (!isLt2M) {
+        this.$message.error("上传头像图片大小不能超过 2MB!");
+        
+      }
+      return isJPG && isLt2M;
     },
   },
 };
