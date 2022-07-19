@@ -2,43 +2,16 @@
   <div style="text-align: center;">
     <el-row>
       <el-col :span="4">
-        <!-- <el-avatar :size="70" :src="userInfo.avatar"></el-avatar> -->
-        <!-- <el-button
-          class="el-icon-edit-outline"
-          type="text"
-          @click="editAvatarHandle()"
-          >修改头像</el-button
-        > -->
-
-        <!-- <el-upload
-          class="upload-demo"
-          action="https://jsonplaceholder.typicode.com/posts/"
-          :on-preview="handlePreview"
-          :on-remove="handleRemove"
-          :before-remove="beforeRemove"
-          multiple
-          :limit="1"
-          :on-exceed="handleExceed"
-          :file-list="fileList"
-        > -->
-        <!-- <el-upload :show-file-list="false">
-          <el-avatar :size="70" :src="userInfo.avatar"></el-avatar>
-          <el-button class="el-icon-edit-outline" type="text"
-            >修改头像</el-button
-          >
-        </el-upload> -->
-
         <el-upload
           class="avatar-uploader"
-          action="http://localhost:8080/Login/upload"
+          action="http://localhost:8088/file/upload"
           :show-file-list="false"
           :on-success="handleAvatarSuccess"
-          :data="{ userId: user.eid, status: userStatus }"
           :before-upload="beforeAvatarUpload"
-          style="display: inline-block;width: 300px"
         >
-          <img v-if="imageUrl" :src="imageUrl" class="avatar" />
-          <i v-else class="el-icon-plus avatar-uploader-icon"></i>
+          <img :src="imageUrl" class="avatar" />
+
+          <i class="el-icon-upload2 avatar-uploader-icon"></i>
         </el-upload>
       </el-col>
 
@@ -162,7 +135,7 @@
           <el-button type="primary" @click="submitUsernameForm('usernameForm')"
             >提交</el-button
           >
-          <el-button @click="resetForm('usernameForm')">重置</el-button>
+          <el-button @click="dialogUsernameVisible = false">取消</el-button>
         </el-form-item>
       </el-form>
     </el-dialog>
@@ -192,9 +165,30 @@
           <el-button type="primary" @click="submitMobileForm('mobileForm')"
             >提交</el-button
           >
-          <el-button @click="resetForm('mobileForm')">重置</el-button>
+          <el-button @click="dialogMobileVisible = false">取消</el-button>
         </el-form-item>
       </el-form>
+    </el-dialog>
+
+    <el-dialog
+      title="确认修改头像吗？"
+      :visible.sync="dialogAvatarVisible"
+      width="30%"
+    >
+      <div style="text-align:center">
+        <img
+          v-if="imageUrl"
+          :src="imageUrl"
+          class="avatar"
+          style="vertical-align: middle;margin: 0 auto;"
+        />
+      </div>
+      <span slot="footer" class="dialog-footer">
+        <el-button type="primary" @click="submitAvatarForm('avatarForm')"
+          >提交</el-button
+        >
+        <el-button @click="dialogAvatarVisible = false">取消</el-button>
+      </span>
     </el-dialog>
   </div>
 </template>
@@ -215,6 +209,9 @@ export default {
       dialogPasswordVisible: false,
       dialogUsernameVisible: false,
       dialogMobileVisible: false,
+
+      dialogAvatarVisible: false,
+      imageUrl: "",
       userInfo: {},
       passForm: {
         password: "",
@@ -266,6 +263,9 @@ export default {
           // },
         ],
       },
+      avatarForm: {
+        avatar: "",
+      },
     };
   },
   created() {
@@ -277,6 +277,7 @@ export default {
         this.userInfo = res.data.data;
         this.mobileForm.mobile = res.data.data.mobile; // 设置默认值
         this.usernameForm.username = res.data.data.username;
+        this.imageUrl = res.data.data.avatar; //头像
       });
     },
     //修改密码按钮操作
@@ -363,34 +364,63 @@ export default {
         }
       });
     },
+
+    submitAvatarForm(formName) {
+      const _this = this;
+      this.$axios.post("/user/update/avatar", this.avatarForm).then((res) => {
+        if (res.data.code === 20000) {
+          _this.$alert(res.data.message, "提示", {
+            confirmButtonText: "确定",
+            callback: (action) => {
+              console.log(action);
+              console.log(formName);
+              // this.$refs[formName].resetFields();
+              this.dialogAvatarVisible = false;
+            },
+          });
+          this.getUserInfo(); //重新请求用户详情接口
+        }
+      });
+    },
     resetForm(formName) {
+      console.log(formName);
       //重置
       this.$refs[formName].resetFields();
     },
-    handleAvatarSuccess(res, file) {
-      this.imageUrl = URL.createObjectURL(file.raw);
-      console.log(URL.createObjectURL(file.raw));
-      console.log(this.imageUrl);
-      console.log(res);
+    // 移除图片
+    handleRemove() {
+      this.imageUrl = "";
     },
-    beforeAvatarUpload(file) {
-      const isJPG = file.type === "image/jpeg";
-      const isLt2M = file.size / 1024 / 1024 < 2;
+    // 上传成功回调
+    handleAvatarSuccess(res, file) {
+      console.log(file);
 
-      if (!isJPG) {
-        this.$message.error("上传头像图片只能是 JPG 格式!");
+      this.avatarForm.avatar = "http://localhost:8088" + res.data.url;
+      this.dialogAvatarVisible = true;
+
+      this.imageUrl = "http://localhost:8088" + res.data.url;
+    },
+    // 上传前格式和图片大小限制
+    beforeAvatarUpload(file) {
+      const type =
+        file.type === "image/jpeg" ||
+        "image/jpg" ||
+        "image/webp" ||
+        "image/png";
+      const isLt2M = file.size / 1024 / 1024 < 2;
+      if (!type) {
+        this.$message.error("图片格式不正确!(只能包含jpg，png，webp，JPEG)");
       }
       if (!isLt2M) {
-        this.$message.error("上传头像图片大小不能超过 2MB!");
-        
+        this.$message.error("上传图片大小不能超过 2MB!");
       }
-      return isJPG && isLt2M;
+      return type && isLt2M;
     },
   },
 };
 </script>
 
-<style scoped>
+<style scoped lang="less">
 .el-form {
   width: 420px;
   margin: 50px auto;
@@ -405,5 +435,38 @@ export default {
 }
 .invisible {
   visibility: hidden;
+}
+
+.avatar-uploader {
+  width: 120px;
+  height: 120px;
+  border-radius: 50%; //圆形
+  cursor: pointer;
+  position: relative;
+  overflow: hidden;
+  //   background: url('../assets/logo.png') no-repeat;
+  background-size: 100% 100%;
+}
+.avatar-uploader-icon {
+  position: absolute;
+  top: 0;
+  left: 0;
+  display: block;
+  width: 100%;
+  height: 100%;
+  font-size: 0;
+  color: #fff;
+  text-align: center;
+  line-height: 120px;
+}
+.avatar-uploader-icon:hover {
+  font-size: 28px;
+  background-color: rgba(0, 0, 0, 0.3);
+}
+.avatar {
+  position: relative;
+  width: 120px;
+  height: 120px;
+  display: block;
 }
 </style>

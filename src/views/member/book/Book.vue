@@ -114,7 +114,7 @@
     >
     </el-pagination>
 
-    <!--角色的对话框-->
+    <!--对话框-->
     <el-dialog
       :title="dialogData.dialogTitle"
       :visible.sync="dialogVisible"
