@@ -1,7 +1,19 @@
 
+// import Vue from "vue"
+
+// Vue.mixin({
+// 	methods: {
+// 		hasAuth(perm) {
+// 			var authority = this.$store.state.menus.permList
+
+// 			return authority.indexOf(perm) > -1
+// 		}
+// 	}
+// })
+
 
 // 公用方法库
-//index请求接口方法
+// index请求接口方法
 export default {
   istest() {
     let x = 'wqer';

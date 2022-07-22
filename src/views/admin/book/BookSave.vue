@@ -3,7 +3,36 @@
     <h1>{{ title }}</h1>
     <el-form ref="book" :model="book" label-width="80px">
       <el-form-item label="图片" required="true">
-        <el-input v-model="book.image"></el-input>
+        <!-- <el-input v-model="book.image"></el-input> -->
+
+        <!-- <el-upload
+          class="avatar-uploader"
+          action="http://localhost:8088/file/upload"
+          :show-file-list="false"
+          :on-success="handleAvatarSuccess"
+          :on-remove="handleRemove"
+          :before-upload="beforeAvatarUpload"
+        >
+          <img v-if="imageUrl" :src="imageUrl" class="avatar" />
+          <span
+            v-if="imageUrl"
+            class="el-upload-action"
+            @click.stop="handleRemove()"
+          >
+            <i class="el-icon-delete"></i>
+          </span>
+          <i v-else class="el-icon-upload2 avatar-uploader-icon" stop></i>
+        </el-upload> -->
+        <el-upload
+          class="avatar-uploader"
+          action="http://localhost:8088/file/upload"
+          :show-file-list="false"
+          :on-success="handleAvatarSuccess"
+          :before-upload="beforeAvatarUpload"
+        >
+          <img v-if="book.image" :src="book.image" class="avatar" />
+          <i v-else class="el-icon-plus avatar-uploader-icon"></i>
+        </el-upload>
       </el-form-item>
       <el-form-item label="书名" required="true">
         <el-input v-model="book.name"></el-input>
@@ -94,114 +123,66 @@ export default {
       publisherList: [],
       btnSubmit: null, //提交按钮的名称
       title: null, //标题
-      token: localStorage.getItem("token"),
+   
     };
   },
   methods: {
     onSubmit() {
       console.log("submit!");
-      if (this.book.id == null) {
-        this.$axios({
-          method: "post",
-          url: "/admin/book/create", //创建数据的接口
-          headers: {
-            token: this.token,
-          },
-          data: {
-            bookName: this.book.bookName,
-            image: this.book.image,
-            author: this.book.author,
-            publisherId: this.book.publisherId,
-            bookTypeId: this.book.bookTypeId,
-            inventory: this.book.inventory,
-            total: this.book.total,
-            price: this.book.price,
-            desc: this.book.desc,
-          },
-        })
-          .then((response) => {
-            console.log(response);
+      console.log(this.book.id);
 
-            let successFlag = response.data.success;
+      this.$axios
+        .post(
+          "/admin/book/" + (this.book.id ? "update" : "create"), //根据有没有id判断
+          this.book
+        )
+        // })
+        .then((response) => {
+          console.log(response);
 
-            console.log(typeof successFlag);
-            console.log(successFlag);
-            if (successFlag) {
-              this.$message.success(response.data.message);
-            } else {
-              console.log("输出报错信息");
-              let fieldErrors = response.data.data.fieldErrors;
-              let errors = "";
-              console.log(fieldErrors);
+          let successFlag = response.data.success;
 
-              // let arr=[];
-              // Object.keys(fieldErrors).forEach((key,index)=>{
-              //   console.log(index)
-              //        arr.push(fieldErrors[key]);
-              // });
-              // console.log(arr)
-              // for(let i in  arr){
-              //   errors = errors +" \n " + arr[i];
-              // }
-
-              for (let key in fieldErrors) {
-                //遍历json对象的每个key/value对,key为key
-                console.log(key);
-                let error = fieldErrors[key];
-                errors = errors + " \n " + error;
-                console.log(error);
-              }
-              console.log(errors);
-              this.$message.error(errors);
-            }
-          })
-          .catch(function(error) {
-            // 请求失败处理
-            console.log(error);
-          });
-      } else {
-        this.$axios({
-          method: "post",
-          url: "/admin/book/update", //修改数据的接口
-          headers: {
-            token: this.token,
-          },
-          data: {
-            bookName: this.book.bookName,
-            image: this.book.image,
-            author: this.book.author,
-            publisherId: this.book.publisherId,
-            bookTypeId: this.book.bookTypeId,
-            inventory: this.book.inventory,
-            total: this.book.total,
-            price: this.book.price,
-            desc: this.book.desc,
-            id: this.book.id,
-          },
-        })
-          .then((response) => {
-            console.log(response);
+          if (successFlag) {
             this.$message.success(response.data.message);
-          })
-          .catch(function(error) {
-            // 请求失败处理
-            console.log(error);
-          });
-      }
+            this.$router.push({ name: "AdminBook" }); //跳转到图书页面
+          } else {
+            console.log("输出报错信息");
+            let fieldErrors = response.data.data.fieldErrors;
+            let errors = "";
+            console.log(fieldErrors);
+
+            // let arr=[];
+            // Object.keys(fieldErrors).forEach((key,index)=>{
+            //   console.log(index)
+            //        arr.push(fieldErrors[key]);
+            // });
+            // console.log(arr)
+            // for(let i in  arr){
+            //   errors = errors +" \n " + arr[i];
+            // }
+
+            for (let key in fieldErrors) {
+              //遍历json对象的每个key/value对,key为key
+              console.log(key);
+              let error = fieldErrors[key];
+              errors = errors + " \n " + error;
+              console.log(error);
+            }
+            console.log(errors);
+            this.$message.error(errors);
+          }
+        })
+        .catch(function(error) {
+          // 请求失败处理
+          console.log(error);
+        });
     },
     createOrUpdate() {
       //判断是否是新增或者修改
-      console.log("this.book.id")
-      console.log(this.$route.params)
-      console.log(this.$route.params.id)
-      // console.log(this.book.id)
-      console.log("this.book.id")
-
       if (this.book.id != null) {
         //判断是否是修改
         this.title = "修改";
         this.btnSubmit = "修改";
-        // console.log(this.book.id)
         this.$axios
           .get(
             "/admin/book/detail", //请求详情数据
@@ -213,18 +194,7 @@ export default {
             }
           )
           .then((response) => {
- 
-            this.book = response.data.data
-            // let book = response.data.data.detail;
-            // (this.book.bookName = book.bookName), //会修改默认的参数，渲染出详情数据
-            //   (this.book.image = book.image),
-            //   (this.book.author = book.author),
-            //   (this.book.publisherId = book.publisherId),
-            //   (this.book.bookTypeId = book.bookTypeId),
-            //   (this.book.inventory = book.inventory),
-            //   (this.book.total = book.total),
-            //   (this.book.price = book.price),
-            //   (this.book.desc = book.desc);
+            this.book = response.data.data;
           })
           .catch(function(error) {
             // 请求失败处理
@@ -257,6 +227,7 @@ export default {
         .then((response) => {
           console.log(response);
           this.publisherList = response.data.data;
+
           // this.page = response.data.data
           console.log(this.publisherList);
         })
@@ -273,14 +244,58 @@ export default {
         this.$router.go(-1); //返回上一页
       }
     },
+    // 上传前格式和图片大小限制
+    handleAvatarSuccess(res, file) {
+      console.log(file);
+      // this.imageUrl = URL.createObjectURL(file.raw);
+      this.book.image = "http://localhost:8088" + res.data.url;
+    },
+    beforeAvatarUpload(file) {
+      const isJPG =
+        file.type === "image/jpeg" ||
+        "image/jpg" ||
+        "image/webp" ||
+        "image/png";
+      const isLt2M = file.size / 1024 / 1024 < 2;
+
+      if (!isJPG) {
+        this.$message.error("图片格式不正确!(只能包含jpg，png，webp，JPEG)");
+      }
+      if (!isLt2M) {
+        this.$message.error("上传头像图片大小不能超过 2MB!");
+      }
+      return isJPG && isLt2M;
+    },
   },
   created() {
     this.createOrUpdate(); //判断是否是新增或者修改
     this.getBookTypeList(); //下拉框列表
     this.getPublisherList(); //下拉框列表
-  
-    
-
   },
 };
 </script>
+<style>
+.avatar-uploader .el-upload {
+  border: 1px dashed #d9d9d9;
+  border-radius: 6px;
+  cursor: pointer;
+  position: relative;
+  overflow: hidden;
+}
+.avatar-uploader .el-upload:hover {
+  border-color: #409eff;
+}
+.avatar-uploader-icon {
+  font-size: 28px;
+  color: #8c939d;
+  width: 178px;
+  height: 178px;
+  line-height: 178px;
+  text-align: center;
+}
+.avatar {
+  width: 178px;
+  height: 178px;
+  display: block;
+}
+</style>

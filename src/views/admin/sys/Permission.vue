@@ -108,13 +108,11 @@
       >
         <el-form-item label="上级菜单" prop="parentId">
           <el-select v-model="editForm.parentId" placeholder="请选择上级菜单">
-            <template >
+            <template>
               <div v-for="item in tableData" :key="item">
-
                 <el-option :label="item.name" :value="item.id"></el-option>
                 <template>
                   <div v-for="child in item.children" :key="child">
-                  
                     <el-option :label="child.name" :value="child.id">
                       <span>{{ "- " + child.name }}</span>
                     </el-option>
@@ -167,7 +165,7 @@
 
         <el-form-item>
           <el-button type="primary" @click="submitForm('editForm')"
-            >立即创建</el-button
+            >{{dialogData.dialogSubmit}}</el-button
           >
           <el-button @click="resetForm('editForm')">重置</el-button>
         </el-form-item>
@@ -208,7 +206,7 @@ export default {
         orderNum: [
           { required: true, message: "请填入排序号", trigger: "blur" },
         ],
-        statu: [{ required: true, message: "请选择状态", trigger: "blur" }],
+        status: [{ required: true, message: "请选择状态", trigger: "blur" }],
       },
 
       //列表
@@ -281,8 +279,8 @@ export default {
 
     //新增按钮操作
     addHandle() {
-      (this.editForm.status = 1), //默认是正常
-        (this.dialogData.dialogTitle = "新增");
+      this.editForm.status = 1; //默认是正常
+      this.dialogData.dialogTitle = "新增";
       this.dialogData.dialogSubmit = "创建";
       this.dialogVisible = true; //打开对话框
     },
@@ -313,7 +311,7 @@ export default {
               console.log(res);
               this.getTableList(); //刷新列表
 
-              if (res.data.code == 20000) {
+              if (res.data.success) {
                 this.$message({
                   showClose: true,
                   message: "操作成功",

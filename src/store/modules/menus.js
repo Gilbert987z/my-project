@@ -6,7 +6,7 @@ Vue.use(Vuex)
 export default {
 	state: {
 
-		menuList: [], //菜单栏数据
+		// menuList: [], //菜单栏数据
 		permList: [], //权限数据
 
 		hasRoutes: false,

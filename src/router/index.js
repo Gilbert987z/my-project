@@ -9,6 +9,9 @@ import bookBorrow from "../components/bookBorrow.vue";
 import userlist from "../components/userlist.vue";
 import naviMenu from "../components/layout/naviMenu.vue";
 
+// import axios from "../axios";
+// import store from "../store"
+
 Vue.use(Router);
 
 //路由导航冗余报错（路由重复）
@@ -230,7 +233,7 @@ const router = new Router({
       children: [
         {
           path: "/admin/book/list",
-          name: "Book",
+          name: "AdminBook",
           meta: {
             title: "图书列表",
           },
@@ -423,6 +426,11 @@ export default router;
 
 // 路由拦截，判断是否需要登录
 router.beforeEach((to, from, next) => {
+	// let hasRoute = store.state.menus.hasRoutes
+
+	let token = localStorage.getItem("token")
+
+
   /* 路由发生变化修改页面title */
   if (to.meta.title) {
     document.title = to.meta.title;
@@ -433,16 +441,83 @@ router.beforeEach((to, from, next) => {
     next();
     // console.log(11)
   } else {
-    let token = localStorage.getItem("token");//要改成从vuex中取吗？
+    
     // console.log(22)
     if (!token) {
       //如果没有token，直接跳转到登录页
       // alert("请登录！")
       // console.log(33)
       next("/login");
+
+    // } else if(token && !hasRoute) {
+    //   axios.get("/sys/permission/list", {
+    //     headers: {
+    //       Authorization: localStorage.getItem("token")
+    //     }
+    //   }).then(res => {
+  
+    //     console.log(res.data.data)
+  
+    //     // 拿到menuList
+    //     // store.commit("setMenuList", res.data.data.nav)
+  
+    //     // 拿到用户权限
+    //     store.commit("setPermList", res.data.data.authoritys)
+  
+    //     console.log(store.state.menus.menuList)
+  
+    //     // 动态绑定路由
+    //     let newRoutes = router.options.routes
+  
+    //     res.data.data.nav.forEach(menu => {
+    //       if (menu.children) {
+    //         menu.children.forEach(e => {
+  
+    //           // 转成路由
+    //           let route = menuToRoute(e)
+  
+    //           // 吧路由添加到路由管理中
+    //           if (route) {
+    //             newRoutes[0].children.push(route)
+    //           }
+  
+    //         })
+    //       }
+    //     })
+  
+    //     console.log("newRoutes")
+    //     console.log(newRoutes)
+    //     router.addRoutes(newRoutes)
+  
+    //     hasRoute = true
+    //     store.commit("changeRouteStatus", hasRoute)
+    //   })
+     
     } else {
       // console.log(44)
       next();
     }
   }
 });
+
+
+
+// // 导航转成路由
+// const menuToRoute = (menu) => {
+
+// 	if (!menu.component) {
+// 		return null
+// 	}
+
+// 	let route = {
+// 		name: menu.name,
+// 		path: menu.path,
+// 		meta: {
+// 			icon: menu.icon,
+// 			title: menu.title
+// 		}
+// 	}
+// 	route.component = () => import('@/views/' + menu.component +'.vue')
+
+// 	return route
+// }

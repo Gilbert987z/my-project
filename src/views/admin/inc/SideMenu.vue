@@ -44,7 +44,7 @@
       </template>
       <el-menu-item-group>
         <router-link :to="{ name: 'Book' }">
-          <el-menu-item index="2-1">图书列表</el-menu-item>
+          <el-menu-item v-if="flase" index="2-1">图书列表</el-menu-item>
         </router-link>
         <router-link :to="{ name: 'BookType' }">
           <el-menu-item index="2-2">图书类型</el-menu-item>
