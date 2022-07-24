@@ -224,7 +224,10 @@ export default {
               if (token) {
                 //token有值
 
-                // this.$store.commit('SET_TOKEN', token); //调用vuex中的设置token的mutations方法
+                console.log('测试vuex  token')
+                this.$store.commit('SET_TOKEN', token); //调用vuex中的设置token的mutations方法
+                console.log(this.$store.state.token)//获取vuex state变量
+
                 localStorage.setItem("token", token); //将token存入本地
                 localStorage.setItem("refreshToken", refreshToken); //将token存入本地
 

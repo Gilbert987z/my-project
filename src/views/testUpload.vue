@@ -87,6 +87,7 @@ export default {
 </script>
 
 <style scoped lang="less">
+//bug的解决 https://blog.csdn.net/m0_49159526/article/details/115957028
 .avatar-uploader {
   width: 120px;
   height: 120px;

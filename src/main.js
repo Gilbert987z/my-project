@@ -11,6 +11,8 @@ import "element-ui/lib/theme-chalk/index.css";
 import qs from "qs";
 import vConsole from 'vconsole';
 import VueClipboard from 'vue-clipboard2'
+
+import store from '@/store'                //vuex  报错解决https://blog.csdn.net/c327127960/article/details/122843822
 //引入公共方法
 import publicFunction from './utils/publicFunction'
 
@@ -31,5 +33,6 @@ Vue.config.productionTip = false;
 
 new Vue({
   router,
+  store,//在main.js中导入store实例
   render: (h) => h(App),
 }).$mount("#app");
