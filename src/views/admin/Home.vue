@@ -1,8 +1,4 @@
 <template>
-
-
-
-
   <el-container>
     <el-aside width="200px">
       <!-- 导入菜单组件 -->
@@ -29,7 +25,9 @@
               </el-dropdown-item>
               <!-- <el-popconfirm title="是否登出?" @confirm="logout"> -->
               <!-- <template #reference> -->
-              <el-dropdown-item @click.native="logout()">退出登录</el-dropdown-item>
+              <el-dropdown-item @click.native="logout()"
+                >退出登录</el-dropdown-item
+              >
               <!-- </template> -->
               <!-- </el-popconfirm> -->
             </el-dropdown-menu>
@@ -40,7 +38,6 @@
             target="_blank"
             >切换到用户界面</el-link
           > -->
-     
         </div>
       </el-header>
       <el-main>
@@ -73,7 +70,7 @@ export default {
         id: "",
         username: "",
         avatar: "",
-        isAdmin:null, //是否是管理员
+        isAdmin: null, //是否是管理员
       },
     };
   },
@@ -88,10 +85,12 @@ export default {
         console.log(this.userInfo);
       });
     },
-       getUserPermissions() {
+    getUserPermissions() {
       this.$axios.get("/user/permissions").then((res) => {
-        this.userPermissions = res.data.data;
-        console.log(this.userPermissions);
+        // this.userPermissions = res.data.data;
+         // 拿到用户权限
+        this.$store.commit("setPermList", res.data.data.authoritys) 
+        // console.log(this.userPermissions);
       });
     },
     logout() {
@@ -116,7 +115,7 @@ export default {
 
               // this.$store.commit("resetState"); //调用vuex中的清空数据的mutations方法
 
-              this.$router.push({name:"Login"}); //跳转到登录页
+              this.$router.push({ name: "Login" }); //跳转到登录页
             });
 
             done();
@@ -127,7 +126,8 @@ export default {
             done();
           }
         },
-      }).then(() => { //登出后，弹出成功信息
+      }).then(() => {
+        //登出后，弹出成功信息
         this.$message({
           type: "success",
           message: "登出成功",

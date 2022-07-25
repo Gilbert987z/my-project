@@ -18,10 +18,11 @@ export default {
 		}]
 	},
 	mutations: {
-		setMenuList(state, menus) {
-			state.menuList = menus
-		},
+		// setMenuList(state, menus) {
+		// 	state.menuList = menus
+		// },
 		setPermList(state, perms) {
+			console.log('设置vuex的权限缓存')
 			state.permList = perms
 		},
 		changeRouteStatus(state, hasRoutes) {
@@ -43,7 +44,7 @@ export default {
 		},
 
 		resetState: (state) => {
-			state.menuList = []
+			// state.menuList = []
 			state.permList = []
 
 			state.hasRoutes = false

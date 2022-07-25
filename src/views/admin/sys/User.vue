@@ -42,6 +42,7 @@
           type="primary"
           icon="el-icon-circle-plus"
           @click="addHandle()"
+          v-if="hasAuth('sys.user.save')"
           >新增</el-button
         >
       </el-row>
@@ -114,9 +115,9 @@
 
       <el-table-column label="操作">
         <template slot-scope="scope">
-          <div v-if="scope.row.isAdmin  != 1">
+          <div v-if="scope.row.isAdmin != 1">
             <el-button
-              v-if="scope.row.isAdmin === 2"
+              v-if="scope.row.isAdmin === 2 && hasAuth('sys.user.role.update')"
               type="text"
               @click="roleHandle(scope.row.id)"
               >分配角色</el-button
@@ -126,7 +127,10 @@
               >修改密码</el-button
             > -->
             <el-divider direction="vertical"></el-divider>
-            <el-button type="text" @click="editHandle(scope.row.id)"
+            <el-button
+              type="text"
+              @click="editHandle(scope.row.id)"
+              v-if="hasAuth('sys.user.update') && hasAuth('sys.user.info')"
               >编辑</el-button
             >
             <!-- <el-divider direction="vertical"></el-divider>
@@ -146,12 +150,13 @@
             <el-button
               type="text"
               @click="delHandle(scope.row.id)"
+              v-if="hasAuth('sys.user.changStatus')"
               >注销</el-button
             >
             <!-- <el-button disabled type="text" @click="delHandle(scope.row.id)"
               >注销用户</el-button
             > -->
-            </div>
+          </div>
         </template>
       </el-table-column>
     </el-table>
@@ -193,7 +198,12 @@
             autocomplete="off"
           ></el-input>
         </el-form-item>
-        <el-form-item v-if="dialogData.dialogTitle === '新增'" label="密码" prop="password" label-width="100px">
+        <el-form-item
+          v-if="dialogData.dialogTitle === '新增'"
+          label="密码"
+          prop="password"
+          label-width="100px"
+        >
           <el-input
             type="password"
             v-model="editForm.password"
@@ -250,7 +260,6 @@
           :data="roleTreeData"
           show-checkbox
           ref="roleTree"
-          :check-strictly="checkStrictly"
           node-key="id"
           :default-expand-all="true"
           :props="defaultProps"

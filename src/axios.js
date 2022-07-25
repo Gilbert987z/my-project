@@ -205,6 +205,10 @@ request.interceptors.response.use(
           //       },
           //     });
           //   }, 1000);
+          Notification.error({
+            title: "403",
+            message: error.response.data.message,
+          });
           break;
 
         // 404请求不存在

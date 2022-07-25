@@ -42,6 +42,7 @@
           type="primary"
           icon="el-icon-circle-plus"
           @click="addHandle()"
+           v-if="hasAuth('bookPublisher.save')"
           >新增</el-button
         >
       </el-row>
@@ -86,6 +87,7 @@
           >
           <el-divider direction="vertical"></el-divider> -->
           <el-button type="text" @click="editHandle(scope.row.id)"
+          v-if="hasAuth('bookPublisher.update')"
             >编辑</el-button
           >
           <el-divider direction="vertical"></el-divider>

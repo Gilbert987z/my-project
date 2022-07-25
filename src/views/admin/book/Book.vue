@@ -8,7 +8,7 @@
       action="#"
     >
       <!--οnsubmit="return false;" @submit.prevent="formSubmit" -->
-      <el-form-item  prop="queryName">
+      <el-form-item prop="queryName">
         <el-input
           placeholder="请输入图书名称"
           clearable
@@ -74,6 +74,7 @@
           type="success"
           icon="el-icon-export"
           @click="exportData()"
+          v-if="hasAuth('book.export')"
           >导出</el-button
         >
 
@@ -82,12 +83,14 @@
           type="danger"
           icon="el-icon-remove"
           :disabled="delBtlStatus"
+          v-if="hasAuth('book.delete')"
           @click="delHandle(null)"
           >批量删除</el-button
         >
         <!-- </el-popconfirm>      slot="reference"-->
 
         <el-button
+          v-if="hasAuth('book.save')"
           type="primary"
           icon="el-icon-circle-plus"
           @click="addHandle()"
@@ -149,7 +152,7 @@
       </el-table-column>
       <el-table-column prop="createdAt" label="时间"></el-table-column>
       <el-table-column label="操作">
-        <template slot-scope="scope">
+        <template slot-scope="scope"  v-if="hasAuth('book.switch')">
           <el-button
             v-if="scope.row.status === 1"
             type="text"
@@ -164,12 +167,18 @@
           >
 
           <el-divider direction="vertical"></el-divider>
-          <el-button type="text" @click="editHandle(scope.row.id)"
+          <el-button
+            type="text"
+            @click="editHandle(scope.row.id)"
+            v-if="hasAuth('book.update') && hasAuth('book.info')"
             >编辑</el-button
           >
 
           <el-divider direction="vertical"></el-divider>
-          <el-button type="text" @click="delHandle(scope.row.id)"
+          <el-button
+            type="text"
+            @click="delHandle(scope.row.id)"
+            v-if="hasAuth('book.delete')"
             >删除</el-button
           >
         </template>

@@ -9,6 +9,7 @@
           type="primary"
           icon="el-icon-circle-plus"
           @click="addHandle()"
+          v-if="hasAuth('sys.permission.save')"
           >新增</el-button
         >
       </el-row>
@@ -75,7 +76,12 @@
       </el-table-column>
       <el-table-column prop="icon" label="操作">
         <template slot-scope="scope">
-          <el-button type="text" @click="editHandle(scope.row.id)"
+          <el-button
+            type="text"
+            @click="editHandle(scope.row.id)"
+            v-if="
+              hasAuth('sys.permission.update') && hasAuth('sys.permission.info')
+            "
             >编辑</el-button
           >
           <el-divider direction="vertical"></el-divider>
@@ -85,7 +91,12 @@
               title="这是一段内容确定删除吗？"
               @confirm="delHandle(scope.row.id)"
             >
-              <el-button type="text" slot="reference">删除</el-button>
+              <el-button
+                type="text"
+                slot="reference"
+                v-if="hasAuth('sys.permission.delete')"
+                >删除</el-button
+              >
             </el-popconfirm>
           </template>
         </template>
@@ -164,9 +175,9 @@
         </el-form-item>
 
         <el-form-item>
-          <el-button type="primary" @click="submitForm('editForm')"
-            >{{dialogData.dialogSubmit}}</el-button
-          >
+          <el-button type="primary" @click="submitForm('editForm')">{{
+            dialogData.dialogSubmit
+          }}</el-button>
           <el-button @click="resetForm('editForm')">重置</el-button>
         </el-form-item>
       </el-form>

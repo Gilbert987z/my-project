@@ -14,7 +14,6 @@ txt+= "<p>用户代理语言: " + navigator.language + "</p>";
 document.getElementById("example").innerHTML=txt;
 </script> -->
 
-
     <div class="login-container">
       <el-image class="login-pic" :src="require('../../assets/login.png')">
       </el-image>
@@ -169,13 +168,15 @@ export default {
       loginRules: {
         username: [{ required: true, message: "用户名必填", trigger: "blur" }],
         password: [{ required: true, message: "密码必填", trigger: "blur" }],
-        code: [{ required: true, message: "验证码必填", trigger: "blur" },
-        {pattern: /^[a-zA_Z0-9]{5}$/, message:'请输入5位数字或字母的验证码', trigger: 'blur'},
+        code: [
+          { required: true, message: "验证码必填", trigger: "blur" },
+          {
+            pattern: /^[a-zA_Z0-9]{5}$/,
+            message: "请输入5位数字或字母的验证码",
+            trigger: "blur",
+          },
         ],
       },
-
-     
-
     };
   },
   computed: {
@@ -192,8 +193,7 @@ export default {
       this.$refs[formName].validate((valid) => {
         //表单校验
         if (valid) {
-          
-          axios
+          this.$axios
             .post("/login", this.$qs.stringify(this.loginForm), {
               headers: { "Content-Type": "application/x-www-form-urlencoded" },
             })
@@ -201,51 +201,43 @@ export default {
               console.log(response.data);
               var message = response.data.message;
               var success = response.data.success;
-              var token = response.data.data.token;
-              var refreshToken = response.data.data.refreshToken;
+
               console.log(message);
 
-              var messageType = null;
-              console.log("success的值：", success);
-              console.log(typeof success);
-              if (success === true) {
-                messageType = "success";
+              // console.log("success的值：", success);
+              // console.log(typeof success);
+              if (success) {
+                var token = response.data.data.token;
+                var refreshToken = response.data.data.refreshToken;
+
+                this.$message({
+                  //登录提示信息
+                  message: message,
+                  type: 'success', //提示类型 success(成功)/warning(警告)/info(消息)/error(错误)
+                });
               } else {
-                messageType = "error";
-                this.getCaptcha();//重新请求验证码接口
+                this.getCaptcha(); //重新请求验证码接口
               }
-              console.log(messageType);
-              this.$message({
-                //登录提示信息
-                message: message,
-                type: messageType, //提示类型 success(成功)/warning(警告)/info(消息)/error(错误)
-              });
 
               if (token) {
                 //token有值
 
-                console.log('测试vuex  token')
-                this.$store.commit('SET_TOKEN', token); //调用vuex中的设置token的mutations方法
-                console.log(this.$store.state.token)//获取vuex state变量
+                // console.log("测试vuex  token");
+                this.$store.commit("SET_TOKEN", token); //调用vuex中的设置token的mutations方法
+                // console.log(this.$store.state.token); //获取vuex state变量
 
                 localStorage.setItem("token", token); //将token存入本地
                 localStorage.setItem("refreshToken", refreshToken); //将token存入本地
 
-              
-                
                 this.$axios.get("/user/info").then((res) => {
                   let isAdmin = res.data.data.isAdmin;
                   // console.log(this.userInfo);
-                  if(isAdmin==1||isAdmin==2){
-             
-                    this.$router.push({name:"AdminIndex"}); //跳转到管理员首页
-                  }else if (isAdmin==3){
-                     this.$router.push({name:"MemberIndex"}); //跳转到用户首页
+                  if (isAdmin == 1 || isAdmin == 2) {
+                    this.$router.push({ name: "AdminIndex" }); //跳转到管理员首页
+                  } else if (isAdmin == 3) {
+                    this.$router.push({ name: "MemberIndex" }); //跳转到用户首页
                   }
-                  
-
                 });
-                
               }
             })
             .catch(function(error) {

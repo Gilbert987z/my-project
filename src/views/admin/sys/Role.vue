@@ -34,6 +34,7 @@
           icon="el-icon-remove"
           :disabled="delBtlStatus"
           @click="delHandle(null)"
+           v-if="hasAuth('sys.role.delete')"
           >批量删除</el-button
         >
         <!-- </el-popconfirm>      slot="reference"-->
@@ -42,6 +43,7 @@
           type="primary"
           icon="el-icon-circle-plus"
           @click="addHandle()"
+          v-if="hasAuth('sys.role.save')"
           >新增</el-button
         >
       </el-row>
@@ -82,15 +84,15 @@
 
       <el-table-column label="操作">
         <template slot-scope="scope">
-          <el-button type="text" @click="permHandle(scope.row.id)"
+          <el-button type="text" @click="permHandle(scope.row.id)" v-if="hasAuth('sys.role.permission.edit')"
             >分配权限</el-button
           >
           <el-divider direction="vertical"></el-divider>
-          <el-button type="text" @click="editHandle(scope.row.id)"
+          <el-button type="text" @click="editHandle(scope.row.id)" v-if="hasAuth('sys.role.update') && hasAuth('sys.role.info')"
             >编辑</el-button
           >
           <el-divider direction="vertical"></el-divider>
-          <el-button type="text" @click="delHandle(scope.row.id)"
+          <el-button type="text" @click="delHandle(scope.row.id)" v-if="hasAuth('sys.role.delete')"
             >删除</el-button
           >
         </template>
@@ -357,7 +359,11 @@ export default {
     },
     submitPermFormHandle(formName) {
       var menuIds = this.$refs.permTree.getCheckedKeys()
+      // console.log(this.$refs.permTree.getHalfCheckedKeys()) 
+      // console.log(this.$refs.permTree.getCurrentKey())
+      var half_menuIds = this.$refs.permTree.getHalfCheckedKeys() //获取到半选的节点
 
+      menuIds = menuIds.concat(half_menuIds) // 合并数组
       console.log(menuIds)
       console.log(this.permForm.id)
 

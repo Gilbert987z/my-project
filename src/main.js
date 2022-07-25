@@ -15,6 +15,7 @@ import VueClipboard from 'vue-clipboard2'
 import store from '@/store'                //vuex  报错解决https://blog.csdn.net/c327127960/article/details/122843822
 //引入公共方法
 import publicFunction from './utils/publicFunction'
+import global from './utils/globalFun'
 
 new vConsole();
 
@@ -27,6 +28,8 @@ Vue.prototype.$qs = qs; //全局注册,查询参数序列化和解析库
 Vue.prototype.$axios = axios; //全局注册，使用方法为:this.$axios
 Vue.prototype.$notify = ElementUI.Notification; //全局注册，使用方法为:this.$notify
 Vue.prototype.$publicFunction = publicFunction; //全局注册公共方法
+
+
 
 
 Vue.config.productionTip = false;

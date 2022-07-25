@@ -9,8 +9,8 @@ import bookBorrow from "../components/bookBorrow.vue";
 import userlist from "../components/userlist.vue";
 import naviMenu from "../components/layout/naviMenu.vue";
 
-// import axios from "../axios";
-// import store from "../store"
+import axios from "../axios";
+import store from "../store"
 
 Vue.use(Router);
 
@@ -426,7 +426,7 @@ export default router;
 
 // 路由拦截，判断是否需要登录
 router.beforeEach((to, from, next) => {
-	// let hasRoute = store.state.menus.hasRoutes
+	let hasRoute = store.state.menus.hasRoutes
 
 	let token = localStorage.getItem("token")
 
@@ -450,7 +450,7 @@ router.beforeEach((to, from, next) => {
       next("/login");
 
     // } else if(token && !hasRoute) {
-    //   axios.get("/sys/permission/list", {
+    //   axios.get("/user/permissions", {
     //     headers: {
     //       Authorization: localStorage.getItem("token")
     //     }
@@ -462,28 +462,30 @@ router.beforeEach((to, from, next) => {
     //     // store.commit("setMenuList", res.data.data.nav)
   
     //     // 拿到用户权限
-    //     store.commit("setPermList", res.data.data.authoritys)
+    //     store.commit("setPermList", res.data.data.authoritys) 
   
+    //     console.log('PermList123:')
     //     console.log(store.state.menus.menuList)
   
     //     // 动态绑定路由
     //     let newRoutes = router.options.routes
+    //       console.log(newRoutes)
+
+    //     // res.data.data.nav.forEach(menu => {
+    //     //   if (menu.children) {
+    //     //     menu.children.forEach(e => {
   
-    //     res.data.data.nav.forEach(menu => {
-    //       if (menu.children) {
-    //         menu.children.forEach(e => {
+    //     //       // 转成路由
+    //     //       let route = menuToRoute(e)
   
-    //           // 转成路由
-    //           let route = menuToRoute(e)
+    //     //       // 吧路由添加到路由管理中
+    //     //       if (route) {
+    //     //         newRoutes[0].children.push(route)
+    //     //       }
   
-    //           // 吧路由添加到路由管理中
-    //           if (route) {
-    //             newRoutes[0].children.push(route)
-    //           }
-  
-    //         })
-    //       }
-    //     })
+    //     //     })
+    //     //   }
+    //     // })
   
     //     console.log("newRoutes")
     //     console.log(newRoutes)
@@ -492,7 +494,7 @@ router.beforeEach((to, from, next) => {
     //     hasRoute = true
     //     store.commit("changeRouteStatus", hasRoute)
     //   })
-     
+    
     } else {
       // console.log(44)
       next();
