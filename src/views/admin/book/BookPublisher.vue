@@ -87,9 +87,10 @@
           >
           <el-divider direction="vertical"></el-divider> -->
           <el-button type="text" @click="editHandle(scope.row.id)"
-          v-if="hasAuth('bookPublisher.update')"
+          v-if="hasAuth('bookPublisher.update') && hasAuth('bookPublisher.detail')"
             >编辑</el-button
           >
+        <template v-if="hasAuth('bookPublisher.switch')">
           <el-divider direction="vertical"></el-divider>
              <el-button
             v-if="scope.row.status === 1"
@@ -103,6 +104,7 @@
             @click="switchHandle(scope.row.id, scope.row.status)"
             >{{ bookPublisherStatus.on }}</el-button
           >
+          </template>
         </template>
       </el-table-column>
     </el-table>

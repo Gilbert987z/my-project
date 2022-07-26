@@ -42,6 +42,7 @@
           type="primary"
           icon="el-icon-circle-plus"
           @click="addHandle()"
+          v-if="hasAuth('bookType.save')"
           >新增</el-button
         >
       </el-row>
@@ -80,22 +81,27 @@
             >分配权限</el-button
           > -->
           <!-- <el-divider direction="vertical"></el-divider> -->
-          <el-button type="text" @click="editHandle(scope.row.id)"
+          <el-button
+            type="text"
+            @click="editHandle(scope.row.id)"
+            v-if="hasAuth('bookType.update') && hasAuth('bookType.detail')"
             >编辑</el-button
           >
           <el-divider direction="vertical"></el-divider>
-          <el-button
-            v-if="scope.row.status === 1"
-            type="text"
-            @click="switchHandle(scope.row.id, scope.row.status)"
-            >{{ bookTypeStatus.off }}</el-button
-          >
-          <el-button
-            v-else-if="scope.row.status === 0"
-            type="text"
-            @click="switchHandle(scope.row.id, scope.row.status)"
-            >{{ bookTypeStatus.on }}</el-button
-          >
+          <template v-if="hasAuth('bookType.switch')">
+            <el-button
+              v-if="scope.row.status === 1"
+              type="text"
+              @click="switchHandle(scope.row.id, scope.row.status)"
+              >{{ bookTypeStatus.off }}</el-button
+            >
+            <el-button
+              v-else-if="scope.row.status === 0"
+              type="text"
+              @click="switchHandle(scope.row.id, scope.row.status)"
+              >{{ bookTypeStatus.on }}</el-button
+            >
+          </template>
         </template>
       </el-table-column>
     </el-table>

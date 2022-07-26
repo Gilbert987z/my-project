@@ -152,25 +152,26 @@
       </el-table-column>
       <el-table-column prop="createdAt" label="时间"></el-table-column>
       <el-table-column label="操作">
-        <template slot-scope="scope"  v-if="hasAuth('book.switch')">
-          <el-button
-            v-if="scope.row.status === 1"
-            type="text"
-            @click="switchBookHandle(scope.row.id, scope.row.status)"
-            >{{ bookStatus.off }}</el-button
-          >
-          <el-button
-            v-else-if="scope.row.status === 0"
-            type="text"
-            @click="switchBookHandle(scope.row.id, scope.row.status)"
-            >{{ bookStatus.on }}</el-button
-          >
-
+        <template slot-scope="scope">
+          <template v-if="hasAuth('book.switch')">
+            <el-button
+              v-if="scope.row.status === 1"
+              type="text"
+              @click="switchBookHandle(scope.row.id, scope.row.status)"
+              >{{ bookStatus.off }}</el-button
+            >
+            <el-button
+              v-else-if="scope.row.status === 0"
+              type="text"
+              @click="switchBookHandle(scope.row.id, scope.row.status)"
+              >{{ bookStatus.on }}</el-button
+            >
+          </template>
           <el-divider direction="vertical"></el-divider>
           <el-button
             type="text"
             @click="editHandle(scope.row.id)"
-            v-if="hasAuth('book.update') && hasAuth('book.info')"
+            v-if="hasAuth('book.update') && hasAuth('book.detail')"
             >编辑</el-button
           >
 

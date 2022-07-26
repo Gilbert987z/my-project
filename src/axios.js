@@ -55,11 +55,11 @@ function setToken(token, refreshToken) {
 ////axios响应拦截
 request.interceptors.response.use(
   (response) => {
-    console.log(response.config.baseURL)
+    // console.log(response.config.baseURL)
     // 如果返回的状态码为200，说明接口请求成功，可以正常拿到数据
     // 否则的话抛出错误
     if (response.status === 200) {
-      console.log(response.data.code);
+      // console.log(response.data.code);
 
       // 这里可以根据code值进行判断处理，需要与后端协商统一
       if (response.data.code == 0) {
@@ -94,6 +94,9 @@ request.interceptors.response.use(
   // 然后根据返回的状态码进行一些操作，例如登录过期提示，错误提示等等
   // 下面列举几个常见的操作，其他需求可自行扩展
   (error) => {
+    // console.log('报错了')
+    // console.log(error)
+    // console.log(error.response)
     if (error.response.status) {
       switch (error.response.status) {
         // 401: 未登录
@@ -115,8 +118,8 @@ request.interceptors.response.use(
 
         case 401:
           //要看懂需要学习promise的用法*********************************
-          console.log("error1111111",error)
-          console.log("error2222222",error.config)
+          // console.log("error1111111",error)
+          // console.log("error2222222",error.config)
           var config = error.config; //获取axios请求的config的配置
 
           if (!isRefreshing) {
@@ -145,7 +148,7 @@ request.interceptors.response.use(
                 (err) => {
                   console.log("errs", err);
                   Notification.error({
-                    title: "401",
+                    title: error.response.status,
                     message: error.response.data.message,
                   });
 
@@ -206,7 +209,7 @@ request.interceptors.response.use(
           //     });
           //   }, 1000);
           Notification.error({
-            title: "403",
+            title: error.response.status,
             message: error.response.data.message,
           });
           break;
@@ -214,8 +217,8 @@ request.interceptors.response.use(
         // 404请求不存在
         case 404:
           Notification.error({
-            title: "404",
-            message: error.response.data,
+            title: error.response.status,
+            message: error.response.data.message,
           });
           //   Message({
           //     message: "网络请求不存在",
@@ -225,6 +228,11 @@ request.interceptors.response.use(
           break;
         // 其他错误，直接抛出错误提示
         default:
+          console.log('ssss')
+          Notification.error({
+            title: error.response.status,
+            message: error.response.data.message,
+          });
         //   Message({
         //     message: error.response.data.message,
         //     duration: 1500,

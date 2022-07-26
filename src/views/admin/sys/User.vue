@@ -130,29 +130,31 @@
             <el-button
               type="text"
               @click="editHandle(scope.row.id)"
-              v-if="hasAuth('sys.user.update') && hasAuth('sys.user.info')"
+              v-if="hasAuth('sys.user.update') && hasAuth('sys.user.detail')"
               >编辑</el-button
             >
-            <!-- <el-divider direction="vertical"></el-divider>
-            <el-button
-              v-if="scope.row.status === 1"
-              type="text"
-              @click="delHandle(scope.row.id)"
-              >封禁</el-button
-            >
-            <el-button
-              v-if="scope.row.status === -1"
-              type="text"
-              @click="delHandle(scope.row.id)"
-              >解禁</el-button
-            > -->
+            <template v-if="hasAuth('sys.user.changStatus')">
+              <el-divider direction="vertical"></el-divider>
+              <el-button
+                v-if="scope.row.status === 1"
+                type="text"
+                @click="delHandle(scope.row.id)"
+                >封禁</el-button
+              >
+              <el-button
+                v-if="scope.row.status === -1"
+                type="text"
+                @click="delHandle(scope.row.id)"
+                >解禁</el-button
+              >
+            </template>
             <el-divider direction="vertical"></el-divider>
-            <el-button
+            <!-- <el-button
               type="text"
               @click="delHandle(scope.row.id)"
-              v-if="hasAuth('sys.user.changStatus')"
+              
               >注销</el-button
-            >
+            > -->
             <!-- <el-button disabled type="text" @click="delHandle(scope.row.id)"
               >注销用户</el-button
             > -->
@@ -401,13 +403,24 @@ export default {
     },
     //分配角色按钮操作
     roleHandle(id) {
-      this.roleDialogFormVisible = true;
-
       console.log(id);
 
       //获取角色列表
-      this.$axios.get("/admin/sys/role/list").then((res) => {
-        this.roleTreeData = res.data.data.records;
+      this.$axios.get("/admin/sys/role/list", { params: { type: 'tree' } }).then((res) => {
+        var roleTreeData = res.data.data;
+
+        // for (index in this.roleTreeData) {
+        //   if (index.status == 0) {
+        //     this.roleTreeData;
+        //   }
+        // }
+        for (var i = 0; i < roleTreeData.length; i++) {
+          if (roleTreeData[i].status == 0) {
+            roleTreeData[i].disabled = true; 
+            // roleTreeData.splice(i, 1); ////删除起始下标为1，长度为1的一个值(len设置1，如果为0，则数组不变)
+          }
+        }
+        this.roleTreeData = roleTreeData;
       });
 
       //获取用户拥有的角色
@@ -424,6 +437,9 @@ export default {
           //拥有的角色默认选中
           this.$refs.roleTree.setCheckedKeys(roleIds);
         });
+
+      console.log(this.roleTreeData);
+      this.roleDialogFormVisible = true;
     },
     //分配角色按钮操作
     submitRoleHandle(formName) {
