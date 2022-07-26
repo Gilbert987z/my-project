@@ -34,7 +34,7 @@
           icon="el-icon-remove"
           :disabled="delBtlStatus"
           @click="delHandle(null)"
-           v-if="hasAuth('sys.role.delete')"
+          v-if="hasAuth('sys.role.delete')"
           >批量删除</el-button
         >
         <!-- </el-popconfirm>      slot="reference"-->
@@ -84,15 +84,24 @@
 
       <el-table-column label="操作">
         <template slot-scope="scope">
-          <el-button type="text" @click="permHandle(scope.row.id)" v-if="hasAuth('sys.role.permission.edit')"
+          <el-button
+            type="text"
+            @click="permHandle(scope.row.id)"
+            v-if="hasAuth('sys.role.permission.edit')"
             >分配权限</el-button
           >
           <el-divider direction="vertical"></el-divider>
-          <el-button type="text" @click="editHandle(scope.row.id)" v-if="hasAuth('sys.role.update') && hasAuth('sys.role.info')"
+          <el-button
+            type="text"
+            @click="editHandle(scope.row.id)"
+            v-if="hasAuth('sys.role.update') && hasAuth('sys.role.info')"
             >编辑</el-button
           >
           <el-divider direction="vertical"></el-divider>
-          <el-button type="text" @click="delHandle(scope.row.id)" v-if="hasAuth('sys.role.delete')"
+          <el-button
+            type="text"
+            @click="delHandle(scope.row.id)"
+            v-if="hasAuth('sys.role.delete')"
             >删除</el-button
           >
         </template>
@@ -198,7 +207,7 @@ export default {
       },
       dialogVisible: false, //新增对话框 默认关闭
       editForm: {
-        status:1, //默认是正常状态
+        status: 1, //默认是正常状态
       },
       editFormRules: {
         name: [{ required: true, message: "请输入角色名称", trigger: "blur" }],
@@ -298,17 +307,19 @@ export default {
     permHandle(id) {
       this.permDialogVisible = true; //打开对话框
 
-      this.$axios.get("/admin/sys/role/info", { params: { id: id } }).then((res) => {
-        console.log(res)
-        this.$refs.permTree.setCheckedKeys(res.data.data.permissionIds);
-        this.permForm = res.data.data;
-        // console.log(this.permForm)
-      });
+      this.$axios
+        .get("/admin/sys/role/info", { params: { id: id } })
+        .then((res) => {
+          console.log(res);
+          this.$refs.permTree.setCheckedKeys(res.data.data.permissionIds);
+          this.permForm = res.data.data;
+          // console.log(this.permForm)
+        });
     },
     //新增按钮操作
     addHandle() {
-      this.editForm.status = 1, //默认是正常
-      this.dialogData.dialogTitle = "新增";
+      (this.editForm.status = 1), //默认是正常
+        (this.dialogData.dialogTitle = "新增");
       this.dialogData.dialogSubmit = "创建";
       this.dialogVisible = true; //打开对话框
     },
@@ -317,11 +328,13 @@ export default {
       this.dialogData.dialogTitle = "编辑";
       this.dialogData.dialogSubmit = "编辑";
       //请求详情
-      this.$axios.get("/admin/sys/role/info", { params: { id: id } }).then((res) => {
-        this.editForm = res.data.data;
+      this.$axios
+        .get("/admin/sys/role/info", { params: { id: id } })
+        .then((res) => {
+          this.editForm = res.data.data;
 
-        this.dialogVisible = true; //打开对话框
-      });
+          this.dialogVisible = true; //打开对话框
+        });
     },
 
     //新增修改角色
@@ -358,33 +371,36 @@ export default {
       });
     },
     submitPermFormHandle(formName) {
-      var menuIds = this.$refs.permTree.getCheckedKeys()
-      // console.log(this.$refs.permTree.getHalfCheckedKeys()) 
+      var menuIds = this.$refs.permTree.getCheckedKeys();
+      // console.log(this.$refs.permTree.getHalfCheckedKeys())
       // console.log(this.$refs.permTree.getCurrentKey())
-      var half_menuIds = this.$refs.permTree.getHalfCheckedKeys() //获取到半选的节点
+      var half_menuIds = this.$refs.permTree.getHalfCheckedKeys(); //获取到半选的节点
 
-      menuIds = menuIds.concat(half_menuIds) // 合并数组
-      console.log(menuIds)
-      console.log(this.permForm.id)
+      menuIds = menuIds.concat(half_menuIds); // 合并数组
+      console.log(menuIds);
+      console.log(this.permForm.id);
 
-      this.$axios.post('/admin/sys/role/permission/edit' , 
-        {
-          "id":this.permForm.id,
-          "permissionIds":menuIds
-        }
-      ).then(res => {
-        console.log(res)
-        this.$message({
-          showClose: true,
-          message: '恭喜你，操作成功',
-          type: 'success',
-          onClose:() => {
-            this.getTableList()
+      this.$axios
+        .post("/admin/sys/role/permission/edit", {
+          id: this.permForm.id,
+          permissionIds: menuIds,
+        })
+        .then((res) => {
+          console.log(res);
+          if (res.data.success) {
+            this.$message({
+              showClose: true,
+              message: "恭喜你，操作成功",
+              type: "success",
+              onClose: () => {
+                this.getTableList();
+              },
+            });
           }
+
+          this.permDialogVisible = false;
+          this.resetForm(formName);
         });
-        this.permDialogVisible = false
-        this.resetForm(formName)
-      })
     },
     // toggleSelection(rows) {
     //   if (rows) {
@@ -440,9 +456,9 @@ export default {
   created() {
     this.getTableList();
 
-    this.$axios.get('/admin/sys/permission/list').then(res => {
-				this.permTreeData = res.data.data
-			})
+    this.$axios.get("/admin/sys/permission/list").then((res) => {
+      this.permTreeData = res.data.data;
+    });
   },
   mounted() {},
 };
