@@ -113,7 +113,7 @@ export default {
               localStorage.clear();
               sessionStorage.clear();
 
-              // this.$store.commit("resetState"); //调用vuex中的清空数据的mutations方法
+              this.$store.commit("resetState"); //调用vuex中的清空数据的mutations方法
 
               this.$router.push({ name: "Login" }); //跳转到登录页
             });

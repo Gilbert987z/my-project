@@ -133,22 +133,22 @@
               v-if="hasAuth('sys.user.update') && hasAuth('sys.user.detail')"
               >编辑</el-button
             >
-            <template v-if="hasAuth('sys.user.changStatus')">
+            <template v-if="hasAuth('sys.user.switch')">
               <el-divider direction="vertical"></el-divider>
               <el-button
                 v-if="scope.row.status === 1"
                 type="text"
-                @click="delHandle(scope.row.id)"
+                @click="switchHandle(scope.row.id, scope.row.status)"
                 >封禁</el-button
               >
               <el-button
-                v-if="scope.row.status === -1"
+                v-if="scope.row.status === 0"
                 type="text"
-                @click="delHandle(scope.row.id)"
+                @click="switchHandle(scope.row.id, scope.row.status)"
                 >解禁</el-button
               >
             </template>
-            <el-divider direction="vertical"></el-divider>
+            <!-- <el-divider direction="vertical"></el-divider> -->
             <!-- <el-button
               type="text"
               @click="delHandle(scope.row.id)"
@@ -313,6 +313,11 @@ export default {
         ],
         status: [{ required: true, message: "请选择状态", trigger: "blur" }],
       },
+      switchForm: {
+        id: null,
+        status: null,
+      },
+
       //分配角色对话框
       roleDialogFormVisible: false,
       roleForm: {},
@@ -406,22 +411,24 @@ export default {
       console.log(id);
 
       //获取角色列表
-      this.$axios.get("/admin/sys/role/list", { params: { type: 'tree' } }).then((res) => {
-        var roleTreeData = res.data.data;
+      this.$axios
+        .get("/admin/sys/role/list", { params: { type: "tree" } })
+        .then((res) => {
+          var roleTreeData = res.data.data;
 
-        // for (index in this.roleTreeData) {
-        //   if (index.status == 0) {
-        //     this.roleTreeData;
-        //   }
-        // }
-        for (var i = 0; i < roleTreeData.length; i++) {
-          if (roleTreeData[i].status == 0) {
-            roleTreeData[i].disabled = true; 
-            // roleTreeData.splice(i, 1); ////删除起始下标为1，长度为1的一个值(len设置1，如果为0，则数组不变)
+          // for (index in this.roleTreeData) {
+          //   if (index.status == 0) {
+          //     this.roleTreeData;
+          //   }
+          // }
+          for (var i = 0; i < roleTreeData.length; i++) {
+            if (roleTreeData[i].status == 0) {
+              roleTreeData[i].disabled = true;
+              // roleTreeData.splice(i, 1); ////删除起始下标为1，长度为1的一个值(len设置1，如果为0，则数组不变)
+            }
           }
-        }
-        this.roleTreeData = roleTreeData;
-      });
+          this.roleTreeData = roleTreeData;
+        });
 
       //获取用户拥有的角色
       this.$axios
@@ -471,8 +478,8 @@ export default {
     },
     //新增按钮操作
     addHandle() {
-      (this.editForm.status = 1), //默认是正常
-        (this.dialogData.dialogTitle = "新增");
+      this.editForm.status = 1; //默认是正常
+      this.dialogData.dialogTitle = "新增";
       this.dialogData.dialogSubmit = "创建";
       this.dialogVisible = true; //打开对话框
     },
@@ -532,46 +539,97 @@ export default {
 
     //   this.delBtlStatus = val.length == 0; //没有勾选，就是true,禁用
     // },
+    //封禁解禁按钮弹窗操作
+    switchHandle(id, status) {
+      this.switchForm.id = id;
 
-    //单个删除
-    delHandle(id) {
-      var ids = [];
+      if (status == 0) {
+        this.switchForm.status = 1;
 
-      if (id) {
-        ids.push(id);
-      } else {
-        this.multipleSelection.forEach((row) => {
-          ids.push(row.id);
+        this.$confirm("确定解封选中的用户吗?", "解封", {
+          confirmButtonText: "确定",
+          cancelButtonText: "取消",
+          type: "info",
+        }).then(() => {
+          this.$axios
+            .post("/admin/sys/user/switch", this.switchForm)
+            .then((res) => {
+              this.getTableList(); //请求刷新
+              if (res.data.code === 20000) {
+                this.$message.success("解封成功!");
+              }
+            })
+            .catch(() => {
+              //取消操作
+              this.$message({
+                type: "info",
+                message: "已取消",
+              });
+            });
+        });
+      } else if (status == 1) {
+        this.switchForm.status = 0;
+
+        this.$confirm("确定封禁选中的用户吗?", "封禁", {
+          confirmButtonText: "确定",
+          cancelButtonText: "取消",
+          type: "info",
+        }).then(() => {
+          this.$axios
+            .post("/admin/sys/user/switch", this.switchForm)
+            .then((res) => {
+              this.getTableList(); //请求刷新
+              if (res.data.code === 20000) {
+                this.$message.success("封禁成功!");
+              }
+            })
+            .catch(() => {
+              //取消操作
+              this.$message({
+                type: "info",
+                message: "已取消",
+              });
+            });
         });
       }
-
-      this.$confirm("确定删除选中的用户吗?", "删除", {
-        confirmButtonText: "确定",
-        cancelButtonText: "取消",
-        type: "error",
-      }).then(() => {
-        this.$axios
-          .post("/admin/sys/user/delete", ids)
-          .then(() => {
-            this.getTableList(); //请求刷新
-            this.$message.success("已成功删除!");
-          })
-          .catch(() => {
-            //取消操作
-            this.$message({
-              type: "info",
-              message: "已取消删除",
-            });
-          });
-      });
     },
+    //单个删除
+    // delHandle(id) {
+    //   var ids = [];
+
+    //   if (id) {
+    //     ids.push(id);
+    //   } else {
+    //     this.multipleSelection.forEach((row) => {
+    //       ids.push(row.id);
+    //     });
+    //   }
+
+    //   this.$confirm("确定删除选中的用户吗?", "删除", {
+    //     confirmButtonText: "确定",
+    //     cancelButtonText: "取消",
+    //     type: "error",
+    //   }).then(() => {
+    //     this.$axios
+    //       .post("/admin/sys/user/delete", ids)
+    //       .then(() => {
+    //         this.getTableList(); //请求刷新
+    //         this.$message.success("已成功删除!");
+    //       })
+    //       .catch(() => {
+    //         //取消操作
+    //         this.$message({
+    //           type: "info",
+    //           message: "已取消删除",
+    //         });
+    //       });
+    //   });
+    // },
   },
   created() {
     this.getTableList();
 
-    this.$axios.get("/admin/sys/permission/list").then((res) => {
-      this.permTreeData = res.data.data;
-    });
+
   },
   mounted() {},
 };

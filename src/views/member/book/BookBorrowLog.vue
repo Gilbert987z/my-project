@@ -69,6 +69,22 @@
           />
           <p>{{ scope.row.book.name }}/￥{{ scope.row.book.price }}</p>
           <p>用户ID：{{ scope.row.book.id }}</p>
+          <!-- <p>{{scope.row.book.status}}</p> -->
+
+          <el-tag
+            size="small"
+            v-if="scope.row.status === 1"
+            type="success"
+            effect="dark"
+            >上架</el-tag
+          >
+          <el-tag
+            size="small"
+            v-else-if="scope.row.status === 0"
+            type="danger"
+            effect="dark"
+            >下架</el-tag
+          >
         </template>
       </el-table-column>
 

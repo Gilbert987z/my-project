@@ -44,6 +44,7 @@ export default {
 		},
 
 		resetState: (state) => {
+			console.log('退出，登录清空vuex中的state变量缓存')
 			// state.menuList = []
 			state.permList = []
 

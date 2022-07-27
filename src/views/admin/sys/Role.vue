@@ -305,7 +305,53 @@ export default {
     },
     //分配权限按钮操作
     permHandle(id) {
-      this.permDialogVisible = true; //打开对话框
+      this.$axios.get("/admin/sys/permission/list").then((res) => {
+        var permTreeData = res.data.data;
+
+        for (var x = 0; x < permTreeData.length; x++) {
+          console.log("x", x);
+          // console.log(permTreeData[x]["children"]);
+          if (permTreeData[x].status == 0) {
+            console.log(x, "disabled");
+            permTreeData[x].disabled = true;
+          }
+
+          if ("children" in permTreeData[x]) { //判断对象是否包含某个key的方法
+            for (var y = 0; y < permTreeData[x]["children"].length; y++) {
+              console.log("y", y);
+              if (permTreeData[x]["children"][y].status == 0) {
+                console.log(x, y, "disabled");
+                permTreeData[x]["children"][y].disabled = true;
+              }
+
+              if ("children" in permTreeData[x]["children"][y]) {
+                for (
+                  var z = 0;
+                  z < permTreeData[x]["children"][y]["children"].length;
+                  z++
+                ) {
+                  console.log("z", z);
+                  if (
+                    permTreeData[x]["children"][y]["children"][z].status == 0
+                  ) {
+                    console.log(x, y, z, "disabled");
+                    permTreeData[x]["children"][y]["children"][
+                      z
+                    ].disabled = true;
+                  }
+                }
+              }
+            }
+          }
+
+          // if (permTreeData[i].status == 0) {
+          //   permTreeData[i].disabled = true;
+          //   // permTreeData.splice(i, 1); ////删除起始下标为1，长度为1的一个值(len设置1，如果为0，则数组不变)
+          // }
+        }
+        this.permTreeData = permTreeData;
+        console.log(permTreeData);
+      });
 
       this.$axios
         .get("/admin/sys/role/info", { params: { id: id } })
@@ -315,11 +361,13 @@ export default {
           this.permForm = res.data.data;
           // console.log(this.permForm)
         });
+
+      this.permDialogVisible = true; //打开对话框
     },
     //新增按钮操作
     addHandle() {
-      (this.editForm.status = 1), //默认是正常
-        (this.dialogData.dialogTitle = "新增");
+      this.editForm.status = 1; //默认是正常
+      this.dialogData.dialogTitle = "新增";
       this.dialogData.dialogSubmit = "创建";
       this.dialogVisible = true; //打开对话框
     },
@@ -455,10 +503,6 @@ export default {
   },
   created() {
     this.getTableList();
-
-    this.$axios.get("/admin/sys/permission/list").then((res) => {
-      this.permTreeData = res.data.data;
-    });
   },
   mounted() {},
 };

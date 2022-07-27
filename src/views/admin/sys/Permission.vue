@@ -56,7 +56,7 @@
       <el-table-column prop="path" label="菜单URL"> </el-table-column>
       <el-table-column prop="component" label="菜单组件"> </el-table-column>
       <el-table-column prop="orderNum" label="排序号"> </el-table-column>
-      <el-table-column prop="status" label="状态">
+      <!-- <el-table-column prop="status" label="状态">
         <template slot-scope="scope">
           <el-tag
             size="small"
@@ -73,7 +73,7 @@
             >禁用</el-tag
           >
         </template>
-      </el-table-column>
+      </el-table-column> -->
       <el-table-column prop="icon" label="操作">
         <template slot-scope="scope">
           <el-button
@@ -161,12 +161,12 @@
           </el-radio-group>
         </el-form-item>
 
-        <el-form-item label="状态" prop="statu" label-width="100px">
+        <!-- <el-form-item label="状态" prop="statu" label-width="100px">
           <el-radio-group v-model="editForm.status">
             <el-radio :label="1">正常</el-radio>
             <el-radio :label="0">禁用</el-radio>
           </el-radio-group>
-        </el-form-item>
+        </el-form-item> -->
 
         <el-form-item label="排序号" prop="orderNum" label-width="100px">
           <el-input-number v-model="editForm.orderNum" :min="1" label="排序号"
@@ -217,7 +217,7 @@ export default {
         orderNum: [
           { required: true, message: "请填入排序号", trigger: "blur" },
         ],
-        status: [{ required: true, message: "请选择状态", trigger: "blur" }],
+        // status: [{ required: true, message: "请选择状态", trigger: "blur" }],
       },
 
       //列表

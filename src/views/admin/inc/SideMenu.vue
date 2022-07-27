@@ -53,7 +53,7 @@
           <el-menu-item index="2-3" v-if="hasAuth('bookPublisher.list')">图书出版商</el-menu-item>
         </router-link>
         <router-link :to="{ name: 'BookBorrowLog' }">
-          <el-menu-item index="2-4" v-if="hasAuth('book.borrwLog.list')">图书借阅日志</el-menu-item>
+          <el-menu-item index="2-4" v-if="hasAuth('book.borrowLog.list')">图书借阅日志</el-menu-item>
         </router-link>
       </el-menu-item-group>
     </el-submenu>

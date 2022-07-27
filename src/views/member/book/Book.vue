@@ -60,7 +60,7 @@
       </el-table-column>
       <el-table-column prop="remark" label="备注"></el-table-column>
 
-      <el-table-column prop="status" label="状态">
+      <!-- <el-table-column prop="status" label="状态">
         <template slot-scope="scope">
           <el-tag
             size="small"
@@ -77,7 +77,7 @@
             >下架</el-tag
           >
         </template>
-      </el-table-column>
+      </el-table-column> -->
       <el-table-column prop="createdAt" label="时间"></el-table-column>
       <el-table-column label="操作">
         <template slot-scope="scope">
@@ -129,7 +129,7 @@
         class="demo-borrowForm"
       >
         <el-form-item label="借阅天数" prop="borrowDays" label-width="100px">
-          <el-input-number v-model="borrowForm.borrowDays"></el-input-number>
+          <el-input-number :min="1" controls-position="right" v-model="borrowForm.borrowDays"></el-input-number>
         </el-form-item>
 
         <el-form-item label="备注" prop="remark" label-width="100px">
@@ -168,14 +168,14 @@ export default {
       dialogVisible: false, //新增对话框 默认关闭
       borrowForm: {
         bookId: null,
-        borrowDays: null,
+        borrowDays: 1,
         remark: null,
       },
       borrowFormRules: {
-        borrow_num: [
+        borrowDays: [
           { required: true, message: "请输入借阅天数", trigger: "blur" },
-          { type: "number", message: "借阅天数必须为数字值" },
-          //  { max: 10, message: '借阅天数最多10天'},
+          // { type: "number", message: "借阅天数必须为数字值" }, 
+          //  { min: 1, message: '借阅天数最少1天'},
         ],
       },
     
@@ -369,6 +369,7 @@ export default {
 
                 this.dialogVisible = false; //成功了，才会关闭对话框
                 this.resetForm(formName);
+                this.borrowForm.borrowDays=1;
               }
             });
         } else {
