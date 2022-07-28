@@ -98,14 +98,16 @@ document.getElementById("example").innerHTML=txt;
             label-position="left"
             label-width="80px"
             :model="registerForm"
+            ref="registerForm"
+            :rules="registerRules"
           >
-            <el-form-item label="用户名">
+            <el-form-item label="用户名" prop="username">
               <el-input
                 v-model="registerForm.username"
                 prefix-icon="el-icon-user"
               ></el-input>
             </el-form-item>
-            <el-form-item label="手机号">
+            <el-form-item label="手机号" prop="mobile">
               <el-input
                 v-model="registerForm.mobile"
                 prefix-icon="el-icon-mobile-phone"
@@ -116,7 +118,7 @@ document.getElementById("example").innerHTML=txt;
                 maxlength="11"
               ></el-input>
             </el-form-item>
-            <el-form-item label="密码">
+            <el-form-item label="密码" prop="password">
               <el-input
                 v-model="registerForm.password"
                 type="password"
@@ -124,7 +126,7 @@ document.getElementById("example").innerHTML=txt;
                 show-password
               ></el-input>
             </el-form-item>
-            <el-form-item label="重复密码">
+            <el-form-item label="重复密码" prop="rePassword">
               <el-input
                 v-model="registerForm.rePassword"
                 type="password"
@@ -133,7 +135,9 @@ document.getElementById("example").innerHTML=txt;
               ></el-input>
             </el-form-item>
             <el-form-item>
-              <el-button type="primary" @click="registerSubmit">注册</el-button>
+              <el-button type="primary" @click="registerSubmit('registerForm')"
+                >注册</el-button
+              >
               <!--          <el-button>取消</el-button>-->
             </el-form-item>
           </el-form>
@@ -160,10 +164,10 @@ export default {
         token: "",
       },
       registerForm: {
-        username: "",
-        mobile: "",
-        password: "",
-        rePassword: "",
+        username: null,
+        mobile: null,
+        password: null,
+        rePassword: null,
       },
       loginRules: {
         username: [{ required: true, message: "用户名必填", trigger: "blur" }],
@@ -176,6 +180,19 @@ export default {
             trigger: "blur",
           },
         ],
+      },
+      registerRules: {
+        username: [{ required: true, message: "用户名必填", trigger: "blur" }],
+        mobile: [
+          { required: true, message: "手机号必填", trigger: "blur" },
+          {
+            pattern: /^1[3456789]\d{9}$/,
+            message: "请正确输入手机号",
+            trigger: "blur",
+          },
+        ],
+        password: [{ required: true, message: "密码必填", trigger: "blur" }],
+        rePassword: [{ required: true, message: "密码必填", trigger: "blur" }],
       },
     };
   },
@@ -213,7 +230,7 @@ export default {
                 this.$message({
                   //登录提示信息
                   message: message,
-                  type: 'success', //提示类型 success(成功)/warning(警告)/info(消息)/error(错误)
+                  type: "success", //提示类型 success(成功)/warning(警告)/info(消息)/error(错误)
                 });
               } else {
                 this.getCaptcha(); //重新请求验证码接口
@@ -251,46 +268,38 @@ export default {
         }
       });
     },
-    registerSubmit() {
-      axios
-        .post("/register", {
-          username: this.registerForm.username,
-          mobile: parseInt(this.registerForm.mobile),
-          password: this.registerForm.password,
-        })
-        .then((response) => {
-          console.log(response);
-          var message = response.data.message;
-          var success = response.data.success;
+    registerSubmit(formName) {
+      this.$refs[formName].validate((valid) => {
+        //表单校验
+        if (valid) {
+          this.$axios
+            .post("/register", this.registerForm)
+            .then((response) => {
+              console.log(response);
+              var message = response.data.message;
+              var success = response.data.success;
 
-          console.log(message);
-
-          var messageType = null;
-          console.log("success的值：", success);
-          console.log(typeof success);
-          if (success === true) {
-            messageType = "success";
-          } else {
-            messageType = "error";
-          }
-          console.log(messageType);
-          this.$message({
-            //登录提示信息
-            message: message,
-            type: messageType, //提示类型 success(成功)/warning(警告)/info(消息)/error(错误)
-          });
-        })
-        .catch(function(error) {
-          // 请求失败处理
-          console.log(error);
-        });
-      console.log("submit!");
+              if (success) {
+                this.$message({
+                  //登录提示信息
+                  message: message,
+                  type: "success", //提示类型 success(成功)/warning(警告)/info(消息)/error(错误)
+                });
+              }
+            })
+            .catch(function(error) {
+              // 请求失败处理
+              console.log(error);
+            });
+          console.log("submit!");
+        } else {
+          console.log("error submit!!");
+          return false;
+        }
+      });
     },
     getCaptcha() {
-      // console.log("getCaptcha");
-
       this.$axios.get("/captcha").then((res) => {
-        // console.log(res);
         let data = res.data.data;
         // console.log(data);
         this.loginForm.token = data.token;

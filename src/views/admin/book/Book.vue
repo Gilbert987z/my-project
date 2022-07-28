@@ -90,7 +90,7 @@
         <!-- </el-popconfirm>      slot="reference"-->
 
         <el-button
-          v-if="hasAuth('book.save')"
+          v-if="hasAuth('book.create')"
           type="primary"
           icon="el-icon-circle-plus"
           @click="addHandle()"
@@ -283,6 +283,8 @@ export default {
         bookTypeId: null,
         publisherId: null,
       },
+      bookTypeList:[],
+      publisherList:[]
     };
   },
   methods: {
@@ -533,7 +535,6 @@ export default {
         .then((response) => {
           console.log(response);
           this.bookTypeList = response.data.data;
-          // this.page = response.data.data
           console.log("bookTypeList", this.bookTypeList);
           console.log("bookTypeList", response.data);
         })
@@ -548,7 +549,6 @@ export default {
         .then((response) => {
           console.log(response);
           this.publisherList = response.data.data;
-          // this.page = response.data.data
           console.log(this.publisherList);
         })
         .catch(function(error) {

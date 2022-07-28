@@ -191,11 +191,6 @@ export default {
     return {
       tableData: [], //列表数据
 
-      formInline: {
-        user: "",
-        region: "",
-      },
-
       multipleSelection: [], //多选的勾选列表
       delBtlStatus: true, //批量删除按钮的禁用
       //角色对话框
@@ -241,8 +236,6 @@ export default {
         .get("/admin/sys/permission/list")
         .then((response) => {
           this.tableData = response.data.data;
-          // this.$router.push({path: '/movie?page=' + this.page.current_page});
-          //+'&size='+this.page.pageSize
         })
         .catch(function(error) {
           // 请求失败处理

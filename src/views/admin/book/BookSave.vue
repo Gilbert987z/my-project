@@ -108,7 +108,7 @@ export default {
     return {
       book: {
         //book的实例，默认数据
-        bookName: null,
+        name: null,
         image: null,
         author: null,
         publisherId: null,
@@ -123,7 +123,6 @@ export default {
       publisherList: [],
       btnSubmit: null, //提交按钮的名称
       title: null, //标题
-   
     };
   },
   methods: {
@@ -136,10 +135,7 @@ export default {
           "/admin/book/" + (this.book.id ? "update" : "create"), //根据有没有id判断
           this.book
         )
-        // })
         .then((response) => {
-          console.log(response);
-
           let successFlag = response.data.success;
 
           if (successFlag) {
@@ -212,9 +208,6 @@ export default {
         .then((response) => {
           console.log(response);
           this.bookTypeList = response.data.data;
-          // this.page = response.data.data
-          console.log("bookTypeList", this.bookTypeList);
-          console.log("bookTypeList", response.data);
         })
         .catch(function(error) {
           // 请求失败处理
@@ -227,9 +220,6 @@ export default {
         .then((response) => {
           console.log(response);
           this.publisherList = response.data.data;
-
-          // this.page = response.data.data
-          console.log(this.publisherList);
         })
         .catch(function(error) {
           // 请求失败处理

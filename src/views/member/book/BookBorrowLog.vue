@@ -144,6 +144,10 @@
               >归还</el-button
             >
             <el-divider direction="vertical"></el-divider>
+            <el-button type="text" @click="bookRenew(scope.row.id)"
+              >续借</el-button
+            >
+            <el-divider direction="vertical"></el-divider>
             <el-button
               type="text"
               @click="bookLost(scope.row.id, scope.row.remark)"
@@ -167,6 +171,31 @@
     >
     </el-pagination>
 
+    <!--续借对话框-->
+    <el-dialog title="续借" :visible.sync="dialogRenewVisible" width="600px">
+      <el-form
+        :model="renewForm"
+        :rules="renewFormRules"
+        ref="renewForm"
+        label-width="100px"
+        class="demo-editForm"
+      >
+        <el-form-item label="借阅天数" prop="borrowDays" label-width="100px">
+          <el-input-number
+            :min="1"
+            controls-position="right"
+            v-model="renewForm.borrowDays"
+          ></el-input-number>
+        </el-form-item>
+
+        <el-form-item>
+          <el-button type="primary" @click="submitRenewForm('renewForm')"
+            >确定</el-button
+          >
+          <el-button @click="dialogRenewVisible = false">取消</el-button>
+        </el-form-item>
+      </el-form>
+    </el-dialog>
     <!--对话框-->
     <el-dialog
       title="遗失"
@@ -181,7 +210,7 @@
         label-width="100px"
         class="demo-editForm"
       >
-        <el-form-item label="备注" prop="remark" label-width="100px">
+        <el-form-item label="遗失原因" prop="remark" label-width="100px">
           <el-input
             type="textarea"
             v-model="editForm.remark"
@@ -210,6 +239,14 @@ export default {
       editFormRules: {
         remark: [
           { required: true, message: "请输入遗失理由", trigger: "blur" },
+        ],
+      },
+      //续借对话框
+      dialogRenewVisible: false, //新增对话框 默认关闭
+      renewForm: { borrowDays: 1 },
+      renewFormRules: {
+        borrowDays: [
+          { required: true, message: "请输入借阅天数", trigger: "blur" },
         ],
       },
 
@@ -305,6 +342,12 @@ export default {
       this.dialogVisible = true; //打开对话框
     },
 
+    //遗失按钮操作
+    bookRenew(id) {
+      this.renewForm.id = id;
+
+      this.dialogRenewVisible = true; //打开对话框
+    },
     //遗失填写备注
     submitForm(formName) {
       this.$refs[formName].validate((valid) => {
@@ -333,7 +376,34 @@ export default {
         }
       });
     },
+    //续借填写时间
+    submitRenewForm(formName) {
+      this.$refs[formName].validate((valid) => {
+        if (valid) {
+          this.$axios.post("/member/book/renew", this.renewForm).then((res) => {
+            console.log(res);
+            this.getTableList(); //刷新列表
 
+            if (res.data.code == 20000) {
+              this.$message({
+                showClose: true,
+                message: "操作成功",
+                type: "success",
+                onClose: () => {
+                  //此处写提示关闭后需要执行的函数
+                },
+              });
+
+              this.dialogRenewVisible = false; //成功了，才会关闭对话框
+              this.resetForm(formName);
+            }
+          });
+        } else {
+          console.log("error submit!!");
+          return false;
+        }
+      });
+    },
     //归还
     bookReturn(id) {
       this.$confirm("确定归还选中的图书吗?", "归还", {
