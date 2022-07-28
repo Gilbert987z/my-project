@@ -426,7 +426,7 @@ export default {
               message: "已取消归还",
             });
           });
-      });
+      }).catch(()=>{});//注意这里，这里是重点！！！;
     },
   },
   created() {
