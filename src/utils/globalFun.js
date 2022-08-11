@@ -1,5 +1,6 @@
 import Vue from "vue"
 
+//混入
 Vue.mixin({
 	methods: {
 		hasAuth(perm) { //查看是否有对应的权限
