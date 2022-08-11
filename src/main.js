@@ -16,7 +16,6 @@ import store from '@/store'                //vuex  报错解决https://blog.csdn
 //引入公共方法
 import publicFunction from './utils/publicFunction'
 import global from './utils/globalFun'
-import VConsoleModel from "lib/model";
 
 new vConsole();
 
@@ -33,7 +32,7 @@ Vue.prototype.$publicFunction = publicFunction; //全局注册公共方法
 
 
 //关闭vue的生产提示
-Vue.config.productionTip = false; 
+Vue.config.productionTip = false;
 
 new Vue({
   router,
