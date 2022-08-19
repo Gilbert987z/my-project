@@ -73,6 +73,14 @@ const router = new Router({
       component: () => import("../views/test/test_pdf.vue"),
     },
     {
+      path: "/testRefresh",
+      name: "testRefresh",
+      meta: {
+        title: "测试页",
+      },
+      component: () => import("../views/test/testRefresh.vue"),
+    },
+    {
       path: "/testInput",
       name: "testInput",
       meta: {
